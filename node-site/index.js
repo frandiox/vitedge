@@ -23,7 +23,9 @@ server.get('*', async (req, res) => {
     const apiHandler = api[req.path.replace('/api/', '')]
 
     if (apiHandler) {
-      return res.end(JSON.stringify(apiHandler({ request: req })))
+      return res.end(
+        JSON.stringify(apiHandler({ request: req, params: req.query }))
+      )
     } else {
       // Error
       return res.end('{}')
@@ -31,7 +33,7 @@ server.get('*', async (req, res) => {
   }
 
   const url = req.protocol + '://' + req.get('host') + req.originalUrl
-  const { html } = await handler({ request: { ...req, url } })
+  const { html } = await handler({ request: { ...req, url }, api })
   res.end(html)
 })
 

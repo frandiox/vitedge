@@ -1,5 +1,6 @@
-import handler from '../example/dist/ssr/src/main'
 import { getAssetFromKV } from '@cloudflare/kv-asset-handler'
+import handler from '../example/dist/ssr/src/main'
+import api from '../example/dist/api'
 
 addEventListener('fetch', (event) => {
   try {
@@ -21,41 +22,46 @@ async function handleEvent(event) {
     ) {
       // --- STATIC FILES
       return await getAssetFromKV(event, {})
-    } else if (event.request.url.includes('/api/getProps')) {
+    } else if (event.request.url.includes('/api/')) {
       // --- API ENDPOINTS
       const url = new URL(event.request.url)
 
-      console.log(
-        'getProps',
-        Array.from(url.searchParams.entries()).reduce(
-          (acc, [key, value]) => ({
-            ...acc,
-            [key]: value,
-          }),
-          {}
-        )
+      // Parse querystring similarly to Express or Rails (there's no standard for this)
+      const query = Array.from(url.searchParams.entries()).reduce(
+        (acc, [key, value]) => ({
+          ...acc,
+          [key]: value,
+        }),
+        {}
       )
 
-      return new Response(
-        JSON.stringify({
-          server: true,
-          msg:
-            'This is page ' +
-            (url.searchParams.get('name') || '').toUpperCase(),
-        }),
-        {
-          status: 200,
-          headers: { 'content-type': 'application/json;charset=UTF-8' },
-        }
-      )
+      console.log('api', url.pathname, query)
+
+      const apiHandler = api[url.pathname.replace('/api/', '')]
+
+      if (apiHandler) {
+        return new Response(
+          JSON.stringify(
+            await apiHandler({
+              request: {
+                ...event.request,
+                query,
+              },
+              params: query,
+            })
+          ),
+          {
+            status: 200,
+            headers: { 'content-type': 'application/json;charset=UTF-8' },
+          }
+        )
+      }
+
+      return new Response('', { status: 404 })
     } else {
       // --- SSR
 
-      // TODO Apparently, a worker cannot call itself so server-side request to '/api/getProps' will fail
-      const { html } = await handler({
-        ...event.request,
-        url: 'http://127.0.0.1:8787', // TODO this should be request.url
-      })
+      const { html } = await handler({ request: event.request, api })
 
       return new Response(html, {
         status: 200,

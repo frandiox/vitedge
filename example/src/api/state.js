@@ -1,6 +1,6 @@
-export default function getStateProps({ request }) {
+export default function getStateProps({ params = {} }) {
   return {
     server: true,
-    msg: 'This is page ' + (request.query.name || '').toUpperCase(),
+    msg: 'This is page ' + (params.name || '').toUpperCase(),
   }
 }
