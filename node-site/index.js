@@ -31,7 +31,7 @@ server.get('*', async (req, res) => {
   }
 
   const url = req.protocol + '://' + req.get('host') + req.originalUrl
-  const { html } = await handler({ ...request, url })
+  const { html } = await handler({ request: { ...req, url } })
   res.end(html)
 })
 
