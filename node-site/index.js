@@ -3,6 +3,7 @@ const path = require('path')
 const express = require('express')
 const { request } = require('http')
 const { default: handler } = require('../example/dist/ssr/src/main')
+const api = require('../example/dist/api')
 
 const server = express()
 
@@ -17,14 +18,16 @@ server.use(
 )
 
 server.get('*', async (req, res) => {
-  if (req.path.startsWith('/api/state')) {
+  if (req.path.startsWith('/api/')) {
     console.log('api', req.query)
-    res.end(
-      JSON.stringify({
-        server: true,
-        msg: 'This is page ' + (req.query.name || '').toUpperCase(),
-      })
-    )
+    const apiHandler = api[req.path.replace('/api/', '')]
+
+    if (apiHandler) {
+      return res.end(JSON.stringify(apiHandler({ request: req })))
+    } else {
+      // Error
+      return res.end('{}')
+    }
   }
 
   const url = req.protocol + '://' + req.get('host') + req.originalUrl

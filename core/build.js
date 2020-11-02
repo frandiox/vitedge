@@ -1,9 +1,10 @@
 const buildSSR = require('vite-ssr/build')
+const buildAPI = require('./api-build')
 
 ;(async () => {
   await buildSSR()
 
-  // TODO build API
+  await buildAPI()
 
   process.exit()
 })()
