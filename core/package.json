@@ -1,0 +1,30 @@
+{
+  "name": "vueflare",
+  "version": "0.0.1",
+  "description": "Vite for server side rendering in Node or in a Cloudflare Worker",
+  "main": "./index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frandiox/vueflare.git"
+  },
+  "keywords": [
+    "vite",
+    "ssr",
+    "worker",
+    "cloudflare"
+  ],
+  "author": "Fran Dios",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/frandiox/vueflare/issues"
+  },
+  "homepage": "https://github.com/frandiox/vueflare#readme",
+  "peerDependencies": {
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0-rc.1",
+    "vite": "^1.0.0-rc.8"
+  },
+  "dependencies": {
+    "vite-ssr": "../../vite-ssr/core"
+  }
+}

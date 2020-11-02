@@ -1,0 +1,11 @@
+name = "vueflare"
+type = "webpack"
+account_id = "<account_id>"
+workers_dev = true
+route = ""
+zone_id = ""
+webpack_config = "webpack.config.js"
+
+[site]
+bucket = "../example/dist/client"
+entry-point = "."
