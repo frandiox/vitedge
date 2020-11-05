@@ -8,10 +8,7 @@ export default function (App, { routes }, hook) {
     })
   })
 
-  return viteSSR(App, { routes }, ({ app, router, baseUrl, request }) => {
-    // The 'request' is the original server request
-    // and should be used to pass auth/headers to the getProps endpoint
-
+  return viteSSR(App, { routes }, async ({ app, router }) => {
     let isFirstRoute = true
 
     router.beforeEach(async (to, from, next) => {
@@ -25,9 +22,7 @@ export default function (App, { routes }, hook) {
 
       try {
         const res = await fetch(
-          `${baseUrl}/api/state?path=${encodeURIComponent(to.path)}&name=${
-            to.name
-          }`,
+          `/api/state?path=${encodeURIComponent(to.path)}&name=${to.name}`,
           {
             method: 'GET',
             headers: {
@@ -44,5 +39,9 @@ export default function (App, { routes }, hook) {
 
       next()
     })
+
+    if (hook) {
+      await hook({ app, router, isClient: true })
+    }
   })
 }

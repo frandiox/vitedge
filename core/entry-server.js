@@ -7,7 +7,8 @@ export default function (App, { routes }, hook) {
       ...((r.props === true ? r.params : r.props) || {}),
     })
   })
-  return viteSSR(App, { routes }, ({ app, router, request, api }) => {
+
+  return viteSSR(App, { routes }, async ({ app, router, request, api }) => {
     // The 'request' is the original server request
     // and should be used to pass auth/headers to the getProps endpoint
 
@@ -24,5 +25,9 @@ export default function (App, { routes }, hook) {
 
       next()
     })
+
+    if (hook) {
+      await hook({ app, router, isClient: false })
+    }
   })
 }
