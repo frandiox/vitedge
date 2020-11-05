@@ -1,12 +1,8 @@
 import viteSSR from 'vite-ssr/entry-server'
+import { addPagePropsGetterToRoutes } from './utils/router'
 
 export default function (App, { routes }, hook) {
-  routes.forEach((route) => {
-    route.props = (r) => ({
-      ...(r.meta.state || {}),
-      ...((r.props === true ? r.params : r.props) || {}),
-    })
-  })
+  addPagePropsGetterToRoutes(routes)
 
   return viteSSR(App, { routes }, async ({ app, router, request, api }) => {
     // The 'request' is the original server request
