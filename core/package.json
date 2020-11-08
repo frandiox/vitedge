@@ -21,6 +21,7 @@
     "url": "https://github.com/frandiox/vitedge/issues"
   },
   "homepage": "https://github.com/frandiox/vitedge#readme",
+  "bin": "./bin/cli.js",
   "peerDependencies": {
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-rc.1"

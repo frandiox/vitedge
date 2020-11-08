@@ -1,7 +1,7 @@
 const buildSSR = require('vite-ssr/build')
 const buildAPI = require('./api-build')
 
-;(async () => {
+module.exports = async () => {
   await buildSSR({
     clientOptions: {
       alias: {
@@ -18,4 +18,4 @@ const buildAPI = require('./api-build')
   await buildAPI()
 
   process.exit()
-})()
+}
