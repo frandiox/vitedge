@@ -1,5 +1,5 @@
 const buildSSR = require('vite-ssr/build')
-const buildAPI = require('./api-build')
+const buildAPI = require('./api')
 
 module.exports = async () => {
   await buildSSR({
