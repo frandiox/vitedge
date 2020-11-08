@@ -40,7 +40,7 @@ export async function handleEvent(
 
     willRequestApi && (await willRequestApi({ event, url, query }))
 
-    const apiHandler = api[url.pathname.replace('/api/', '')]
+    const apiHandler = (api[url.pathname.replace('/api/', '')] || {}).handler
 
     const response = apiHandler
       ? new Response(

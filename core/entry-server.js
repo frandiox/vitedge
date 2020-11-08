@@ -22,7 +22,7 @@ export default function (App, { routes }, hook) {
         try {
           const params = prepareRouteParams(to, { stringify: false })
 
-          to.meta.state = await api[propsGetter]({
+          to.meta.state = await api[propsGetter].handler({
             request,
             ...params,
           })
