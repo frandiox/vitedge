@@ -29,6 +29,7 @@
     "vue-router": "^4.0.0-rc.1"
   },
   "dependencies": {
+    "@cloudflare/kv-asset-handler": "^0.0.12",
     "@rollup/plugin-virtual": "^2.0.3",
     "fast-glob": "^3.2.4",
     "rollup": "^2.33.1",

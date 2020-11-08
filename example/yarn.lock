@@ -37,6 +37,20 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
+"@cloudflare/kv-asset-handler@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.0.12.tgz#4fc397912a0897a5cf8c0b5eb7c983b5e8b36979"
+  integrity sha512-3XCs9TRhQh/yUs1ST9cIMLB8C5c1JRKcDYTPJbAmcgI0kO2FPCSZz+kyNb9x25DuGQeqOMMwmxHPtiOfTki/Gw==
+  dependencies:
+    "@cloudflare/workers-types" "^2.0.0"
+    "@types/mime" "^2.0.2"
+    mime "^2.4.6"
+
+"@cloudflare/workers-types@^2.0.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-2.1.0.tgz#6e4f07567f4c914ad811c2d7a6172d0ae834c7f6"
+  integrity sha512-VmXaHTq0lt6Xre4aK1hUK25hjZjuEUkHtdUEt0FJamv+NzQO54Gwp6Zr5Cfu6SP5EQ/tTmTMP/tK9npA8zhcCg==
+
 "@koa/cors@^3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@koa/cors/-/cors-3.1.0.tgz#618bb073438cfdbd3ebd0e648a76e33b84f3a3b2"
@@ -234,7 +248,7 @@
   resolved "https://registry.yarnpkg.com/@types/lru-cache/-/lru-cache-5.1.0.tgz#57f228f2b80c046b4a1bd5cac031f81f207f4f03"
   integrity sha512-RaE0B+14ToE4l6UqdarKPnXwVDuigfFv+5j9Dze/Nqr23yyuqdNvzcZi3xB+3Agvi5R4EOgAksfv3lXX4vBt9w==
 
-"@types/mime@*":
+"@types/mime@*", "@types/mime@^2.0.2":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-2.0.3.tgz#c893b73721db73699943bfc3653b1deb7faa4a3a"
   integrity sha512-Jus9s4CDbqwocc5pOAnh8ShfrnMcPHuJYzVcSUU7lrh8Ni5HuIqX3oilL86p3dlTrk0LzHRCgA/GQ7uNCw6l2Q==
@@ -1399,6 +1413,11 @@ mime-types@^2.1.18, mime-types@^2.1.27, mime-types@~2.1.24:
   dependencies:
     mime-db "1.44.0"
 
+mime@^2.4.6:
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-2.4.6.tgz#e5b407c90db442f2beb5b162373d07b69affa4d1"
+  integrity sha512-RZKhC3EmpBchfTGBVb8fb+RL2cWyw/32lshnsETttkBAyAUXSGHxbEJWWRXc751DrIxG1q04b8QwMbAwkRPpUA==
+
 mimic-fn@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-2.1.0.tgz#7ed2c2ccccaf84d3ffcb7a69b57711fc2083401b"
@@ -2064,6 +2083,7 @@ vite@^1.0.0-rc.8:
 vitedge@../core:
   version "0.0.1"
   dependencies:
+    "@cloudflare/kv-asset-handler" "^0.0.12"
     "@rollup/plugin-virtual" "^2.0.3"
     fast-glob "^3.2.4"
     rollup "^2.33.1"
