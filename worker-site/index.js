@@ -47,7 +47,7 @@ async function handleEvent(event) {
                 ...event.request,
                 query,
               },
-              params: query,
+              ...query,
             })
           ),
           {

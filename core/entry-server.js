@@ -1,5 +1,9 @@
 import viteSSR from 'vite-ssr/entry-server'
-import { addPagePropsGetterToRoutes } from './utils/router'
+import {
+  addPagePropsGetterToRoutes,
+  prepareRouteParams,
+  findRoutePropsGetter,
+} from './utils/router'
 
 export default function (App, { routes }, hook) {
   addPagePropsGetterToRoutes(routes)
@@ -9,14 +13,23 @@ export default function (App, { routes }, hook) {
     // and should be used to pass auth/headers to the getProps endpoint
 
     router.beforeEach(async (to, from, next) => {
-      try {
-        to.meta.state = await api.state({
-          request,
-          params: { path: to.path, name: to.name },
-        })
-      } catch (error) {
-        console.error(error)
-        // redirect to error route
+      const propsGetter = findRoutePropsGetter(to, from)
+
+      if (
+        propsGetter &&
+        Object.prototype.hasOwnProperty.call(api, propsGetter)
+      ) {
+        try {
+          const params = prepareRouteParams(to, { stringify: false })
+
+          to.meta.state = await api[propsGetter]({
+            request,
+            ...params,
+          })
+        } catch (error) {
+          console.error(error)
+          // redirect to error route
+        }
       }
 
       next()
