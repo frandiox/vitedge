@@ -12,17 +12,15 @@ const {
 } = require('../config')
 
 module.exports = async () => {
-  const root = rootDir instanceof Function ? rootDir() : rootDir
-
   await buildSSR({
     clientOptions: {
-      outDir: path.resolve(root, outDir, clientOutDir),
+      outDir: path.resolve(rootDir, outDir, clientOutDir),
       alias: {
         vitedge: 'vitedge/entry-client',
       },
     },
     ssrOptions: {
-      outDir: path.resolve(root, outDir, ssrOutDir),
+      outDir: path.resolve(rootDir, outDir, ssrOutDir),
       alias: {
         vitedge: 'vitedge/entry-server',
       },
@@ -30,8 +28,8 @@ module.exports = async () => {
   })
 
   await buildAPI({
-    apiInputPath: path.resolve(root, apiInDir),
-    apiOutputPath: path.resolve(root, outDir, apiOutFile),
+    apiInputPath: path.resolve(rootDir, apiInDir),
+    apiOutputPath: path.resolve(rootDir, outDir, apiOutFile),
   })
 
   process.exit()
