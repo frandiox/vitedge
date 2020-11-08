@@ -1,7 +1,7 @@
 {
   "name": "vitedge",
   "version": "0.0.1",
-  "description": "Vite for server side rendering in Cloudflare Workers",
+  "description": "Vite for edge-side-rendering in Cloudflare Workers",
   "main": "./entry-server.js",
   "repository": {
     "type": "git",
@@ -11,9 +11,11 @@
     "vite",
     "vue",
     "ssr",
+    "esr",
     "worker",
     "cloudflare",
-    "edge"
+    "edge",
+    "server"
   ],
   "author": "Fran Dios",
   "license": "MIT",

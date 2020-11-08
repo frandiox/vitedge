@@ -1,6 +1,8 @@
 # Vitedge
 
-Vite SSR framework for Cloudflare Workers.
+[Vite](https://github.com/vitejs/vite) _Edge Side Rendering_ (ESR) framework.
+
+> What's ESR? Think of SSR (Server Side Rendering) in CDN nodes instead of actual servers. This is possible today thanks to [Cloudflare Workers](https://workers.cloudflare.com/) (and maybe some other platforms in the future).
 
 See a full example [here](./example).
 
@@ -16,7 +18,7 @@ Apart from the normal Vite app, it provides some extra fullstack utilities.
 
 It can create a REST API based on filesystem routes: `<root>/api/my/function.js` will be built as `/api/my/function` endpoint and can be requested from the frontend.
 
-### SSR Page Props
+### ESR Page Props
 
 Each page can make an optional "get page props" request to the worker before rendering. For example, if a page's route has `name: "customers"`, the endpoint `/api/props/customers` will be called automatically before rendering. The handler for this route must be defined in `<root>/api/props/customers.js`.
 
