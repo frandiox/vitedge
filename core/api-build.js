@@ -1,22 +1,43 @@
 const path = require('path')
-const fs = require('fs').promises
+const fg = require('fast-glob')
+const { rollup } = require('rollup')
+const virtual = require('@rollup/plugin-virtual')
 
-// TODO This whole process should be done using Rollup
+async function resolveFiles(dir, extensions) {
+  return await fg(`${dir}/**/*.{${extensions.join(',')}}`, {
+    ignore: ['node_modules', '.git'],
+    onlyFiles: true,
+  })
+}
 
 module.exports = async function () {
-  const stateFile = await fs.readFile(
-    path.resolve(process.cwd(), 'src', 'api', 'state.js'),
-    {
-      encoding: 'utf-8',
-    }
-  )
+  const apiDirectory = path.resolve(process.cwd(), 'api')
+  const apiRoutes = await resolveFiles(apiDirectory, ['js', 'ts'])
 
-  // TODO change to ESM
-  const apiFile = `
-    module.exports = {
-      'state': ${stateFile.replace('export default', '')}
-    }
-  `
+  const options = {
+    input: 'entry',
+    plugins: [
+      virtual({
+        entry:
+          apiRoutes
+            .map((route, index) => `import dep${index} from '${route}'`)
+            .join('\n') +
+          '\n' +
+          `export default { ${apiRoutes
+            .map(
+              (route, index) =>
+                `"${route
+                  .replace(apiDirectory + '/', '')
+                  .replace(/\.[tj]sx?$/i, '')}": dep${index}`
+            )
+            .join(',\n')} }`,
+      }),
+    ],
+  }
 
-  await fs.writeFile(path.resolve(process.cwd(), 'dist', 'api.js'), apiFile)
+  const bundle = await rollup(options)
+  await bundle.write({
+    file: path.resolve(process.cwd(), 'dist', 'api.js'),
+    format: 'es',
+  })
 }
