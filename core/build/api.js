@@ -1,4 +1,3 @@
-const path = require('path')
 const fg = require('fast-glob')
 const { rollup } = require('rollup')
 const virtual = require('@rollup/plugin-virtual')
@@ -10,9 +9,8 @@ async function resolveFiles(dir, extensions) {
   })
 }
 
-module.exports = async function () {
-  const apiDirectory = path.resolve(process.cwd(), 'api')
-  const apiRoutes = await resolveFiles(apiDirectory, ['js', 'ts'])
+module.exports = async function ({ apiInputPath, apiOutputPath }) {
+  const apiRoutes = await resolveFiles(apiInputPath, ['js', 'ts'])
 
   const options = {
     input: 'entry',
@@ -27,7 +25,7 @@ module.exports = async function () {
             .map(
               (route, index) =>
                 `"${route
-                  .replace(apiDirectory + '/', '')
+                  .replace(apiInputPath + '/', '')
                   .replace(/\.[tj]sx?$/i, '')}": dep${index}`
             )
             .join(',\n')} }`,
@@ -37,7 +35,7 @@ module.exports = async function () {
 
   const bundle = await rollup(options)
   await bundle.write({
-    file: path.resolve(process.cwd(), 'dist', 'api.js'),
+    file: apiOutputPath,
     format: 'es',
   })
 }
