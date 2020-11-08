@@ -1,4 +1,4 @@
-name = "vueflare"
+name = "vitedge"
 type = "webpack"
 account_id = "<account_id>"
 workers_dev = true

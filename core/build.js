@@ -5,12 +5,12 @@ const buildAPI = require('./api-build')
   await buildSSR({
     clientOptions: {
       alias: {
-        vueflare: 'vueflare/entry-client',
+        vitedge: 'vitedge/entry-client',
       },
     },
     ssrOptions: {
       alias: {
-        vueflare: 'vueflare/entry-server',
+        vitedge: 'vitedge/entry-server',
       },
     },
   })

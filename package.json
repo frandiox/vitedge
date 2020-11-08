@@ -1,5 +1,5 @@
 {
-  "name": "vueflare",
+  "name": "vitedge",
   "version": "0.0.0",
   "private": "true",
   "description": "Vite for server side rendering in Node or in a Cloudflare Worker",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/frandiox/vueflare.git"
+    "url": "git+https://github.com/frandiox/vitedge.git"
   },
   "keywords": [
     "vite",
@@ -29,7 +29,7 @@
   "author": "Fran Dios",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/frandiox/vueflare/issues"
+    "url": "https://github.com/frandiox/vitedge/issues"
   },
-  "homepage": "https://github.com/frandiox/vueflare#readme"
+  "homepage": "https://github.com/frandiox/vitedge#readme"
 }

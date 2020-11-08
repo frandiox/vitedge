@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --port 1337 --open",
-    "build": "rm -rf dist && node node_modules/vueflare/build"
+    "build": "rm -rf dist && node node_modules/vitedge/build"
   },
   "dependencies": {
     "vite": "^1.0.0-rc.8",
-    "vueflare": "../core",
+    "vitedge": "../core",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-rc.1"
   }

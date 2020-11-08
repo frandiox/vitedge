@@ -1,6 +1,6 @@
 import './index.css'
 import App from './App.vue'
 import routes from './routes'
-import vueflare from 'vueflare'
+import vitedge from 'vitedge'
 
-export default vueflare(App, { routes })
+export default vitedge(App, { routes })

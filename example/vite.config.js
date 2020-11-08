@@ -1,7 +1,7 @@
-const vueflarePlugin = require('vueflare/plugin')
+const vitedgePlugin = require('vitedge/plugin')
 
 module.exports = {
-  plugins: [vueflarePlugin],
+  plugins: [vitedgePlugin],
   proxy: {
     '/api': {
       // This is the server in `node-site` directory

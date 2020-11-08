@@ -1,3 +1,3 @@
-# Vueflare
+# Vitedge
 
 WIP

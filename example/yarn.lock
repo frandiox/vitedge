@@ -2063,7 +2063,7 @@ vue@^3.0.0, vue@^3.0.2:
     "@vue/runtime-dom" "3.0.2"
     "@vue/shared" "3.0.2"
 
-vueflare@../core:
+vitedge@../core:
   version "0.0.1"
   dependencies:
     vite-ssr "^0.0.4"
