@@ -1,20 +1,20 @@
 global.fetch = require('node-fetch')
 const path = require('path')
 const express = require('express')
-const { request } = require('http')
-const { default: handler } = require('../example/dist/ssr/src/main')
-const api = require('../example/dist/api')
+
+const { default: handler } = require('../dist/ssr/src/main')
+const api = require('../dist/api')
 
 const server = express()
 
 server.use(
   '/_assets',
-  express.static(path.join(__dirname, '../example/dist/client/_assets'))
+  express.static(path.join(__dirname, '../dist/client/_assets'))
 )
 
 server.use(
   '/favicon.ico',
-  express.static(path.join(__dirname, '../example/dist/client/favicon.ico'))
+  express.static(path.join(__dirname, '../dist/client/favicon.ico'))
 )
 
 server.get('*', async (req, res) => {

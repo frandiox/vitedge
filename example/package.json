@@ -2,8 +2,12 @@
   "name": "example",
   "version": "0.0.0",
   "scripts": {
+    "setup": "yarn && (cd node-site && yarn) && (cd worker-site && yarn)",
     "dev": "vite --port 1337 --open",
-    "build": "rm -rf dist && node node_modules/vitedge/build"
+    "build": "rm -rf dist && node node_modules/vitedge/build",
+    "refresh": "rm -rf node_modules && yarn",
+    "serve:worker": "cd worker-site && yarn serve",
+    "serve:node": "cd node-site && yarn serve"
   },
   "dependencies": {
     "vite": "^1.0.0-rc.8",

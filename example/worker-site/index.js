@@ -1,6 +1,6 @@
 import { getAssetFromKV } from '@cloudflare/kv-asset-handler'
-import handler from '../example/dist/ssr/src/main'
-import api from '../example/dist/api'
+import handler from '../dist/ssr/src/main'
+import api from '../dist/api'
 
 addEventListener('fetch', (event) => {
   try {
