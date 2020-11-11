@@ -39,18 +39,18 @@ export function buildAndCacheApiResponse({ event, data, options, cacheKey }) {
     (event.request.method === 'GET' && (options.cache || {}).api) || 0
 
   if (cacheMaxAge > MIN_CACHE_AGE) {
-    const url = new URL(event.request.url)
     response.headers.append('cache-control', `public, max-age=${cacheMaxAge}`)
 
     event.waitUntil(
-      caches.default.put(
-        new Request(cacheKey || url.pathname + url.search),
-        response.clone()
-      )
+      caches.default.put(cacheKey || event.request.url, response.clone())
     )
   }
 
   return response
+}
+
+function getCachedResponse(event) {
+  return caches.default.match(event.request.url)
 }
 
 export async function handleApiRequest(event) {
@@ -60,7 +60,16 @@ export async function handleApiRequest(event) {
   )
 
   if (Object.prototype.hasOwnProperty.call(api, propsGetter)) {
-    const { handler, options } = api[propsGetter]
+    const { handler, options = {} } = api[propsGetter]
+
+    if (options.cache && options.cache.api) {
+      const response = await getCachedResponse(event)
+
+      if (response) {
+        return response
+      }
+    }
+
     const { query } = parseQuerystring(event)
 
     const data = await handler({
