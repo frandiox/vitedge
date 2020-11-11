@@ -13,18 +13,18 @@ export default function (App, { routes }, hook) {
     // and should be used to pass auth/headers to the getProps endpoint
 
     router.beforeEach(async (to, from, next) => {
-      const propsGetter = findRoutePropsGetter(to, from)
+      const apiRoute = buildApiRoute(to, from)
 
       if (
-        propsGetter &&
-        Object.prototype.hasOwnProperty.call(api, propsGetter)
+        apiRoute &&
+        Object.prototype.hasOwnProperty.call(api, apiRoute.propsGetter)
       ) {
-        try {
-          const params = prepareRouteParams(to, { stringify: false })
+        const { handler } = api[apiRoute.propsGetter]
 
-          to.meta.state = await api[propsGetter].handler({
+        try {
+          to.meta.state = await handler({
             request,
-            ...params,
+            ...apiRoute.data,
           })
         } catch (error) {
           console.error(error)
