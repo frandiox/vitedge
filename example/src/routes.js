@@ -20,7 +20,7 @@ export default [
     component: () => import('./pages/PageB.vue'),
     name: 'b',
     meta: {
-      propsGetter: 'default',
+      propsGetter: 'example',
     },
   },
   {

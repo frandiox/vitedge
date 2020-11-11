@@ -5,4 +5,10 @@ export default {
       msg: 'This is an EXAMPLE page ',
     }
   },
+  options: {
+    cache: {
+      props: 30,
+      html: 30,
+    },
+  },
 }

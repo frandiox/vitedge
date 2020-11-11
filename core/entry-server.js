@@ -19,13 +19,18 @@ export default function (App, { routes }, hook) {
         apiRoute &&
         Object.prototype.hasOwnProperty.call(api, apiRoute.propsGetter)
       ) {
-        const { handler } = api[apiRoute.propsGetter]
+        const { handler, options = {} } = api[apiRoute.propsGetter]
 
         try {
           to.meta.state = await handler({
             request,
             ...apiRoute.data,
           })
+
+          to.meta.response = {
+            options,
+            apiRoute,
+          }
         } catch (error) {
           console.error(error)
           // redirect to error route
