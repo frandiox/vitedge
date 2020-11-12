@@ -1,9 +1,9 @@
 import api from '__vitedge_api__'
 
-const MIN_CACHE_AGE = 60
+const API_PREFIX = '/api'
 
 export function isApiRequest(event) {
-  return event.request.url.includes('/api/')
+  return event.request.url.includes(API_PREFIX + '/')
 }
 
 export function parseQuerystring(event) {
@@ -20,68 +20,30 @@ export function parseQuerystring(event) {
   return { url, query }
 }
 
-function buildApiResponse(data, options = {}) {
+function buildApiResponse(payload, options = {}) {
   const headers = {
     'content-type': 'application/json;charset=UTF-8',
     ...options.headers,
   }
 
-  return new Response(JSON.stringify(data), {
+  return new Response(JSON.stringify(payload), {
     status: 200,
     headers,
   })
 }
 
-export function buildAndCacheApiResponse({ event, data, options, cacheKey }) {
-  const response = buildApiResponse(data, options)
-
-  const cacheMaxAge =
-    (event.request.method === 'GET' && (options.cache || {}).api) || 0
-
-  if (cacheMaxAge > MIN_CACHE_AGE) {
-    response.headers.append('cache-control', `public, max-age=${cacheMaxAge}`)
-
-    event.waitUntil(
-      caches.default.put(cacheKey || event.request.url, response.clone())
-    )
-  }
-
-  return response
-}
-
-function getCachedResponse(event) {
-  return caches.default.match(event.request.url)
-}
-
 export async function handleApiRequest(event) {
-  const propsGetter = Object.prototype.hasOwnProperty.call(
-    api,
-    apiRoute.propsGetter
-  )
+  const url = new URL(event.request.url)
+  const endpoint = url.pathname.replace(API_PREFIX, '')
 
-  if (Object.prototype.hasOwnProperty.call(api, propsGetter)) {
-    const { handler, options = {} } = api[propsGetter]
+  if (Object.prototype.hasOwnProperty.call(api, endpoint)) {
+    const { handler, options = {} } = api[endpoint]
 
-    if (options.cache && options.cache.api) {
-      const response = await getCachedResponse(event)
+    const { url, query } = parseQuerystring(event)
+    const payload = await handler({ event, request: event.request, url, query })
 
-      if (response) {
-        return response
-      }
-    }
-
-    const { query } = parseQuerystring(event)
-
-    const data = await handler({
-      request: {
-        ...event.request,
-        query,
-      },
-      ...query,
-    })
-
-    return buildAndCacheApiResponse({ event, data, options })
+    return buildApiResponse(payload, options)
   }
 
-  return new Response('', { status: 404 })
+  return new Response('Not found', { status: 404 })
 }
