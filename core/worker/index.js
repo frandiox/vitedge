@@ -16,8 +16,8 @@ export async function handleEvent(
     didRequestRender,
   }
 ) {
+  // --- STATIC FILES
   if (isStaticAsset(event)) {
-    // --- STATIC FILES
     willRequestAsset && (await willRequestAsset({ event }))
     const response = await handleStaticAsset(event)
 
@@ -25,8 +25,10 @@ export async function handleEvent(
       (didRequestAsset && (await didRequestAsset({ event, response }))) ||
       response
     )
-  } else if (isApiRequest(event)) {
-    // --- API ENDPOINTS
+  }
+
+  // --- API ENDPOINTS
+  if (isApiRequest(event)) {
     const { url, query } = parseQuerystring(event)
 
     willRequestApi && (await willRequestApi({ event, url, query }))
@@ -38,8 +40,9 @@ export async function handleEvent(
       response
     )
   }
+
+  // --- PROPS ENDPOINTS
   if (isPropsRequest(event)) {
-    // --- PROPS ENDPOINTS
     const { url, query } = parseQuerystring(event)
 
     willRequestProps && (await willRequestProps({ event }))
@@ -50,15 +53,14 @@ export async function handleEvent(
         (await didRequestProps({ event, url, query, response }))) ||
       response
     )
-  } else {
-    // --- SSR
-    willRequestRender && (await willRequestRender({ event }))
-    const response = await handleViewRendering(event)
-
-    return (
-      (didRequestRender &&
-        (await didRequestRender({ event, html, response }))) ||
-      response
-    )
   }
+
+  // --- SSR
+  willRequestRender && (await willRequestRender({ event }))
+  const response = await handleViewRendering(event)
+
+  return (
+    (didRequestRender && (await didRequestRender({ event, html, response }))) ||
+    response
+  )
 }
