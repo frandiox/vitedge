@@ -1,4 +1,4 @@
-import api from '__vitedge_api__'
+import fns from '__vitedge_functions__'
 import { getCachedResponse, setCachedResponse } from './cache'
 import { createResponse, createNotFoundResponse } from './utils'
 
@@ -42,10 +42,10 @@ export async function handleApiRequest(event) {
   }
 
   const url = new URL(event.request.url)
-  const endpoint = url.pathname.replace(API_PREFIX, '')
+  const endpoint = url.pathname
 
-  if (Object.prototype.hasOwnProperty.call(api, endpoint)) {
-    const { handler, options = {} } = api[endpoint]
+  if (Object.prototype.hasOwnProperty.call(fns, endpoint)) {
+    const { handler, options = {} } = fns[endpoint]
 
     const { url, query } = parseQuerystring(event)
     const payload = await handler({ event, request: event.request, url, query })

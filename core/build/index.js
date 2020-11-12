@@ -1,14 +1,14 @@
 const path = require('path')
 const buildSSR = require('vite-ssr/build')
-const buildAPI = require('./api')
+const buildFunctions = require('./functions')
 
 const {
   rootDir,
   outDir,
   clientOutDir,
   ssrOutDir,
-  apiInDir,
-  apiOutFile,
+  fnsInDir,
+  fnsOutFile,
 } = require('../config')
 
 module.exports = async () => {
@@ -27,9 +27,9 @@ module.exports = async () => {
     },
   })
 
-  await buildAPI({
-    apiInputPath: path.resolve(rootDir, apiInDir),
-    apiOutputPath: path.resolve(rootDir, outDir, apiOutFile),
+  await buildFunctions({
+    fnsInputPath: path.resolve(rootDir, fnsInDir),
+    fnsOutputPath: path.resolve(rootDir, outDir, fnsOutFile),
   })
 
   process.exit()

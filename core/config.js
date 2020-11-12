@@ -16,6 +16,6 @@ module.exports = {
   outDir: 'dist',
   clientOutDir: 'client',
   ssrOutDir: 'ssr',
-  apiInDir: 'api',
-  apiOutFile: 'api.js',
+  fnsInDir: 'functions',
+  fnsOutFile: 'functions.js',
 }

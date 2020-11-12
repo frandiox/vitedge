@@ -1,5 +1,5 @@
 import router from '__vitedge_router__'
-import api from '__vitedge_api__'
+import fns from '__vitedge_functions__'
 import { getCachedResponse, setCachedResponse } from './cache'
 import { createNotFoundResponse, createResponse } from './utils'
 
@@ -11,9 +11,9 @@ export function isPropsRequest(event) {
 export function resolvePropsRoute(url = '') {
   const route = router.resolve(url)
 
-  if (route && Object.prototype.hasOwnProperty.call(api, route.propsGetter)) {
+  if (route && Object.prototype.hasOwnProperty.call(fns, route.propsGetter)) {
     return {
-      ...api[route.propsGetter],
+      ...fns[route.propsGetter],
       route,
     }
   }

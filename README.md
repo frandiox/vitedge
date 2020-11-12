@@ -18,11 +18,11 @@ Apart from the normal Vite app, it provides some extra fullstack utilities.
 
 ### API
 
-It can create a REST API based on filesystem routes: `<root>/api/my/function.js` will be built as `/api/my/function` endpoint and can be requested from the frontend.
+It can create a REST API based on filesystem routes: `<root>/functions/api/my/function.js` will be built as `/api/my/function` endpoint and can be requested from the frontend.
 
 ### ESR Page Props
 
-Each page can make an optional "get page props" request to the worker before rendering. For example, if a page's route is `/admin/customers/123`, the endpoint `/props/admin/customers/123` will be requested automatically before rendering. The handler for this route must be defined in `<root>/api/props/<route name>`.
+Each page can make an optional "get page props" request to the worker before rendering. For example, if a page's route is `/admin/customers/123`, the endpoint `/props/admin/customers/123` will be requested automatically before rendering. The handler for this route must be defined in `<root>/functions/props/<route name>`.
 
 ## Requirements
 
@@ -38,7 +38,7 @@ This is required for accessing the Workers Key Value data store that handles all
 4. Import and call Vitedge from your app's entry point providing your main `App.vue` and your page routes. Vitedge will create the router and attach the app to the DOM for you according to the running environment. [Example here](./example/src/main.js)
 5. Build using `vitedge build` command
 
-## TODOS
+## TODOS - Raw ideas
 
 - [ ] TypeScript
 - [ ] Custom Vite dev-server that serves API/Props during development
@@ -50,6 +50,7 @@ This is required for accessing the Workers Key Value data store that handles all
 - [ ] List of pages that should be prerrendered automatically after deployment
 - [ ] Compatibility with Node runtime for other providers (Vercel/...)
 - [ ] Detect imported files in HTML and push them with HTTP2
+- [ ] Sitemap utility (handler in `<root>/functions/sitemap.js`?)
 
 ### Research/consider
 

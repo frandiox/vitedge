@@ -9,23 +9,23 @@ async function resolveFiles(dir, extensions) {
   })
 }
 
-module.exports = async function ({ apiInputPath, apiOutputPath }) {
-  const apiRoutes = await resolveFiles(apiInputPath, ['js', 'ts'])
+module.exports = async function ({ fnsInputPath, fnsOutputPath }) {
+  const fnsRoutes = await resolveFiles(fnsInputPath, ['js', 'ts'])
 
   const options = {
     input: 'entry',
     plugins: [
       virtual({
         entry:
-          apiRoutes
+          fnsRoutes
             .map((route, index) => `import dep${index} from '${route}'`)
             .join('\n') +
           '\n' +
-          `export default { ${apiRoutes
+          `export default { ${fnsRoutes
             .map(
               (route, index) =>
                 `"${route
-                  .replace(apiInputPath, '')
+                  .replace(fnsInputPath, '')
                   .replace(/\.[tj]sx?$/i, '')}": dep${index}`
             )
             .join(',\n')} }`,
@@ -35,7 +35,7 @@ module.exports = async function ({ apiInputPath, apiOutputPath }) {
 
   const bundle = await rollup(options)
   await bundle.write({
-    file: apiOutputPath,
+    file: fnsOutputPath,
     format: 'es',
   })
 }
