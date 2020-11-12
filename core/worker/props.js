@@ -3,8 +3,9 @@ import api from '__vitedge_api__'
 import { getCachedResponse, setCachedResponse } from './cache'
 import { createNotFoundResponse, createResponse } from './utils'
 
+const PROPS_PREFIX = '/props'
 export function isPropsRequest(event) {
-  return event.request.url.includes('/props/')
+  return event.request.url.includes(PROPS_PREFIX + '/')
 }
 
 export function resolvePropsRoute(url = '') {
@@ -32,7 +33,18 @@ function buildPropsResponse(props, options = {}) {
   })
 }
 
-export async function getPageProps(event, { raw } = {}) {
+function getCacheKey(event) {
+  // This request might come from rendering so
+  // the URL must be modified to match props cache key
+  const url = new URL(event.request.url)
+  if (!url.pathname.startsWith(PROPS_PREFIX)) {
+    url.pathname = PROPS_PREFIX + url.pathname
+  }
+
+  return url.toString()
+}
+
+export async function getPageProps(event) {
   const propsRoute = resolvePropsRoute(event.request.url)
 
   if (!propsRoute) {
@@ -40,18 +52,12 @@ export async function getPageProps(event, { raw } = {}) {
   }
 
   const { handler, options = {}, route = {} } = propsRoute
+  const cacheOption = options.cache && options.cache.api
+  const cacheKey = cacheOption && getCacheKey(event)
 
-  if (options.cache && options.cache.api) {
-    const response = await getCachedResponse(event)
-
+  if (cacheOption) {
+    const response = await getCachedResponse(cacheKey)
     if (response) {
-      if (raw) {
-        return {
-          options,
-          props: await response.json(),
-        }
-      }
-
       return { options, response }
     }
   }
@@ -62,25 +68,20 @@ export async function getPageProps(event, { raw } = {}) {
     request: event.request,
   })
 
-  if (raw) {
-    return { props, options }
+  const response = buildPropsResponse(props, options)
+
+  if (cacheOption) {
+    setCachedResponse(event, response, cacheKey, cacheOption)
   }
 
-  return {
-    options,
-    response: buildPropsResponse(props, options),
-  }
+  return { options, response }
 }
 
 export async function handlePropsRequest(event) {
   const page = await getPageProps(event)
 
   if (page) {
-    const { response, options = {} } = page
-
-    setCachedResponse(event, response, options)
-
-    return response
+    return page.response
   }
 
   return createNotFoundResponse()
