@@ -43,6 +43,7 @@ Each page can make an optional "get page props" request to the worker before ren
 - [ ] Auth utilities (passing JWT in requests)
 - [ ] List of pages that should be prerrendered automatically after deployment
 - [ ] Compatibility with Node runtime for other providers (Vercel/...)
+- [ ] Detect imported files in HTML and push them with HTTP2
 
 ### Research/consider
 
