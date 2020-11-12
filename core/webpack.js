@@ -7,7 +7,7 @@ module.exports = {
   resolve: {
     mainFields: ['main', 'module'],
     alias: {
-      __vitedge_handler__: path.resolve(rootDir, outDir, ssrOutDir, 'src/main'),
+      __vitedge_router__: path.resolve(rootDir, outDir, ssrOutDir, 'src/main'),
       __vitedge_api__: path.resolve(rootDir, outDir, apiOutFile),
     },
   },

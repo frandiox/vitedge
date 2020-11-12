@@ -1,10 +1,10 @@
-import apiRouter from '__vitedge_handler__'
+import router from '__vitedge_router__'
 import { getPageProps } from './props'
 
 export async function handleViewRendering(event) {
   const page = await getPageProps(event)
 
-  const { html } = await apiRouter.render({
+  const { html } = await router.render({
     initialState: (page || {}).props || {},
     request: event.request,
   })

@@ -1,4 +1,4 @@
-import router from '__vitedge_handler__'
+import router from '__vitedge_router__'
 import api from '__vitedge_api__'
 
 export function isPropsRequest(event) {
