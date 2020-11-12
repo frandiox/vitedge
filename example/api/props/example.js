@@ -7,8 +7,8 @@ export default {
   },
   options: {
     cache: {
-      props: 30,
-      html: 30,
+      api: 90,
+      html: 90,
     },
   },
 }

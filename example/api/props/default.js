@@ -5,4 +5,10 @@ export default {
       msg: 'This is page ' + name.toUpperCase(),
     }
   },
+  options: {
+    cache: {
+      api: 90,
+      html: 90,
+    },
+  },
 }

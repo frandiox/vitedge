@@ -1,5 +1,6 @@
 import router from '__vitedge_router__'
 import api from '__vitedge_api__'
+import { getCachedResponse, setCachedResponse } from './cache'
 import { createNotFoundResponse, createResponse } from './utils'
 
 export function isPropsRequest(event) {
@@ -31,7 +32,7 @@ function buildPropsResponse(props, options = {}) {
   })
 }
 
-export async function getPageProps(event) {
+export async function getPageProps(event, { raw } = {}) {
   const propsRoute = resolvePropsRoute(event.request.url)
 
   if (!propsRoute) {
@@ -40,20 +41,46 @@ export async function getPageProps(event) {
 
   const { handler, options = {}, route = {} } = propsRoute
 
+  if (options.cache && options.cache.api) {
+    const response = await getCachedResponse(event)
+
+    if (response) {
+      if (raw) {
+        return {
+          options,
+          props: await response.json(),
+        }
+      }
+
+      return { options, response }
+    }
+  }
+
   const props = await handler({
     ...route,
+    event,
     request: event.request,
   })
 
-  return { props, options }
+  if (raw) {
+    return { props, options }
+  }
+
+  return {
+    options,
+    response: buildPropsResponse(props, options),
+  }
 }
+
 export async function handlePropsRequest(event) {
   const page = await getPageProps(event)
 
   if (page) {
-    const { props, options = {} } = page
+    const { response, options = {} } = page
 
-    return buildPropsResponse(props, options)
+    setCachedResponse(event, response, options)
+
+    return response
   }
 
   return createNotFoundResponse()

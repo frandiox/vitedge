@@ -3,7 +3,7 @@ import { getPageProps } from './props'
 import { createResponse } from './utils'
 
 export async function handleViewRendering(event) {
-  const page = await getPageProps(event)
+  const page = await getPageProps(event, { raw: true })
 
   const { html } = await router.render({
     initialState: (page || {}).props || {},
