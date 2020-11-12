@@ -1,5 +1,5 @@
 import viteSSR from 'vite-ssr/entry-client'
-import { addPagePropsGetterToRoutes, buildApiRoute } from './utils/router'
+import { addPagePropsGetterToRoutes, buildPropsRoute } from './utils/router'
 
 export default function (App, { routes }, hook) {
   addPagePropsGetterToRoutes(routes)
@@ -16,15 +16,13 @@ export default function (App, { routes }, hook) {
         return next()
       }
 
-      const apiRoute = buildApiRoute(to, from)
+      const propsRoute = buildPropsRoute(to)
 
-      if (apiRoute) {
+      if (propsRoute) {
         try {
-          const res = await fetch(apiRoute.fullpath, {
+          const res = await fetch(propsRoute.fullpath, {
             method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
           })
 
           to.meta.state = await res.json()

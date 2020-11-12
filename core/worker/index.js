@@ -1,5 +1,6 @@
 import { handleStaticAsset, isStaticAsset } from './assets'
-import { isApiRequest, parseQuerystring } from './api'
+import { handleApiRequest, isApiRequest, parseQuerystring } from './api'
+import { handlePropsRequest, isPropsRequest } from './props'
 import { handleViewRendering } from './render'
 
 export async function handleEvent(
@@ -9,6 +10,8 @@ export async function handleEvent(
     didRequestAsset,
     willRequestApi,
     didRequestApi,
+    willRequestProps,
+    didRequestProps,
     willRequestRender,
     didRequestRender,
   }
@@ -32,6 +35,19 @@ export async function handleEvent(
     return (
       (didRequestApi &&
         (await didRequestApi({ event, url, query, response }))) ||
+      response
+    )
+  }
+  if (isPropsRequest(event)) {
+    // --- PROPS ENDPOINTS
+    const { url, query } = parseQuerystring(event)
+
+    willRequestProps && (await willRequestProps({ event }))
+    const response = await handlePropsRequest(event)
+
+    return (
+      (didRequestProps &&
+        (await didRequestProps({ event, url, query, response }))) ||
       response
     )
   } else {

@@ -1,4 +1,6 @@
-const PROPS_PREFIX = 'props/'
+import { createRouter, createMemoryHistory } from 'vue-router'
+
+const PROPS_PREFIX = '/props'
 
 export function addPagePropsGetterToRoutes(routes) {
   routes.forEach((route) => {
@@ -9,23 +11,23 @@ export function addPagePropsGetterToRoutes(routes) {
   })
 }
 
-function findRoutePropsGetter(to, from) {
-  if (to.meta.propsGetter === false) {
+function findRoutePropsGetter(route) {
+  if (route.meta.propsGetter === false) {
     return false
   }
 
   let getter
 
-  if (to.meta.propsGetter) {
+  if (route.meta.propsGetter) {
     getter =
-      to.meta.propsGetter instanceof Function
-        ? to.meta.propsGetter(to, from)
-        : to.meta.propsGetter
+      route.meta.propsGetter instanceof Function
+        ? route.meta.propsGetter(route)
+        : route.meta.propsGetter
   }
 
-  getter = getter || to.name
+  getter = getter || route.name
 
-  return getter ? PROPS_PREFIX + getter : false
+  return getter ? PROPS_PREFIX + '/' + getter : false
 }
 
 function prepareRouteData(route) {
@@ -50,29 +52,23 @@ function prepareRouteData(route) {
   return data
 }
 
-export function buildApiRoute(to, from) {
-  const propsGetter = findRoutePropsGetter(to, from)
+export function buildPropsRoute(route) {
+  const propsGetter = findRoutePropsGetter(route)
 
   if (!propsGetter) {
     return null
   }
 
-  const apiPrefix = '/api'
-
-  const data = prepareRouteData(to)
-
-  const querystring = new URLSearchParams({
-    ...data,
-    params: encodeURIComponent(new URLSearchParams(data.params).toString()),
-    query: encodeURIComponent(new URLSearchParams(data.query).toString()),
-  }).toString()
+  const data = prepareRouteData(route)
 
   return {
-    data,
-    apiPrefix,
+    ...data,
     propsGetter,
-    querystring,
-    fullpath:
-      apiPrefix + '/' + propsGetter + (querystring ? `?${querystring}` : ''),
+    fullpath: route.fullPath.replace(route.path, PROPS_PREFIX + route.path),
   }
+}
+
+export function resolvePropsRoute(routes, url) {
+  const router = createRouter({ routes, history: createMemoryHistory() })
+  return buildPropsRoute(router.resolve(url.replace(PROPS_PREFIX + '/', '/')))
 }

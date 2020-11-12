@@ -25,7 +25,7 @@ module.exports = async function ({ apiInputPath, apiOutputPath }) {
             .map(
               (route, index) =>
                 `"${route
-                  .replace(apiInputPath + '/', '')
+                  .replace(apiInputPath, '')
                   .replace(/\.[tj]sx?$/i, '')}": dep${index}`
             )
             .join(',\n')} }`,
