@@ -4,7 +4,7 @@
 
 > What's ESR? Think of SSR (Server Side Rendering) in CDN nodes instead of actual servers. This is possible today thanks to [Cloudflare Workers](https://workers.cloudflare.com/) (and maybe some other platforms in the future).
 
-See a full example [here](./example).
+See a demo [here](https://vitedge.zable.workers.dev/). Full code example [here](./example).
 
 **Note: This is WIP.**
 
