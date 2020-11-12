@@ -1,6 +1,6 @@
 {
   "name": "vitedge",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Vite for edge-side-rendering in Cloudflare Workers",
   "main": "./entry-server.js",
   "repository": {
