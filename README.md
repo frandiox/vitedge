@@ -6,11 +6,13 @@
 
 See a full example [here](./example).
 
+**Note: This is WIP.**
+
 ## Concept
 
 Vitedge is "just a Vite app" that prerrenders the first view in a CF worker and runs the rest as an SPA. That means it will lead to good SEO while keeping the snappy routing and DX of an SPA.
 
-It replaces static site generators since it builds on the fly and caches at the edge (cache is WIP). Therefore, instead of getting a static `index.html` from the CDN, the CDN itself will create it on the fly or provide it from cache if it was alredy accessed (with configurable cache age).
+It can replace static site generators in some situations since it builds on the fly and caches at the edge (cache is WIP). Therefore, instead of getting a static `index.html` from the CDN, the CDN itself will create it on the fly or provide it from cache if it was already accessed (with configurable cache age).
 
 Apart from the normal Vite app, it provides some extra fullstack utilities.
 
@@ -20,7 +22,7 @@ It can create a REST API based on filesystem routes: `<root>/api/my/function.js`
 
 ### ESR Page Props
 
-Each page can make an optional "get page props" request to the worker before rendering. For example, if a page's route has `name: "customers"`, the endpoint `/api/props/customers` will be called automatically before rendering. The handler for this route must be defined in `<root>/api/props/customers.js`.
+Each page can make an optional "get page props" request to the worker before rendering. For example, if a page's route is `/admin/customers/123`, the endpoint `/props/admin/customers/123` will be requested automatically before rendering. The handler for this route must be defined in `<root>/api/props/<route name>`.
 
 ## Usage
 
@@ -32,13 +34,18 @@ Each page can make an optional "get page props" request to the worker before ren
 
 ## TODOS
 
-- Custom Vite dev-server that serves API during development
-- Provide TS types
-- Docs website
-- File sytem routing for pages
-- Extract CF worker boilerplate as a utility
-- Cache props/html in worker's KV and make it configurable
-- List of pages that should be prerrendered automatically after deployment
+- [ ] TypeScript
+- [ ] Custom Vite dev-server that serves API/Props during development
+- [ ] Docs website
+- [x] Extract CF worker boilerplate as utilities
+- [ ] Cache props/html in worker and make it configurable
+- [ ] i18n utilities
+- [ ] Auth utilities (passing JWT in requests)
+- [ ] List of pages that should be prerrendered automatically after deployment
+- [ ] Compatibility with Node runtime for other providers (Vercel/...)
+
+### Research/consider
+
 - Research if Rollup can build directly for webworker target and remove Webpack
-- i18n utilities
 - Explore the possibility of extracting "getPageProps" from each page component using custom Vue blocks (currently these are provided in `<root>/api/props/` directory).
+- Consider file sytem routing for pages (this should probably happen in user-land with `vite-plugin-voie` or similar)
