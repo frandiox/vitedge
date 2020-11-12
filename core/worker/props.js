@@ -1,5 +1,6 @@
 import router from '__vitedge_router__'
 import api from '__vitedge_api__'
+import { createNotFoundResponse, createResponse } from './utils'
 
 export function isPropsRequest(event) {
   return event.request.url.includes('/props/')
@@ -18,13 +19,13 @@ export function resolvePropsRoute(url = '') {
   return null
 }
 
-function buildPropsResponse(payload, options = {}) {
+function buildPropsResponse(props, options = {}) {
   const headers = {
     'content-type': 'application/json;charset=UTF-8',
     ...options.headers,
   }
 
-  return new Response(JSON.stringify(payload), {
+  return createResponse(JSON.stringify(props), {
     status: 200,
     headers,
   })
@@ -55,5 +56,5 @@ export async function handlePropsRequest(event) {
     return buildPropsResponse(props, options)
   }
 
-  return new Response('Not found', { status: 404 })
+  return createNotFoundResponse()
 }

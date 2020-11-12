@@ -1,4 +1,5 @@
 import api from '__vitedge_api__'
+import { createResponse, createNotFoundResponse } from './utils'
 
 const API_PREFIX = '/api'
 
@@ -26,7 +27,7 @@ function buildApiResponse(payload, options = {}) {
     ...options.headers,
   }
 
-  return new Response(JSON.stringify(payload), {
+  return createResponse(JSON.stringify(payload), {
     status: 200,
     headers,
   })
@@ -45,5 +46,5 @@ export async function handleApiRequest(event) {
     return buildApiResponse(payload, options)
   }
 
-  return new Response('Not found', { status: 404 })
+  return createNotFoundResponse()
 }

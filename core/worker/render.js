@@ -1,5 +1,6 @@
 import router from '__vitedge_router__'
 import { getPageProps } from './props'
+import { createResponse } from './utils'
 
 export async function handleViewRendering(event) {
   const page = await getPageProps(event)
@@ -9,7 +10,7 @@ export async function handleViewRendering(event) {
     request: event.request,
   })
 
-  const response = new Response(html, {
+  const response = createResponse(html, {
     status: 200,
     headers: {
       'content-type': 'text/html;charset=UTF-8',
