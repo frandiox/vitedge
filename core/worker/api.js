@@ -1,4 +1,5 @@
 import api from '__vitedge_api__'
+import { getCachedResponse, setCachedResponse } from './cache'
 import { createResponse, createNotFoundResponse } from './utils'
 
 const API_PREFIX = '/api'
@@ -34,6 +35,12 @@ function buildApiResponse(payload, options = {}) {
 }
 
 export async function handleApiRequest(event) {
+  const cacheKey = event.request.url
+  const cachedResponse = await getCachedResponse(cacheKey)
+  if (cachedResponse) {
+    return cachedResponse
+  }
+
   const url = new URL(event.request.url)
   const endpoint = url.pathname.replace(API_PREFIX, '')
 
@@ -43,7 +50,11 @@ export async function handleApiRequest(event) {
     const { url, query } = parseQuerystring(event)
     const payload = await handler({ event, request: event.request, url, query })
 
-    return buildApiResponse(payload, options)
+    const response = buildApiResponse(payload, options)
+
+    setCachedResponse(event, response, cacheKey, (options.cache || {}).api)
+
+    return response
   }
 
   return createNotFoundResponse()

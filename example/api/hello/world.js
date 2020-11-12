@@ -8,4 +8,9 @@ export default {
       msg: 'Hello world!',
     }
   },
+  options: {
+    cache: {
+      api: 85,
+    },
+  },
 }
