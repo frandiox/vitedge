@@ -6,13 +6,13 @@
 
 See a demo [here](https://vitedge.zable.workers.dev/). Full code example [here](./example).
 
-**Note: This is WIP.**
+**Current status:** Build and deploy works but DX needs major improvements.
 
 ## Concept
 
 Vitedge is "just a Vite app" that prerrenders the first view in a CF worker and runs the rest as an SPA. That means it will lead to good SEO while keeping the snappy routing and DX of an SPA.
 
-It can replace static site generators in some situations since it builds on the fly and caches at the edge (cache is WIP). Therefore, instead of getting a static `index.html` from the CDN, the CDN itself will create it on the fly or provide it from cache if it was already accessed (with configurable cache age).
+It can replace static site generators in some situations since it builds on the fly and caches at the edge. Therefore, instead of getting a static `index.html` from the CDN, the CDN itself will create it on the fly or provide it from cache if it was already accessed (with configurable cache age).
 
 Apart from the normal Vite app, it provides some extra fullstack utilities.
 
@@ -23,6 +23,12 @@ It can create a REST API based on filesystem routes: `<root>/api/my/function.js`
 ### ESR Page Props
 
 Each page can make an optional "get page props" request to the worker before rendering. For example, if a page's route is `/admin/customers/123`, the endpoint `/props/admin/customers/123` will be requested automatically before rendering. The handler for this route must be defined in `<root>/api/props/<route name>`.
+
+## Requirements
+
+For deploying to Cloudflare, you will need an account with the [Workers Bundled plan](https://workers.cloudflare.com/sites#plans) (\$5/mo) -- _No, I'm not affiliated with Cloudflare_.
+
+This is required for accessing the Workers Key Value data store that handles all the static assets.
 
 ## Usage
 
@@ -38,7 +44,7 @@ Each page can make an optional "get page props" request to the worker before ren
 - [ ] Custom Vite dev-server that serves API/Props during development
 - [ ] Docs website
 - [x] Extract CF worker boilerplate as utilities
-- [ ] Cache props/html in worker and make it configurable
+- [x] Cache props/html in worker and make it configurable
 - [ ] i18n utilities
 - [ ] Auth utilities (passing JWT in requests)
 - [ ] List of pages that should be prerrendered automatically after deployment
