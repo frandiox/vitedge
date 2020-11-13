@@ -61,10 +61,20 @@ export function buildPropsRoute(route) {
 
   const data = prepareRouteData(route)
 
+  const EXAMPLE_URL = 'http://e.g'
+  const url = new URL(EXAMPLE_URL + route.fullPath)
+  url.pathname = PROPS_PREFIX + url.pathname
+
+  if (process.env.NODE_ENV === 'development') {
+    url.searchParams.append('propsGetter', propsGetter)
+  }
+
+  const fullPath = url.toString().replace(EXAMPLE_URL, '')
+
   return {
     ...data,
     propsGetter,
-    fullPath: route.fullPath.replace(route.path, PROPS_PREFIX + route.path),
+    fullPath,
   }
 }
 
