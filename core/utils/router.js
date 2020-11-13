@@ -64,7 +64,7 @@ export function buildPropsRoute(route) {
   return {
     ...data,
     propsGetter,
-    fullpath: route.fullPath.replace(route.path, PROPS_PREFIX + route.path),
+    fullPath: route.fullPath.replace(route.path, PROPS_PREFIX + route.path),
   }
 }
 

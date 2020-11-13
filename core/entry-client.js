@@ -20,7 +20,7 @@ export default function (App, { routes }, hook) {
 
       if (propsRoute) {
         try {
-          const res = await fetch(propsRoute.fullpath, {
+          const res = await fetch(propsRoute.fullPath, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
           })
