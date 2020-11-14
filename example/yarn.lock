@@ -1520,6 +1520,11 @@ ora@^5.1.0:
     strip-ansi "^6.0.0"
     wcwidth "^1.0.1"
 
+p-map-series@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/p-map-series/-/p-map-series-2.1.0.tgz#7560d4c452d9da0c07e692fdbfe6e2c81a2a91f2"
+  integrity sha512-RpYIIK1zXSNEOdwxcfe7FdvGcs7+y5n8rifMhMNWvaxRNMPINJHF5GDeuVxWqnfrcHPSCnp7Oo5yNXHId9Av2Q==
+
 parent-module@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/parent-module/-/parent-module-1.0.1.tgz#691d2709e78c79fae3a156622452d00762caaaa2"
@@ -2013,20 +2018,20 @@ vary@^1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
-vite-ssr@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.0.4.tgz#42f3491cd683a56ba7580364745c13bf89658071"
-  integrity sha512-TyaF5nuvkyo5lijnv5R2Y3h19uajbk5Y3LBoFY07+nknFEBymfq8BCnGzjQqlpBR3UJtAIB5QpDcTymn1qkaUA==
+vite-ssr@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.0.5.tgz#2c11be90fc85b81ec2d39a6b39c1d275afe45b9e"
+  integrity sha512-nSsp8O3z0jN3CY60dBNFQQzjNd5SKS5x3Ibvum3Ecw6et6/Tg8ULnxo2WelF+vKYkrzGpbkNvye3vha+cvzJFA==
   dependencies:
     "@rollup/plugin-replace" "^2.3.3"
     "@vue/compiler-sfc" "^3.0.0"
     "@vue/server-renderer" "^3.0.0"
     merge-options "^3.0.3"
 
-vite@^1.0.0-rc.8:
-  version "1.0.0-rc.8"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-1.0.0-rc.8.tgz#26ebe3d6cb7c36f0bceb04398eef0d5d2d7c10df"
-  integrity sha512-HLRVbtsRYr7zIcq2IbKGq13URP2bOw/hrJ3Ufjp+TRM8PM6Ncquvqrr0WswIJOT6a+z3NGDJPi61Z97A0mdVvA==
+vite@^1.0.0-rc.9:
+  version "1.0.0-rc.9"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-1.0.0-rc.9.tgz#63621a39cf36fe9a6dccafdb11360a5ebbdb2663"
+  integrity sha512-u0PT2sKMes2RtE5rZsLY0nFm6kEmce7IhVRWKFXmrsjn0MBOCNEi+S6iNnJDmsj1nzvU2dMZ5MHhFyXIqTgjzA==
   dependencies:
     "@babel/parser" "^7.12.3"
     "@koa/cors" "^3.1.0"
@@ -2066,6 +2071,7 @@ vite@^1.0.0-rc.8:
     minimist "^1.2.5"
     open "^7.2.1"
     ora "^5.1.0"
+    p-map-series "^2.1.0"
     postcss-discard-comments "^4.0.2"
     postcss-import "^12.0.1"
     postcss-load-config "^3.0.0"
@@ -2081,13 +2087,13 @@ vite@^1.0.0-rc.8:
     ws "^7.3.1"
 
 vitedge@../core:
-  version "0.0.1"
+  version "0.1.0"
   dependencies:
     "@cloudflare/kv-asset-handler" "^0.0.12"
     "@rollup/plugin-virtual" "^2.0.3"
     fast-glob "^3.2.4"
     rollup "^2.33.1"
-    vite-ssr "^0.0.4"
+    vite-ssr "^0.0.5"
 
 vue-router@^4.0.0-rc.1:
   version "4.0.0-rc.1"
