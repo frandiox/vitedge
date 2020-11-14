@@ -1,3 +1,3 @@
 module.exports = {
-  ...require('vitedge/webpack'),
+  ...require('vitedge/webpack.cjs'),
 }

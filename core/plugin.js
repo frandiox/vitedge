@@ -1,6 +1,6 @@
-const viteSSRPlugin = require('vite-ssr/plugin')
+import viteSSRPlugin from 'vite-ssr/plugin.js'
 
-module.exports = {
+export default {
   ...viteSSRPlugin,
   alias: {
     vitedge: 'vitedge/entry-client',

@@ -1,11 +1,5 @@
-const vitedgePlugin = require('vitedge/plugin')
+import vitedgePlugin from 'vitedge/plugin.js'
 
-module.exports = {
+export default {
   plugins: [vitedgePlugin],
-  proxy: {
-    '/api': {
-      // This is the server in `node-site` directory
-      target: 'http://localhost:8080',
-    },
-  },
 }

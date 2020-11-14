@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 
-const build = require('vitedge/build')
+const [, , command, ...args] = process.argv
 
-const [, , ...args] = process.argv
-
-if (args[0] === 'build') {
-  ;(async () => {
+;(async () => {
+  if (command === 'build') {
+    const { default: build } = await import('vitedge/build/index.js')
     await build()
     process.exit()
-  })()
-} else {
-  console.log(`Command "${args[0]}" not supported`)
-}
+  } else {
+    console.log(`Command "${command}" not supported`)
+  }
+})()

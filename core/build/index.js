@@ -1,6 +1,8 @@
-const path = require('path')
-const buildSSR = require('vite-ssr/build')
-const buildFunctions = require('./functions')
+import path from 'path'
+import buildSSR from 'vite-ssr/build/index.js'
+import buildFunctions from './functions.js'
+
+import config from '../config.cjs'
 
 const {
   rootDir,
@@ -9,9 +11,9 @@ const {
   ssrOutDir,
   fnsInDir,
   fnsOutFile,
-} = require('../config')
+} = config
 
-module.exports = async () => {
+export default async function () {
   await buildSSR({
     clientOptions: {
       outDir: path.resolve(rootDir, outDir, clientOutDir),

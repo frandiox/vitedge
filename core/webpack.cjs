@@ -1,5 +1,5 @@
 const path = require('path')
-const { rootDir, outDir, ssrOutDir, fnsOutFile } = require('./config')
+const { rootDir, outDir, ssrOutDir, fnsOutFile } = require('./config.cjs')
 
 module.exports = {
   entry: './index',
@@ -7,7 +7,12 @@ module.exports = {
   resolve: {
     mainFields: ['main', 'module'],
     alias: {
-      __vitedge_router__: path.resolve(rootDir, outDir, ssrOutDir, 'src/main'),
+      __vitedge_router__: path.resolve(
+        rootDir,
+        outDir,
+        ssrOutDir,
+        '_assets/src/main.js'
+      ),
       __vitedge_functions__: path.resolve(rootDir, outDir, fnsOutFile),
     },
   },
