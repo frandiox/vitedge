@@ -10,7 +10,7 @@
     "serve:node": "cd node-site && yarn serve"
   },
   "dependencies": {
-    "vite": "^1.0.0-rc.8",
+    "vite": "^1.0.0-rc.9",
     "vitedge": "../core",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-rc.1"
