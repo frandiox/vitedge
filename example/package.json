@@ -1,16 +1,17 @@
 {
   "name": "example",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "setup": "yarn && (cd node-site && yarn) && (cd worker-site && yarn)",
-    "dev": "vite --port 1337 --open",
+    "dev": "vite --open --esm",
     "build": "rm -rf dist && vitedge build",
     "refresh": "rm -rf node_modules && yarn",
     "serve:worker": "cd worker-site && yarn serve",
     "serve:node": "cd node-site && yarn serve"
   },
   "dependencies": {
-    "vite": "^1.0.0-rc.9",
+    "vite": "../../vite",
     "vitedge": "../core",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-rc.1"
