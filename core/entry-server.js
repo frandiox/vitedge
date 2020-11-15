@@ -13,7 +13,7 @@ export default function (App, { routes }, hook) {
       })
 
       if (hook) {
-        await hook({ app, router, isClient: false })
+        await hook({ app, router, isClient: false, initialState })
       }
     }),
   }
