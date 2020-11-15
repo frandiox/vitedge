@@ -15,12 +15,12 @@ export default {
       async function handleFunctionRequest(ctx, functionPath) {
         try {
           const filepath = root + '/functions' + functionPath + '.js'
-          let result = await import(filepath)
+          let endpointMeta = await import(filepath)
 
-          if (result) {
-            result = result.default || result
-            if (result.handler) {
-              ctx.body = await result.handler({
+          if (endpointMeta) {
+            endpointMeta = endpointMeta.default || endpointMeta
+            if (endpointMeta.handler) {
+              ctx.body = await endpointMeta.handler({
                 request: ctx.request,
                 query: ctx.query,
                 body: ctx.request.body,
