@@ -1,8 +1,10 @@
 import viteSSR from 'vite-ssr/entry-server'
 import { addPagePropsGetterToRoutes, resolvePropsRoute } from './utils/router'
 
-export default function (App, { routes }, hook) {
-  addPagePropsGetterToRoutes(routes)
+export default function (App, { routes, pageProps = true }, hook) {
+  if (pageProps) {
+    addPagePropsGetterToRoutes(routes)
+  }
 
   return {
     resolve: (url) => resolvePropsRoute(routes, url),

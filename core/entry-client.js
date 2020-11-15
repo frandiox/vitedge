@@ -1,8 +1,10 @@
 import viteSSR from 'vite-ssr/entry-client'
 import { addPagePropsGetterToRoutes, buildPropsRoute } from './utils/router'
 
-export default function (App, { routes }, hook) {
-  addPagePropsGetterToRoutes(routes)
+export default function (App, { routes, pageProps = true }, hook) {
+  if (pageProps) {
+    addPagePropsGetterToRoutes(routes)
+  }
 
   return viteSSR(App, { routes }, async ({ app, router, initialState }) => {
     let isFirstRoute = true
