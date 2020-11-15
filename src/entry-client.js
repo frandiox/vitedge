@@ -4,16 +4,17 @@ import { addPagePropsGetterToRoutes, buildPropsRoute } from './utils/router'
 export default function (App, { routes }, hook) {
   addPagePropsGetterToRoutes(routes)
 
-  return viteSSR(App, { routes }, async ({ app, router }) => {
+  return viteSSR(App, { routes }, async ({ app, router, initialState }) => {
     let isFirstRoute = true
 
     router.beforeEach(async (to, from, next) => {
-      if (isFirstRoute && window.__INITIAL_STATE__) {
-        // Do not get props for the first route since it is
-        // already rendered in the server. Instead, use the inital state.
+      if (isFirstRoute) {
         isFirstRoute = false
-        to.meta.state = window.__INITIAL_STATE__ || {}
-        return next()
+        if (to.meta.state) {
+          // Do not get props the first time for the entry
+          // route since it is already rendered in the server.
+          return next()
+        }
       }
 
       const propsRoute = buildPropsRoute(to)
@@ -36,7 +37,7 @@ export default function (App, { routes }, hook) {
     })
 
     if (hook) {
-      await hook({ app, router, isClient: true })
+      await hook({ app, router, isClient: true, initialState })
     }
   })
 }

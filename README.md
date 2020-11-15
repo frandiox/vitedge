@@ -12,7 +12,7 @@ See a demo [here](https://vitedge.zable.workers.dev/). Full code example [here](
 
 Vitedge is "just a Vite app" that prerrenders the first view in a CF worker and runs the rest as an SPA. That means it will lead to good SEO while keeping the snappy routing and DX of an SPA.
 
-It can replace static site generators in some situations since it builds on the fly and caches at the edge. Therefore, instead of getting a static `index.html` from the CDN, the CDN itself will create it on the fly or provide it from cache if it was already accessed (with configurable cache age).
+It can replace static site generators in some situations since it builds on the fly and caches at the edge. Therefore, instead of getting a static `index.html` from the CDN, the CDN itself will create it on the fly or provide it from cache if it was already accessed (with configurable cache age + stale-while-revalidate).
 
 Apart from the normal Vite app, it provides some extra fullstack utilities.
 
@@ -22,7 +22,7 @@ It can create a REST API based on filesystem routes: `<root>/functions/api/my/fu
 
 ### ESR Page Props
 
-Each page can make an optional "get page props" request to the worker before rendering. For example, if a page's route is `/admin/customers/123`, the endpoint `/props/admin/customers/123` will be requested automatically before rendering. The handler for this route must be defined in `<root>/functions/props/<route name>`.
+Each page can make an optional "get page props" request to the worker before rendering. For example, if a page's route is `/admin/customers/123`, the endpoint `/props/admin/customers/123` will be requested automatically before rendering. The handler for this route must be defined in `<root>/functions/props/<route name>`. The result of this call will be provided as props to the page component but it can also be passed to Vuex if needed.
 
 ## Requirements
 
@@ -34,9 +34,10 @@ This is required for accessing the Workers Key Value data store that handles all
 
 1. Create a normal Vite app.
 2. Install `vitedge` with your package manager.
-3. Import `vitedge/plugin` in your `vite.config.js`. [Example here](./example/vite.config.js).
-4. Import and call Vitedge from your app's entry point providing your main `App.vue` and your page routes. Vitedge will create the router and attach the app to the DOM for you according to the running environment. [Example here](./example/src/main.js)
-5. Build using `vitedge build` command
+3. Import `vitedge/plugin.js` in your `vite.config.js`. [Example here](./example/vite.config.js).
+4. Import and call Vitedge from your app's entry point providing your main `App.vue` and your page routes. Vitedge will create the router and attach the app to the DOM for you according to the running environment. [Example here](./example/src/main.js).
+5. Add page props or API handlers in [functions directory](./example/functions).
+6. Build using `vitedge build` command, import `vitedge/worker` in your [worker entry point](./example/worker-site/index.js) and add a custom [Webpack config](./example/worker-site/webpack.config.js).
 
 ## TODOS - Raw ideas
 

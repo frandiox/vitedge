@@ -1,19 +1,19 @@
 {
   "compilerOptions": {
-  	"module": "es2015",
-		"target": "es2019",
-		"strict": true,
-		"moduleResolution": "node",
-		"outDir": "dist",
+    "module": "es2015",
+    "target": "es2019",
+    "strict": true,
+    "moduleResolution": "node",
+    "outDir": "dist",
     "noEmitOnError": true,
-		"forceConsistentCasingInFileNames": true,
-		"noFallthroughCasesInSwitch": false,
-		"removeComments": false,
-		"sourceMap": false,
-		"allowJs": true,
-		"lib": ["esnext", "webworker"]
-	},
-	"include": [
-		"src/**/*"
-	]
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": false,
+    "removeComments": false,
+    "sourceMap": false,
+    "allowJs": true,
+    "lib": ["esnext", "webworker"]
+  },
+  "include": [
+    "src/**/*"
+  ]
 }
