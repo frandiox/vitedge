@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Vite for edge-side-rendering in Cloudflare Workers",
   "main": "./entry-server.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/frandiox/vitedge.git"
@@ -34,5 +37,10 @@
     "fast-glob": "^3.2.4",
     "rollup": "^2.33.1",
     "vite-ssr": "^0.0.5"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^2.1.0",
+    "@types/node": "^14.14.7",
+    "typescript": "^4.0.5"
   }
 }

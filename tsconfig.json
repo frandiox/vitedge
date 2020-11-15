@@ -1,9 +1,19 @@
 {
   "compilerOptions": {
-    "outDir": "./built",
-    "allowJs": true,
-    "lib": ["es2018", "dom"],
-    "target": "es5"
-  },
-  "include": ["./core/**/*", "./core/node_modules/vite-ssr"]
+  	"module": "es2015",
+		"target": "es2019",
+		"strict": true,
+		"moduleResolution": "node",
+		"outDir": "dist",
+    "noEmitOnError": true,
+		"forceConsistentCasingInFileNames": true,
+		"noFallthroughCasesInSwitch": false,
+		"removeComments": false,
+		"sourceMap": false,
+		"allowJs": true,
+		"lib": ["esnext", "webworker"]
+	},
+	"include": [
+		"src/**/*"
+	]
 }
