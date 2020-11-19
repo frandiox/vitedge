@@ -1,6 +1,6 @@
-const fg = require('fast-glob')
-const { rollup } = require('rollup')
-const virtual = require('@rollup/plugin-virtual')
+import fg from 'fast-glob'
+import { rollup } from 'rollup'
+import virtual from '@rollup/plugin-virtual'
 
 async function resolveFiles(dir, extensions) {
   return await fg(`${dir}/**/*.{${extensions.join(',')}}`, {
@@ -9,7 +9,7 @@ async function resolveFiles(dir, extensions) {
   })
 }
 
-module.exports = async function ({ fnsInputPath, fnsOutputPath }) {
+export default async function ({ fnsInputPath, fnsOutputPath }) {
   const fnsRoutes = await resolveFiles(fnsInputPath, ['js', 'ts'])
 
   const options = {

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Vite for edge-side-rendering in Cloudflare Workers",
   "main": "./entry-server.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/frandiox/vitedge.git"

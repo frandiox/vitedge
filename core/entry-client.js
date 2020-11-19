@@ -12,7 +12,7 @@ export default function (App, { routes, pageProps = true }, hook) {
     router.beforeEach(async (to, from, next) => {
       if (isFirstRoute) {
         isFirstRoute = false
-        if (to.meta.state) {
+        if (process.env.NODE_ENV !== 'development' && to.meta.state) {
           // Do not get props the first time for the entry
           // route since it is already rendered in the server.
           return next()
