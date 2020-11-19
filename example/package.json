@@ -8,10 +8,11 @@
     "build": "rm -rf dist && vitedge build",
     "refresh": "rm -rf node_modules && yarn",
     "serve:worker": "cd worker-site && yarn serve",
-    "serve:node": "cd node-site && yarn serve"
+    "serve:node": "cd node-site && yarn serve",
+    "postinstall": "vitedge patch"
   },
   "dependencies": {
-    "vite": "../../vite",
+    "vite": "^1.0.0-rc.9",
     "vitedge": "../core",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-rc.1"
