@@ -2,11 +2,11 @@
 
 [Vite](https://github.com/vitejs/vite) _Edge Side Rendering_ (ESR) framework.
 
-> What's ESR? Think of SSR (Server Side Rendering) in CDN nodes instead of actual servers. This is possible today thanks to [Cloudflare Workers](https://workers.cloudflare.com/) (and maybe some other platforms in the future).
+> What's ESR? Think of SSR (Server Side Rendering) in CDN nodes instead of actual servers. This is possible today thanks to [Cloudflare Workers](https://workers.cloudflare.com/) (and maybe some other platforms in the near future).
 
 See a demo [here](https://vitedge.zable.workers.dev/). Full code example [here](./example).
 
-**Current status:** Build and deploy works but DX needs major improvements.
+**Current status:** Dev, build and edge caching work. Needs typings and improving Commonjs <> ESM compatibility.
 
 ## Concept
 
@@ -28,7 +28,7 @@ Each page can make an optional "get page props" request to the worker before ren
 
 For deploying to Cloudflare, you will need an account with the [Workers Bundled plan](https://workers.cloudflare.com/sites#plans) (\$5/mo) -- _No, I'm not affiliated with Cloudflare_.
 
-This is required for accessing the Workers Key Value data store that handles all the static assets.
+Other providers (Netlify, Vercel, etc.) offer free tier generally.
 
 ## Usage
 
@@ -37,21 +37,23 @@ This is required for accessing the Workers Key Value data store that handles all
 3. Import `vitedge/plugin.js` in your `vite.config.js`. [Example here](./example/vite.config.js).
 4. Import and call Vitedge from your app's entry point providing your main `App.vue` and your page routes. Vitedge will create the router and attach the app to the DOM for you according to the running environment. [Example here](./example/src/main.js).
 5. Add page props or API handlers in [functions directory](./example/functions).
-6. Build using `vitedge build` command, import `vitedge/worker` in your [worker entry point](./example/worker-site/index.js) and add a custom [Webpack config](./example/worker-site/webpack.config.js).
+6. Develop locally with Vite's blazing fast HMR running `vite --open`.
+7. Build using `vitedge build` command, import `vitedge/worker` in your [worker entry point](./example/worker-site/index.js) and add a custom [Webpack config](./example/worker-site/webpack.config.js).
 
 ## TODOS - Raw ideas
 
 - [ ] TypeScript
-- [ ] Custom Vite dev-server that serves API/Props during development
+- [x] Custom Vite dev-server that serves API/Props during development
 - [ ] Docs website
 - [x] Extract CF worker boilerplate as utilities
 - [x] Cache props/html in worker and make it configurable
 - [ ] i18n utilities
 - [ ] Auth utilities (passing JWT in requests)
 - [ ] List of pages that should be prerrendered automatically after deployment
-- [ ] Compatibility with Node runtime for other providers (Vercel/...)
+- [x] Compatibility with Node runtime for other providers (Vercel/...)
 - [ ] Detect imported files in HTML and push them with HTTP2
 - [ ] Sitemap utility (handler in `<root>/functions/sitemap.js`?)
+- [ ] React/Preact compatibility.
 
 ### Research/consider
 
