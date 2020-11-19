@@ -3,6 +3,11 @@ import App from './App.vue'
 import routes from './routes'
 import vitedge from 'vitedge'
 
-export default vitedge(App, { routes }, ({ app, router, isClient }) => {
-  // Custom setup hook
-})
+export default vitedge(
+  App,
+  { routes },
+  ({ app, router, isClient, initialState }) => {
+    // Custom setup hook.
+    // E.g. set initialState in a Vuex store, install plugins, etc.
+  }
+)
