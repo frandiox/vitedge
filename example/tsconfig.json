@@ -8,6 +8,7 @@
     "noEmitOnError": true,
     "sourceMap": false,
     "allowJs": true,
+    "noImplicitAny": false,
   },
   "include": [
     "src/**/*"
