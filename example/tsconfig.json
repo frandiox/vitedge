@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "es2015",
+    "target": "es2019",
+    "strict": true,
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "noEmitOnError": true,
+    "sourceMap": false,
+    "allowJs": true,
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
