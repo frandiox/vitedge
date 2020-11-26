@@ -22,7 +22,10 @@ const patchVite = async () => {
           ' await import(resolvedPath); config = config.default || config'
         )
         // Ignore TS check to keep using native ESM with ts-node instead of Rollup
-        .replace(/if\s+\(!isTS\)/i, 'if (true)')
+        .replace(
+          /if\s+\(!isTS\)/i,
+          'if (!isTS || process[Symbol.for("ts-node.register.instance")])'
+        )
     )
   } catch (error) {
     console.warn('Vitedge could not patch Vite:', error.message)
