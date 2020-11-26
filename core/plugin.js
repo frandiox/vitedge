@@ -12,11 +12,19 @@ export default {
       server, // raw http server instance
       watcher, // chokidar file watcher instance
     }) => {
+      const cacheBust = new Map()
+      watcher.on('change', (fullPath) => {
+        if (fullPath.replace(root, '').startsWith('/functions/')) {
+          const filePath = fullPath.replace(/\.[jt]sx?$/i, '')
+          cacheBust.set(filePath, (cacheBust.get(filePath) || 0) + 1)
+        }
+      })
+
       async function handleFunctionRequest(ctx, functionPath) {
         try {
-          const filePath = root + '/functions' + functionPath + '.js'
-          const cacheBust = `?cacheBust=${Math.random().toString(36).substr(2)}`
-          let endpointMeta = await import(filePath + cacheBust)
+          const filePath = root + '/functions' + functionPath
+          const cacheBust = `?cacheBust=${cacheBust.get(filePath) || 0}`
+          let endpointMeta = await import(filePath + '.js' + cacheBust)
 
           if (endpointMeta) {
             endpointMeta = endpointMeta.default || endpointMeta
