@@ -23,8 +23,9 @@ export default {
       async function handleFunctionRequest(ctx, functionPath) {
         try {
           const filePath = root + '/functions' + functionPath
-          const cacheBust = `?cacheBust=${cacheBust.get(filePath) || 0}`
-          let endpointMeta = await import(filePath + '.js' + cacheBust)
+          let endpointMeta = await import(
+            filePath + '.js' + `?cacheBust=${cacheBust.get(filePath) || 0}`
+          )
 
           if (endpointMeta) {
             endpointMeta = endpointMeta.default || endpointMeta
