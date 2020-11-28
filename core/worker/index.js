@@ -6,6 +6,9 @@ import { handleViewRendering } from './render'
 export async function handleEvent(
   event,
   {
+    // Options
+    http2ServerPush,
+    // Hooks
     willRequestAsset,
     didRequestAsset,
     willRequestApi,
@@ -57,7 +60,7 @@ export async function handleEvent(
 
   // --- SSR
   willRequestRender && (await willRequestRender({ event }))
-  const response = await handleViewRendering(event)
+  const response = await handleViewRendering(event, { http2ServerPush })
 
   return (
     (didRequestRender && (await didRequestRender({ event, html, response }))) ||

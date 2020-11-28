@@ -53,7 +53,7 @@ Other providers (Netlify, Vercel, etc.) offer free tier generally.
 - [ ] Auth utilities (passing JWT in requests)
 - [ ] List of pages that should be prerrendered automatically after deployment
 - [x] Compatibility with Node runtime for other providers (Vercel/...)
-- [ ] Detect imported files in HTML and push them with HTTP/2
+- [x] Detect imported files in HTML and push them with HTTP/2
 - [ ] Sitemap utility (handler in `<root>/functions/sitemap.js`?)
 - [ ] React/Preact compatibility.
 

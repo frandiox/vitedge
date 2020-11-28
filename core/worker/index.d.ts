@@ -5,6 +5,12 @@ declare module 'vitedge/worker' {
   export const handleEvent: (
     event: Event,
     options?: {
+      // Options
+      http2ServerPush?: {
+        destinations: ('script' | 'style')[]
+      }
+
+      // Hooks
       willRequestAsset?: ({ event: Event }) => WillResponse
       willRequestApi?: ({ event: Event, url: URL, query: any }) => WillResponse
       willRequestProps?: ({
