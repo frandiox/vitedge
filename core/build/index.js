@@ -11,6 +11,7 @@ const {
   ssrOutDir,
   fnsInDir,
   fnsOutFile,
+  commitHash,
 } = config
 
 export default async function () {
@@ -25,6 +26,11 @@ export default async function () {
       outDir: path.resolve(rootDir, outDir, ssrOutDir),
       alias: {
         vitedge: 'vitedge/entry-server',
+      },
+      packageJson: {
+        vitedge: {
+          commitHash,
+        },
       },
     },
   })
