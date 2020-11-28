@@ -12,7 +12,7 @@
     "postinstall": "vitedge patch"
   },
   "dependencies": {
-    "vite": "^1.0.0-rc.9",
+    "vite": "^1.0.0-rc.13",
     "vitedge": "../core",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-rc.1"
