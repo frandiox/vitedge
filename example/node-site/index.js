@@ -1,22 +1,24 @@
 import path from 'path'
 import express from 'express'
 import fetch from 'node-fetch'
-import router from '../dist/ssr/_assets/src/main.js'
 import api from '../dist/functions.js'
+import ssrBuild from '../dist/ssr/main.js'
 
 // @ts-ignore
 global.fetch = fetch // Must be polyfilled for SSR
+
+const { default: router } = ssrBuild
 
 const server = express()
 
 server.use(
   '/_assets',
-  express.static(path.join(__dirname, '../dist/client/_assets'))
+  express.static(path.join(process.cwd(), '../dist/client/_assets'))
 )
 
 server.use(
   '/favicon.ico',
-  express.static(path.join(__dirname, '../dist/client/favicon.ico'))
+  express.static(path.join(process.cwd(), '../dist/client/favicon.ico'))
 )
 
 async function getPageProps(request) {
@@ -38,7 +40,7 @@ async function getPageProps(request) {
 server.get('*', async (request, response) => {
   try {
     if (request.path.startsWith('/api/')) {
-      console.log('api', request.query)
+      console.log(request.path, request.query)
       const apiMeta = api[request.path]
 
       if (apiMeta) {
@@ -54,7 +56,7 @@ server.get('*', async (request, response) => {
     }
 
     if (request.path.startsWith('/props/')) {
-      console.log('props', request.query)
+      console.log(request.path, request.query)
       const props = await getPageProps(request)
       return response.end(JSON.stringify(props))
     }

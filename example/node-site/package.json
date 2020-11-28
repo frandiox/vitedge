@@ -1,14 +1,12 @@
 {
   "name": "node-server-example",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "serve": "node -r esm index.js"
+    "serve": "node index.js"
   },
   "dependencies": {
     "express": "^4.17.1",
     "node-fetch": "^2.6.1"
-  },
-  "devDependencies": {
-    "esm": "^3.2.25"
   }
 }
