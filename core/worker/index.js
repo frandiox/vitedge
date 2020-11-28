@@ -45,7 +45,7 @@ export async function handleEvent(
   if (isPropsRequest(event)) {
     const { url, query } = parseQuerystring(event)
 
-    willRequestProps && (await willRequestProps({ event }))
+    willRequestProps && (await willRequestProps({ event, url, query }))
     const response = await handlePropsRequest(event)
 
     return (

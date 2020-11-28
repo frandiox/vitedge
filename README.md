@@ -44,7 +44,7 @@ Other providers (Netlify, Vercel, etc.) offer free tier generally.
 
 ## TODOS - Raw ideas
 
-- [ ] TypeScript
+- [x] Support TypeScript projects
 - [x] Custom Vite dev-server that serves API/Props during development
 - [ ] Docs website
 - [x] Extract CF worker boilerplate as utilities
