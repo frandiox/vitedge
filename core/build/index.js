@@ -1,5 +1,5 @@
 import path from 'path'
-import buildSSR from 'vite-ssr/build/index.js'
+import buildSSR from 'vite-ssr/build.js'
 import buildFunctions from './functions.js'
 
 import config from '../config.cjs'

@@ -1,18 +1,7 @@
-const fs = require('fs')
-const path = require('path')
-
-const viteConfigName = 'vite.config.js'
-
-let rootDir = process.cwd()
-if (!fs.existsSync(path.resolve(rootDir, viteConfigName))) {
-  rootDir = path.resolve(process.cwd(), '..')
-  if (!fs.existsSync(path.resolve(rootDir, viteConfigName))) {
-    throw new Error(`Could not find ${viteConfigName}`)
-  }
-}
+const { getProjectInfo } = require('vite-ssr/config')
 
 module.exports = {
-  rootDir,
+  ...getProjectInfo(),
   outDir: 'dist',
   clientOutDir: 'client',
   ssrOutDir: 'ssr',
