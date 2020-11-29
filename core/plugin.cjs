@@ -1,7 +1,4 @@
-import viteSSRPlugin from 'vite-ssr/plugin.js'
-
-export default {
-  ...viteSSRPlugin,
+module.exports = {
   alias: {
     vitedge: 'vitedge/entry-client',
   },
