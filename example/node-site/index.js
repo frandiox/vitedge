@@ -22,7 +22,7 @@ server.use(
 )
 
 async function getPageProps(request) {
-  const { propsGetter, ...extra } = router.resolve(request.url)
+  const { propsGetter, ...extra } = router.resolve(request.url) || {}
   const propsMeta = api[propsGetter]
 
   if (propsMeta) {
