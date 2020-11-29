@@ -286,10 +286,10 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-vite-ssr@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.0.7.tgz#27732afce22ac8433cd296f67f11b3d92287eff2"
-  integrity sha512-liNePmu4pExPKDgMGLkC/U0cBRAkVALSwm0A9+A4LjhXK3Rj3Wyawun+kG6TnP2VD94Aercqp/uuMMzacMFcYw==
+vite-ssr@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.0.8.tgz#48c00bc58bfe3101d7bb5d71bd85098b83168dbf"
+  integrity sha512-XwXDSCc7P8tp0P+lsaCoq6E9POl3PIc/VDrdc7t54Ey+nOXcl7JrKhGzM0lwBxdiET9iiOmHltdRBGzfFSFZtg==
   dependencies:
     "@rollup/plugin-replace" "^2.3.3"
     "@vue/server-renderer" "^3.0.0"
