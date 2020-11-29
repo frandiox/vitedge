@@ -5,7 +5,9 @@ export default {
     }
 
     return {
-      msg: 'Hello world!',
+      data: {
+        msg: 'Hello world!',
+      },
     }
   },
   options: {

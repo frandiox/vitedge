@@ -22,13 +22,13 @@ export function parseQuerystring(event) {
   return { url, query }
 }
 
-function buildApiResponse(payload, options = {}) {
+function buildApiResponse(data, options = {}) {
   const headers = {
     'content-type': 'application/json;charset=UTF-8',
     ...options.headers,
   }
 
-  return createResponse(JSON.stringify(payload), {
+  return createResponse(JSON.stringify(data), {
     status: 200,
     headers,
   })
@@ -48,9 +48,14 @@ export async function handleApiRequest(event) {
     const { handler, options = {} } = fns[endpoint]
 
     const { url, query } = parseQuerystring(event)
-    const payload = await handler({ event, request: event.request, url, query })
+    const { data } = await handler({
+      request: event.request,
+      event,
+      url,
+      query,
+    })
 
-    const response = buildApiResponse(payload, options)
+    const response = buildApiResponse(data, options)
 
     setCachedResponse(event, response, cacheKey, (options.cache || {}).api)
 

@@ -62,13 +62,13 @@ export async function getPageProps(event) {
     }
   }
 
-  const props = await handler({
+  const { data } = await handler({
     ...route,
     event,
     request: event.request,
   })
 
-  const response = buildPropsResponse(props, options)
+  const response = buildPropsResponse(data, options)
 
   if (cacheOption) {
     setCachedResponse(event, response, cacheKey, cacheOption)

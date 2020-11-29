@@ -30,11 +30,13 @@ export default {
           if (endpointMeta) {
             endpointMeta = endpointMeta.default || endpointMeta
             if (endpointMeta.handler) {
-              ctx.body = await endpointMeta.handler({
+              const { data } = await endpointMeta.handler({
                 request: ctx.request,
                 query: ctx.query,
                 body: ctx.request.body,
               })
+
+              ctx.body = data
 
               return
             }

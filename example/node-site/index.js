@@ -22,12 +22,13 @@ server.use(
 )
 
 async function getPageProps(request) {
-  const { propsGetter, ...data } = router.resolve(request.url)
+  const { propsGetter, ...extra } = router.resolve(request.url)
   const propsMeta = api[propsGetter]
 
   if (propsMeta) {
     try {
-      return await propsMeta.handler({ request, ...data })
+      const { data } = await propsMeta.handler({ request, ...extra })
+      return data
     } catch (error) {
       console.error(error)
       return {}
@@ -44,11 +45,12 @@ server.get('*', async (request, response) => {
       const apiMeta = api[request.path]
 
       if (apiMeta) {
-        return response.end(
-          JSON.stringify(
-            await apiMeta.handler({ request: request, params: request.query })
-          )
-        )
+        const { data } = await apiMeta.handler({
+          request: request,
+          params: request.query,
+        })
+
+        return response.end(JSON.stringify(data))
       } else {
         // Error
         return response.end('{}')
