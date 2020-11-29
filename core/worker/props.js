@@ -21,10 +21,10 @@ export function resolvePropsRoute(url = '') {
   return null
 }
 
-function buildPropsResponse(props, options = {}) {
+function buildPropsResponse(props, options) {
   const headers = {
     'content-type': 'application/json;charset=UTF-8',
-    ...options.headers,
+    ...((options && options.headers) || {}),
   }
 
   return createResponse(JSON.stringify(props), {
@@ -51,8 +51,8 @@ export async function getPageProps(event) {
     return null
   }
 
-  const { handler, options = {}, route = {} } = propsRoute
-  const cacheOption = options.cache && options.cache.api
+  const { handler, options, route } = propsRoute
+  const cacheOption = options && options.cache && options.cache.api
   const cacheKey = cacheOption && getCacheKey(event)
 
   if (cacheOption) {
@@ -63,7 +63,7 @@ export async function getPageProps(event) {
   }
 
   const { data } = await handler({
-    ...route,
+    ...(route || {}),
     event,
     request: event.request,
   })

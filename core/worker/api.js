@@ -22,10 +22,10 @@ export function parseQuerystring(event) {
   return { url, query }
 }
 
-function buildApiResponse(data, options = {}) {
+function buildApiResponse(data, option) {
   const headers = {
     'content-type': 'application/json;charset=UTF-8',
-    ...options.headers,
+    ...((options && options.headers) || {}),
   }
 
   return createResponse(JSON.stringify(data), {
@@ -45,7 +45,7 @@ export async function handleApiRequest(event) {
   const endpoint = url.pathname
 
   if (Object.prototype.hasOwnProperty.call(fns, endpoint)) {
-    const { handler, options = {} } = fns[endpoint]
+    const { handler, options } = fns[endpoint]
 
     const { url, query } = parseQuerystring(event)
     const { data } = await handler({
@@ -57,7 +57,12 @@ export async function handleApiRequest(event) {
 
     const response = buildApiResponse(data, options)
 
-    setCachedResponse(event, response, cacheKey, (options.cache || {}).api)
+    setCachedResponse(
+      event,
+      response,
+      cacheKey,
+      ((options && options.cache) || {}).api
+    )
 
     return response
   }

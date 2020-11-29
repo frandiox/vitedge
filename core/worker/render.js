@@ -77,7 +77,12 @@ export async function handleViewRendering(event, { http2ServerPush }) {
     headers,
   })
 
-  setCachedResponse(event, response, cacheKey, (page.options.cache || {}).html)
+  setCachedResponse(
+    event,
+    response,
+    cacheKey,
+    ((page && page.options && page.options.cache) || {}).html
+  )
 
   return response
 }
