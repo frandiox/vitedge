@@ -17,14 +17,21 @@ const patchVite = async () => {
       viteConfigLoader,
       (await fs.readFile(viteConfigLoader, 'utf8'))
         // Use native ESM to import config file instead of Rollup
+        // https://github.com/vitejs/vite/pull/1079
         .replace(
           /(\w+)\s+=\s+require\(resolvedPath\)/,
           '$1 = await import(resolvedPath); $1 = $1.default || $1'
         )
         // Ignore TS check to keep using native ESM with ts-node instead of Rollup
+        // https://github.com/vitejs/vite/pull/1155
         .replace(
           /if\s+\(!isTS\)/i,
           'if (!isTS || process[Symbol.for("ts-node.register.instance")])'
+        )
+        // https://github.com/vitejs/vite/pull/1165
+        .replace(
+          /(let\s+isTS)\s+=\s+false/i,
+          "$1 = (configPath || '').endsWith('.ts')"
         )
     )
   } catch (error) {
