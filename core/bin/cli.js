@@ -18,8 +18,8 @@ const patchVite = async () => {
       (await fs.readFile(viteConfigLoader, 'utf8'))
         // Use native ESM to import config file instead of Rollup
         .replace(
-          /\srequire\(resolvedPath\)/,
-          ' await import(resolvedPath); config = config.default || config'
+          /(\w+)\s+=\s+require\(resolvedPath\)/,
+          '$1 = await import(resolvedPath); $1 = $1.default || $1'
         )
         // Ignore TS check to keep using native ESM with ts-node instead of Rollup
         .replace(
