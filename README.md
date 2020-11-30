@@ -8,7 +8,7 @@ Even though running it at the edge is ideal, it is actually compatible with any 
 
 See a demo [here](https://vitedge.zable.workers.dev/). Full code example [here](./example).
 
-**Current status:** Dev, build and edge caching work. Needs typings and improving Commonjs <> ESM compatibility.
+**Current status:** All working. Feedback welcome!
 
 ## Concept
 
