@@ -35,12 +35,26 @@ Other providers (Netlify, Vercel, etc.) offer free tier generally.
 ## Usage
 
 1. Create a normal Vite app.
-2. Install `vitedge` with your package manager.
-3. Import `vitedge/plugin.js` in your `vite.config.js`. [Example here](./example/vite.config.js).
-4. Import and call Vitedge from your app's entry point providing your main `App.vue` and your page routes. Vitedge will create the router and attach the app to the DOM for you according to the running environment. [Example here](./example/src/main.js).
+2. Install `vitedge` with your package manager and add `"type": "module"` and `"postinstall": "vitedge patch"` to your [`package.json`](./src/package.json).
+3. Import `vitedge/plugin.cjs` in your `vite.config.js`. [Example here](./example/vite.config.ts).
+4. Import and call Vitedge from your app's entry point providing your main `App.vue` and your page routes. Vitedge will create the router and attach the app to the DOM for you according to the running environment. [Example here](./example/src/main.ts).
 5. Add page props or API handlers in [functions directory](./example/functions).
 6. Develop locally with Vite's blazing fast HMR running `vitedge dev --open` (pass any Vite CLI option). When using TypeScript, make sure `typescript` and `ts-node` are installed as devDependencies.
 7. Build using `vitedge build` command, import `vitedge/worker` in your [worker entry point](./example/worker-site/index.js) and add a custom [Webpack config](./example/worker-site/webpack.config.js).
+
+## Troubleshooting
+
+### Cannot import ESM
+
+Vitedge works using ES Modules in modern Node.js (>=12). Make sure the Node version is compatible and that you have `"type": "module"` in your `package.json`.
+
+### Code generation from strings disallowed for this context
+
+This happen if you (or your dependencies) run `eval` or related in a worker environment. Unsafe evaluations are not supported. For example, [`vue-i18n` is affected](https://github.com/intlify/vue-i18n-next/issues/198) by this issue.
+
+### Any error in Vite internals
+
+Try running `vitedge patch` command. This will add some temporary modifications to Vite internals. See [more details here](./core/bin/cli.js).
 
 ## TODOS - Raw ideas
 
@@ -54,6 +68,7 @@ Other providers (Netlify, Vercel, etc.) offer free tier generally.
 - [ ] List of pages that should be prerrendered automatically after deployment
 - [x] Compatibility with Node runtime for other providers (Vercel/...)
 - [x] Detect imported files in HTML and push them with HTTP/2
+- [ ] Add a "preview" mode that runs SSR for local development (web worker?)
 - [ ] Sitemap utility (handler in `<root>/functions/sitemap.js`?)
 - [ ] React/Preact compatibility.
 
@@ -62,3 +77,7 @@ Other providers (Netlify, Vercel, etc.) offer free tier generally.
 - Research if Rollup can build directly for webworker target and remove Webpack
 - Explore the possibility of extracting "getPageProps" from each page component using custom Vue blocks (currently these are provided in `<root>/api/props/` directory).
 - Consider file sytem routing for pages (this should probably happen in user-land with `vite-plugin-voie` or similar)
+
+### Contributing
+
+See [contributing guide](./.github/contributing.md).
