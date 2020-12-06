@@ -7,8 +7,14 @@ module.exports = {
   resolve: {
     mainFields: ['main', 'module'],
     alias: {
-      __vitedge_router__: path.resolve(rootDir, outDir, ssrOutDir),
       __vitedge_functions__: path.resolve(rootDir, outDir, fnsOutFile),
+      __vitedge_router__: path.resolve(rootDir, outDir, ssrOutDir),
+      __vitedge_meta__: path.resolve(
+        rootDir,
+        outDir,
+        ssrOutDir,
+        'package.json'
+      ),
     },
   },
 }
