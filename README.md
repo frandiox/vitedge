@@ -28,7 +28,7 @@ See [docs](https://vitedge.netlify.app).
 
 - [x] Support TypeScript projects
 - [x] Custom Vite dev-server that serves API/Props during development
-- [ ] Docs website
+- [x] Docs website
 - [x] Extract CF worker boilerplate as utilities
 - [x] Cache props/html in worker and make it configurable
 - [ ] i18n utilities
