@@ -14,11 +14,11 @@ See a demo [here](https://vitedge.zable.workers.dev/). Full code example [here](
 
 ## Features
 
-- Ultrafast development and HMR powered by Vite.
-- Renders and caches at the edge for maximum performance in production. Cache is configurable.
-- Each page gets its server data as props by default but can be set in Vuex instead.
-- HTTP/2 server push four your assets to speed up the loading time without waterfall requests.
-- Automatically creates endpoints for your API based on filesystem routes.
+- ⚡ Ultrafast development and HMR powered by Vite.
+- ⚔️ Renders and caches at the edge for maximum performance in production. Cache is configurable.
+- 💁‍♂️ Each page gets its server data as props by default but can be set in Vuex instead.
+- 🔽 HTTP/2 server push for your assets to speed up the loading time without waterfall requests.
+- 🧱 Automatically creates endpoints for your API based on filesystem routes.
 
 ## Docs
 
@@ -41,6 +41,6 @@ See [docs](https://vitedge.netlify.app).
 - [ ] Sitemap utility (handler in `<root>/functions/sitemap.js`?)
 - [ ] React/Preact compatibility.
 
-### Contributing
+## Contributing
 
 See [contributing guide](./.github/contributing.md).
