@@ -8,8 +8,9 @@ export function isPropsRequest(event) {
   return event.request.url.includes(PROPS_PREFIX + '/')
 }
 
-export function resolvePropsRoute(url = '') {
-  const route = router.resolve(url)
+function resolvePropsRoute(url = '') {
+  const { href } = new URL(url)
+  const route = router.resolve(href)
 
   if (route && Object.prototype.hasOwnProperty.call(fns, route.propsGetter)) {
     return {

@@ -63,8 +63,13 @@ server.get('*', async (request, response) => {
       return response.end(JSON.stringify(props))
     }
 
+    const url =
+      request.protocol + '://' + request.get('host') + request.originalUrl
     const initialState = await getPageProps(request)
-    const { html } = await router.render({ request, initialState })
+    const { html } = await router.render({
+      request: { ...request, url },
+      initialState,
+    })
     response.end(html)
   } catch (error) {
     console.error(error)
