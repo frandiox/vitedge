@@ -1,6 +1,6 @@
 # Usage
 
-Once Vitedge is installed, you can use its CLI for develoing and building. See a full example project [here](../example).
+Once Vitedge is installed, you can use its CLI for develoing and building. See a full example project [here](https://github.com/frandiox/vitedge/tree/master/example).
 
 ## Development
 
@@ -39,6 +39,8 @@ addEventListener('fetch', (event) => {
 })
 ```
 
+See a full example [here](https://github.com/frandiox/vitedge/tree/master/example/worker-site/index.js).
+
 ### Other Node environments
 
-For a normal Node.js server or any serverless function running in a Node.js environment, you can find a full example [here](../example/node-site/index.js).
+For a normal Node.js server or any serverless function running in a Node.js environment, you can find a full example [here](https://github.com/frandiox/vitedge/tree/master/example/node-site/index.js).
