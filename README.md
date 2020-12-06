@@ -22,7 +22,7 @@ See a demo [here](https://vitedge.zable.workers.dev/). Full code example [here](
 
 ## Docs
 
-See [docs][./docs]
+See [docs](https://vitedge.netlify.app).
 
 ## Roadmap
 
