@@ -9,8 +9,8 @@ export function isPropsRequest(event) {
 }
 
 function resolvePropsRoute(url = '') {
-  const { href } = new URL(url)
-  const route = router.resolve(href)
+  const { href, origin } = new URL(url)
+  const route = router.resolve(href.replace(origin, ''))
 
   if (route && Object.prototype.hasOwnProperty.call(fns, route.propsGetter)) {
     return {
