@@ -1,9 +1,0 @@
-{
-  "compilerOptions": {
-    "outDir": "./built",
-    "allowJs": true,
-    "lib": ["es2018", "dom"],
-    "target": "es5"
-  },
-  "include": ["./core/**/*", "./core/node_modules/vite-ssr"]
-}
