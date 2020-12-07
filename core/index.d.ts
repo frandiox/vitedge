@@ -1,14 +1,13 @@
-// TODO proper type for Vue Router routes when that package exports types (missing in rc.2)
-
-type VitedgeOptions = { routes: any[]; pageProps?: boolean }
-
 declare module 'vitedge' {
+  import { App } from 'vue'
+  import { Router, RouteLocationRaw } from 'vue-router'
+
   const handler: (
     App: any,
-    options: VitedgeOptions,
+    options: { routes: RouteLocationRaw[]; pageProps?: boolean },
     hook: (params: {
-      app: any
-      router: any
+      app: App
+      router: Router
       isClient: boolean
       initialState: unknown
     }) => void | Promise<void>

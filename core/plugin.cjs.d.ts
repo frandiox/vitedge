@@ -1,7 +1,9 @@
 declare module 'vitedge/plugin.cjs' {
+  import { UserConfig } from 'vite'
+
   const plugin: {
-    alias: Record<string, string>
-    configureServer: Function[]
+    alias: UserConfig['alias']
+    configureServer: UserConfig['configureServer']
   }
   export default plugin
 }
