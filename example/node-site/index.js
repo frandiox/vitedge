@@ -3,6 +3,7 @@ import express from 'express'
 import fetch from 'node-fetch'
 import api from '../dist/functions.js'
 import ssrBuild from '../dist/ssr/main.js'
+import pkgJson from '../dist/ssr/package.json'
 
 // @ts-ignore
 global.fetch = fetch // Must be polyfilled for SSR
@@ -11,15 +12,12 @@ const { default: router } = ssrBuild
 
 const server = express()
 
-server.use(
-  '/_assets',
-  express.static(path.join(process.cwd(), '../dist/client/_assets'))
-)
-
-server.use(
-  '/favicon.ico',
-  express.static(path.join(process.cwd(), '../dist/client/favicon.ico'))
-)
+for (const asset of pkgJson.ssr.assets || []) {
+  server.use(
+    '/' + asset,
+    express.static(path.join(process.cwd(), '../dist/client/' + asset))
+  )
+}
 
 async function getPageProps(request) {
   const { propsGetter, ...extra } = router.resolve(request.url) || {}

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "serve": "node index.js"
+    "serve": "node --experimental-json-modules index.js"
   },
   "dependencies": {
     "express": "^4.17.1",

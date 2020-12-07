@@ -38,6 +38,6 @@
     "@rollup/plugin-virtual": "^2.0.3",
     "fast-glob": "^3.2.4",
     "rollup": "^2.33.1",
-    "vite-ssr": "^0.0.10"
+    "vite-ssr": "^0.0.11"
   }
 }

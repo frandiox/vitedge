@@ -1,11 +1,10 @@
+import meta from '__vitedge_meta__'
 import { getAssetFromKV } from '@cloudflare/kv-asset-handler'
 
 export function isStaticAsset(event) {
-  return (
-    event.request.url.includes('/_assets/') ||
-    event.request.url.includes('/favicon.ico') ||
-    event.request.url.includes('/robots.txt') ||
-    event.request.url.includes('/sitemap.xml')
+  const url = new URL(event.request.url)
+  return (meta.ssr.assets || []).some((asset) =>
+    url.pathname.startsWith('/' + asset)
   )
 }
 
