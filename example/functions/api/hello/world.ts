@@ -12,14 +12,22 @@ export default {
     }
 
     return {
+      // Actual data returned to frontend
       data: {
         msg: 'Hello world!',
         staticImportTestWithExtension,
         staticImportTestWithoutExtension,
         json,
       },
+      // Dynamic options for this request
+      options: {
+        cache: {
+          api: 90,
+        },
+      },
     }
   },
+  // Default static options
   options: {
     cache: {
       api: 85,

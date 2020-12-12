@@ -59,15 +59,17 @@ export async function handleApiRequest(event) {
   const endpoint = normalizeRoute(url.pathname)
 
   if (Object.prototype.hasOwnProperty.call(fns, endpoint)) {
-    const { handler, options } = fns[endpoint]
+    const { handler, options: staticOptions } = fns[endpoint]
 
     const { url, query } = parseQuerystring(event)
-    const { data } = await handler({
+    const { data, options: dynamicOptions } = await handler({
       request: event.request,
       event,
       url,
       query,
     })
+
+    const options = Object.assign({}, staticOptions || {}, dynamicOptions || {})
 
     const response = buildApiResponse(data, options)
 

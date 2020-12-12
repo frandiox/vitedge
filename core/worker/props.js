@@ -52,22 +52,25 @@ export async function getPageProps(event) {
     return null
   }
 
-  const { handler, options, route } = propsRoute
-  const cacheOption = options && options.cache && options.cache.api
+  const { handler, options: staticOptions, route } = propsRoute
+  const cacheOption =
+    staticOptions && staticOptions.cache && staticOptions.cache.api
   const cacheKey = cacheOption && getCacheKey(event)
 
   if (cacheOption) {
     const response = await getCachedResponse(cacheKey)
     if (response) {
-      return { options, response }
+      return { options: staticOptions, response }
     }
   }
 
-  const { data } = await handler({
+  const { data, options: dynamicOptions } = await handler({
     ...(route || {}),
     event,
     request: event.request,
   })
+
+  const options = Object.assign({}, staticOptions || {}, dynamicOptions || {})
 
   const response = buildPropsResponse(data, options)
 
