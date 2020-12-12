@@ -2,15 +2,25 @@ import fg from 'fast-glob'
 import { rollup } from 'rollup'
 import virtual from '@rollup/plugin-virtual'
 
-async function resolveFiles(dir, extensions) {
-  return await fg(`${dir}/**/*.{${extensions.join(',')}}`, {
-    ignore: ['node_modules', '.git'],
-    onlyFiles: true,
-  })
+function resolveFiles(globs, extensions) {
+  return fg(
+    globs.map((glob) => `${glob}.{${extensions.join(',')}}`),
+    {
+      ignore: ['node_modules', '.git'],
+      onlyFiles: true,
+    }
+  )
 }
 
 export default async function ({ fnsInputPath, fnsOutputPath }) {
-  const fnsRoutes = await resolveFiles(fnsInputPath, ['js', 'ts'])
+  const fnsRoutes = await resolveFiles(
+    [
+      fnsInputPath + '/*',
+      fnsInputPath + '/api/**/*',
+      fnsInputPath + '/props/**/*',
+    ],
+    ['js', 'ts']
+  )
 
   const options = {
     input: 'entry',
