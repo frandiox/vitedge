@@ -12,6 +12,10 @@ For example, `<root>/functions/api/my/function.js` (or `*.ts`) will be built as 
 
 Parameters in routes (e.g. `/api/my/function/:something`) are not supported right now and must be handled manually.
 
+#### Versioning
+
+The API can be organized in subfolders such as `<root>/functions/api/v1/*` to provide API versioning.
+
 ### Handlers
 
 Each handler file looks like this:
@@ -43,6 +47,18 @@ export default {
 The actual handler gets the `event` and `request` objects provided by the running platform.
 The response must be an object with `data` property.
 
-## GraphQL
+## Other endpoints
 
-TODO (Should be straightforward using Apollo Server or similar)
+Apart from `<root>/functions/api/**/*` directory, Vitedge will consider any file directly under `<root>/functions/*` to be similar to an API endpoint (following similar syntax in the handlers and cache options).
+
+Thanks to this, it can support other use cases such as the following.
+
+### GraphQL
+
+Add `<root>/functions/graphql.js` and setup a GraphQL server using [`apollo-server-cloudflare`](https://www.npmjs.com/package/apollo-server-cloudflare) or any other tool compatible with your deployment platform.
+
+### Dynamic sitemap, robots, and other files
+
+Add `<root>/functions/sitemap.js` or `<root>/functions/robots.js` and return the corresponding content with cache options. See example [here](https://github.com/frandiox/vitedge/blob/master/example/functions/sitemap.ts). Both `/sitemap.xml` and `sitemap.txt` will match and run the handler (check the request's URL if you want to return different values for each extension).
+
+Note that static files have higher priority than dynamic files. For example, if you have both `<root>/public/sitemap.xml` and `<root>/functions/sitemap.js`, the former will be served.

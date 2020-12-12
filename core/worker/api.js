@@ -4,8 +4,18 @@ import { createResponse, createNotFoundResponse } from './utils'
 
 const API_PREFIX = '/api'
 
+function normalizeRoute(pathname) {
+  // Remove trailing slashes and file extensions
+  return pathname.replace(/(\/|\.\w+)$/, '')
+}
+
 export function isApiRequest(event) {
-  return event.request.url.includes(API_PREFIX + '/')
+  const pathname = normalizeRoute(new URL(event.request.url).pathname)
+
+  return (
+    pathname.startsWith(API_PREFIX + '/') ||
+    Object.prototype.hasOwnProperty.call(fns, pathname)
+  )
 }
 
 export function parseQuerystring(event) {
@@ -28,7 +38,11 @@ function buildApiResponse(data, options) {
     ...((options && options.headers) || {}),
   }
 
-  return createResponse(JSON.stringify(data), {
+  if ((headers['content-type'] || '').startsWith('application/json')) {
+    data = JSON.stringify(data)
+  }
+
+  return createResponse(data, {
     status: 200,
     headers,
   })
@@ -42,7 +56,7 @@ export async function handleApiRequest(event) {
   }
 
   const url = new URL(event.request.url)
-  const endpoint = url.pathname
+  const endpoint = normalizeRoute(url.pathname)
 
   if (Object.prototype.hasOwnProperty.call(fns, endpoint)) {
     const { handler, options } = fns[endpoint]

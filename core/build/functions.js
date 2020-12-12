@@ -45,7 +45,10 @@ export default async function ({ fnsInputPath, fnsOutputPath }) {
             .join(',\n')} }`,
       }),
       esbuild(),
-      nodeResolve({ extensions: ['.mjs', '.js', '.json', '.node', '.ts'] }),
+      nodeResolve({
+        preferBuiltins: false,
+        extensions: ['.mjs', '.js', '.json', '.node', '.ts'],
+      }),
       commonjs(),
       json({ compact: true }),
     ],

@@ -37,18 +37,33 @@ async function getPageProps(request) {
 }
 
 server.get('*', async (request, response) => {
+  const href =
+    request.protocol + '://' + request.get('host') + request.originalUrl
+  const normalizedPathname = request.path.replace(/(\/|\.\w+)$/, '')
+
   try {
-    if (request.path.startsWith('/api/')) {
+    if (normalizedPathname.startsWith('/api/') || !!api[normalizedPathname]) {
       console.log(request.path, request.query)
-      const apiMeta = api[request.path]
+      const apiMeta = api[normalizedPathname]
 
       if (apiMeta) {
         const { data } = await apiMeta.handler({
-          request: request,
+          request: { ...request, url: href },
           params: request.query,
         })
 
-        return response.end(JSON.stringify(data))
+        const headers = {
+          'content-type': 'application/json',
+          ...(apiMeta.options.headers || {}),
+        }
+
+        response.set(headers)
+
+        return response.end(
+          (headers['content-type'] || '').startsWith('application/json')
+            ? JSON.stringify(data)
+            : data
+        )
       } else {
         // Error
         return response.end('{}')
@@ -61,11 +76,9 @@ server.get('*', async (request, response) => {
       return response.end(JSON.stringify(props))
     }
 
-    const url =
-      request.protocol + '://' + request.get('host') + request.originalUrl
     const initialState = await getPageProps(request)
     const { html } = await router.render({
-      request: { ...request, url },
+      request: { ...request, url: href },
       initialState,
     })
     response.end(html)

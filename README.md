@@ -31,14 +31,14 @@ See [docs](https://vitedge.netlify.app).
 - [x] Docs website
 - [x] Extract CF worker boilerplate as utilities
 - [x] Cache props/html in worker and make it configurable
-- [ ] i18n utilities
+- [x] i18n compatible
 - [ ] Auth utilities (passing JWT in requests)
 - [ ] List of pages that should be prerrendered automatically after deployment
 - [x] Compatibility with Node runtime for other providers (Vercel/Netlify...)
 - [ ] Add example using Vercel's edge cache.
 - [x] Detect imported files in HTML and push them with HTTP/2
 - [ ] Add a "preview" mode that runs SSR for local development (web worker?)
-- [ ] Sitemap utility (handler in `<root>/functions/sitemap.js`?)
+- [x] Support GraphQL, sitemap and other dynamic endpoints
 - [ ] React/Preact compatibility.
 
 ## Contributing
