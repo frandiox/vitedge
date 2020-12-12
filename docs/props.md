@@ -66,3 +66,27 @@ export default {
 The actual handler gets the `event` and `request` objects provided by the running platform. Apart from that, the rest of the parameters match [Vue Router's counter parts](https://next.router.vuejs.org/api/#routelocationnormalized) for `params`, `query`, `hash`, `name` and `fullPath`.
 
 The response must be an object with `data` property and will be served as JSON.
+
+**Note on headers**: Use always lower case for header keys.
+
+### Types
+
+In order to get type validation and autocompletion, do one of the following:
+
+```ts
+// Only TypeScript
+import { EdgeProps } from 'vitedge'
+
+export default <EdgeProps>{
+  // handler, options, ...
+} // as EdgeProps // <- This is equivalent
+```
+
+```js
+// JavaScript or TypeScript
+import { defineEdgeProps } from 'vitedge/define'
+
+export default defineEdgeProps({
+  // handler, options, ...
+})
+```

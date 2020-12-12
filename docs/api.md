@@ -47,6 +47,30 @@ export default {
 The actual handler gets the `event` and `request` objects provided by the running platform.
 The response must be an object with `data` property.
 
+**Note on headers**: Use always lower case for header keys.
+
+### Types
+
+In order to get type validation and autocompletion, do one of the following:
+
+```ts
+// Only TypeScript
+import { ApiEndpoint } from 'vitedge'
+
+export default <ApiEndpoint>{
+  // handler, options, ...
+} // as ApiEndpoint // <- This is equivalent
+```
+
+```js
+// JavaScript or TypeScript
+import { defineApiEndpoint } from 'vitedge/define'
+
+export default defineApiEndpoint({
+  // handler, options, ...
+})
+```
+
 ## Other endpoints
 
 Apart from `<root>/functions/api/**/*` directory, Vitedge will consider any file directly under `<root>/functions/*` to be similar to an API endpoint (following similar syntax in the handlers and cache options).

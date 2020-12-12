@@ -13,6 +13,7 @@
     "allowSyntheticDefaultImports": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "functions/**/*"
   ]
 }
