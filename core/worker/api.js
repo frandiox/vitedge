@@ -22,7 +22,7 @@ export function parseQuerystring(event) {
   return { url, query }
 }
 
-function buildApiResponse(data, option) {
+function buildApiResponse(data, options) {
   const headers = {
     'content-type': 'application/json;charset=UTF-8',
     ...((options && options.headers) || {}),
