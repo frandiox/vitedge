@@ -49,8 +49,14 @@ const patchVite = async () => {
 
     const { default: config } = await import('vitedge/config.cjs')
     if (config.isTS) {
-      args.unshift('--loader', 'ts-node/esm')
+      args.unshift(
+        '--loader',
+        'ts-node/esm',
+        '--experimental-specifier-resolution=node'
+      )
     }
+
+    args.unshift('--experimental-json-modules')
 
     cp.spawn('node', args, {
       stdio: [process.stdin, process.stdout, process.stderr],
