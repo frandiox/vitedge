@@ -9,6 +9,8 @@
     "sourceMap": false,
     "allowJs": true,
     "noImplicitAny": false,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src/**/*"

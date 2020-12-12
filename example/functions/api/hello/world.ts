@@ -1,3 +1,10 @@
+// For a JS project, '.js' extension MUST be provided due to ESM limitations
+import { staticImportTestWithExtension } from '../../utils/test1.js'
+// For a TS project, '.js' extension can be optionally provided
+import { staticImportTestWithoutExtension } from '../../utils/test2'
+// JSON can be imported because --experimental-json-modules is provided in CLI dev
+import json from '../../utils/test3.json'
+
 export default {
   handler({ query, body, request }) {
     if (request.method !== 'GET') {
@@ -7,6 +14,9 @@ export default {
     return {
       data: {
         msg: 'Hello world!',
+        staticImportTestWithExtension,
+        staticImportTestWithoutExtension,
+        json,
       },
     }
   },

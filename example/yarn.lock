@@ -42,10 +42,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@cloudflare/kv-asset-handler@^0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.0.12.tgz#4fc397912a0897a5cf8c0b5eb7c983b5e8b36979"
-  integrity sha512-3XCs9TRhQh/yUs1ST9cIMLB8C5c1JRKcDYTPJbAmcgI0kO2FPCSZz+kyNb9x25DuGQeqOMMwmxHPtiOfTki/Gw==
+"@cloudflare/kv-asset-handler@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.1.0.tgz#0febbf4ac6dd04d2c069405cffdcc7cf64b95494"
+  integrity sha512-sXZRw/Z5JJfi/nGh66SECSm5L2zomyf6f9O3nc5QOI11/R3W/4N+BPOecp/Dc8eL/q/Rwgb7lwhhjnqy8O5CYA==
   dependencies:
     "@cloudflare/workers-types" "^2.0.0"
     "@types/mime" "^2.0.2"
@@ -123,11 +123,6 @@
   dependencies:
     "@rollup/pluginutils" "^3.1.0"
     magic-string "^0.25.7"
-
-"@rollup/plugin-virtual@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@rollup/plugin-virtual/-/plugin-virtual-2.0.3.tgz#0afc88d75c1e1378ab290b8e9898d4edb5be0d74"
-  integrity sha512-pw6ziJcyjZtntQ//bkad9qXaBx665SgEL8C8KI5wO8G5iU5MPxvdWrQyVaAvjojGm9tJoS8M9Z/EEepbqieYmw==
 
 "@rollup/pluginutils@^3.0.8", "@rollup/pluginutils@^3.0.9", "@rollup/pluginutils@^3.1.0":
   version "3.1.0"
@@ -915,7 +910,7 @@ execa@^4.0.3:
     signal-exit "^3.0.2"
     strip-final-newline "^2.0.0"
 
-fast-glob@^3.1.1, fast-glob@^3.2.4:
+fast-glob@^3.1.1:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.2.4.tgz#d20aefbf99579383e7f3cc66529158c9b98554d3"
   integrity sha512-kr/Oo6PX51265qeuCYsyGypiO5uJFgBS0jksyG7FUeCyQzNwYnzrNIMR1NXfkZXsMYXYLRAHgISHBz8gQcxKHQ==
@@ -1915,13 +1910,6 @@ rollup@^2.32.1:
   optionalDependencies:
     fsevents "~2.1.2"
 
-rollup@^2.33.1:
-  version "2.33.1"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.33.1.tgz#802795164164ee63cd47769d8879c33ec8ae0c40"
-  integrity sha512-uY4O/IoL9oNW8MMcbA5hcOaz6tZTMIh7qJHx/tzIJm+n1wLoY38BLn6fuy7DhR57oNFLMbDQtDeJoFURt5933w==
-  optionalDependencies:
-    fsevents "~2.1.2"
-
 run-parallel@^1.1.9:
   version "1.1.10"
   resolved "https://registry.yarnpkg.com/run-parallel/-/run-parallel-1.1.10.tgz#60a51b2ae836636c81377df16cb107351bcd13ef"
@@ -2135,10 +2123,10 @@ vary@^1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
-vite-ssr@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.0.8.tgz#48c00bc58bfe3101d7bb5d71bd85098b83168dbf"
-  integrity sha512-XwXDSCc7P8tp0P+lsaCoq6E9POl3PIc/VDrdc7t54Ey+nOXcl7JrKhGzM0lwBxdiET9iiOmHltdRBGzfFSFZtg==
+vite-ssr@^0.0.12:
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.0.12.tgz#f5e88fd6e0682103ee8ef1d746269d215cbdda5c"
+  integrity sha512-8n2iaNxMHBJaa7xMg1Vi2wawyfdFWuBA/ADAecvLGtrTWBHnKneZYi69MMPjEZHTFCrqmgrlVwufGKoJazJhgA==
   dependencies:
     "@rollup/plugin-replace" "^2.3.3"
     "@vue/server-renderer" "^3.0.0"
@@ -2206,13 +2194,10 @@ vite@^1.0.0-rc.13:
     ws "^7.3.1"
 
 vitedge@../core:
-  version "0.3.2"
+  version "0.3.6"
   dependencies:
-    "@cloudflare/kv-asset-handler" "^0.0.12"
-    "@rollup/plugin-virtual" "^2.0.3"
-    fast-glob "^3.2.4"
-    rollup "^2.33.1"
-    vite-ssr "^0.0.8"
+    "@cloudflare/kv-asset-handler" "^0.1.0"
+    vite-ssr "^0.0.12"
 
 vue-router@^4.0.0-rc.1:
   version "4.0.0-rc.1"

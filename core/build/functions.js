@@ -1,6 +1,10 @@
 import fg from 'fast-glob'
 import { rollup } from 'rollup'
+import esbuild from 'rollup-plugin-esbuild'
 import virtual from '@rollup/plugin-virtual'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import json from '@rollup/plugin-json'
+import commonjs from '@rollup/plugin-commonjs'
 
 function resolveFiles(globs, extensions) {
   return fg(
@@ -40,6 +44,10 @@ export default async function ({ fnsInputPath, fnsOutputPath }) {
             )
             .join(',\n')} }`,
       }),
+      esbuild(),
+      nodeResolve({ extensions: ['.mjs', '.js', '.json', '.node', '.ts'] }),
+      commonjs(),
+      json({ compact: true }),
     ],
   }
 
