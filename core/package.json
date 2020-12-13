@@ -40,6 +40,7 @@
     "@rollup/plugin-virtual": "^2.0.3",
     "esbuild": "^0.8.22",
     "fast-glob": "^3.2.4",
+    "node-fetch": "^2.6.1",
     "rollup": "^2.34.2",
     "rollup-plugin-esbuild": "^2.6.1"
   },

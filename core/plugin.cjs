@@ -9,6 +9,9 @@ module.exports = {
       server, // raw http server instance
       watcher, // chokidar file watcher instance
     }) => {
+      // @ts-ignore
+      globalThis.fetch = require('node-fetch')
+
       const cacheBust = new Map()
       watcher.on('change', (fullPath) => {
         if (fullPath.replace(root, '').startsWith('/functions/')) {
@@ -31,6 +34,12 @@ module.exports = {
                 request: ctx.request,
                 query: ctx.query,
                 headers: ctx.headers,
+                event: {
+                  clientId: process.pid,
+                  request: ctx.request,
+                  respondWith: () => undefined,
+                  waitUntil: () => undefined,
+                },
               })
 
               ctx.body = data
