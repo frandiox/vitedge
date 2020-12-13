@@ -1,6 +1,6 @@
 {
   "name": "vitedge",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Vite for edge side rendering",
   "main": "./entry-server.js",
   "type": "module",
