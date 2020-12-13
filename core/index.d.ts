@@ -37,10 +37,12 @@ export type EdgeProps = {
     event: FetchEvent
     request: Request
     headers: Headers
-    fullPath: string
     propsGetter: string
+    fullPath: string
+    path: string
+    hash: string
+    href: string
     name?: string
-    hash?: string
     params?: Record<string, string | string[]>
     query?: Record<string, string | string[]>
   }) => ReturnedPropsPayload | Promise<ReturnedPropsPayload>

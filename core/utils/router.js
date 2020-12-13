@@ -37,12 +37,7 @@ export function buildPropsRoute(route) {
     return null
   }
 
-  const data = {
-    name: route.name,
-    hash: route.hash,
-    params: route.params,
-    query: route.query,
-  }
+  const { matched: _1, meta: _2, redirectedFrom: _3, ...data } = route
 
   const EXAMPLE_URL = 'http://e.g'
   const url = new URL(EXAMPLE_URL + route.fullPath)
