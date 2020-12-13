@@ -7,7 +7,7 @@ export default function (App, { routes, base, pageProps = true }, hook) {
   }
 
   return {
-    resolve: (url) => resolvePropsRoute(routes, url),
+    resolve: (url) => resolvePropsRoute(routes, url, base),
     render: viteSSR(
       App,
       { routes, base },

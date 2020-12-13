@@ -30,6 +30,11 @@ function findRoutePropsGetter(route) {
   return getter ? PROPS_PREFIX + '/' + getter : false
 }
 
+const EXAMPLE_URL = 'http://e.g'
+function getUrlFromPath(path) {
+  return new URL(EXAMPLE_URL + path)
+}
+
 export function buildPropsRoute(route) {
   const propsGetter = findRoutePropsGetter(route)
 
@@ -39,8 +44,7 @@ export function buildPropsRoute(route) {
 
   const { matched: _1, meta: _2, redirectedFrom: _3, ...data } = route
 
-  const EXAMPLE_URL = 'http://e.g'
-  const url = new URL(EXAMPLE_URL + route.fullPath)
+  const url = getUrlFromPath(route.fullPath)
   url.pathname = PROPS_PREFIX + url.pathname
 
   if (process.env.NODE_ENV === 'development') {
@@ -57,7 +61,17 @@ export function buildPropsRoute(route) {
   }
 }
 
-export function resolvePropsRoute(routes, url) {
-  const router = createRouter({ routes, history: createMemoryHistory() })
-  return buildPropsRoute(router.resolve(url.replace(PROPS_PREFIX + '/', '/')))
+export function resolvePropsRoute(routes, path, base) {
+  const routeBase = base && base({ url: getUrlFromPath(path) })
+  let initialRoutePath = path.replace(PROPS_PREFIX + '/', '/')
+  if (routeBase && initialRoutePath.startsWith(routeBase)) {
+    initialRoutePath = initialRoutePath.replace(routeBase, '/')
+  }
+
+  const router = createRouter({
+    routes,
+    history: createMemoryHistory(routeBase),
+  })
+
+  return buildPropsRoute(router.resolve(initialRoutePath))
 }
