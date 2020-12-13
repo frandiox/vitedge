@@ -46,6 +46,6 @@
   },
   "dependencies": {
     "@cloudflare/kv-asset-handler": "^0.1.0",
-    "vite-ssr": "^0.0.12"
+    "vite-ssr": "^0.0.13"
   }
 }

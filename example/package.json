@@ -6,7 +6,7 @@
     "setup": "yarn && (cd node-site && yarn) && (cd worker-site && yarn)",
     "dev": "vitedge dev --open",
     "build": "rm -rf dist && vitedge build",
-    "refresh": "rm -rf node_modules/vitedge && cp -r ../core node_modules/vitedge && cp ../core/bin/cli.js node_modules/.bin/vitedge",
+    "refresh": "rm -f node_modules/.vite_opt_cache/vitedge.js && rm -rf node_modules/vitedge && cp -r ../core node_modules/vitedge && cp ../core/bin/cli.js node_modules/.bin/vitedge",
     "serve:worker": "cd worker-site && yarn serve",
     "serve:node": "cd node-site && yarn serve",
     "postinstall": "vitedge patch"
