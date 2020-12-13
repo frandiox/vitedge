@@ -10,7 +10,8 @@
     "allowJs": true,
     "noImplicitAny": false,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "lib": ["WebWorker"]
   },
   "include": [
     "src/**/*",

@@ -6,7 +6,7 @@ declare module 'vitedge' {
     App: any,
     options: {
       routes: RouteLocationRaw[]
-      base?: ({ url: URL }) => string
+      base?: (params: { url: URL }) => string
       pageProps?: boolean
     },
     hook: (params: {
@@ -34,8 +34,9 @@ type ReturnedPropsPayload = { data: any; options?: PropsOptions }
 export type EdgeProps = {
   options?: PropsOptions
   handler: (payload: {
-    event: any
-    request: any
+    event: FetchEvent
+    request: Request
+    headers: Headers
     fullPath: string
     propsGetter: string
     name?: string
@@ -57,8 +58,9 @@ type ReturnedApiPayload = { data: any; options?: ApiOptions }
 export type ApiEndpoint = {
   options?: ApiOptions
   handler: (payload: {
-    event: any
-    request: any
+    event: FetchEvent
+    request: Request
+    headers: Headers
     url: URL
     query?: Record<string, string | string[]>
   }) => ReturnedApiPayload | Promise<ReturnedApiPayload>

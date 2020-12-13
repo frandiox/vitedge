@@ -63,8 +63,9 @@ export async function handleApiRequest(event) {
 
     const { url, query } = parseQuerystring(event)
     const { data, options: dynamicOptions } = await handler({
-      request: event.request,
       event,
+      request: event.request,
+      headers: event.request.headers,
       url,
       query,
     })

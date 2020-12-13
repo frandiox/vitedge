@@ -30,7 +30,7 @@ module.exports = {
               const { data } = await endpointMeta.handler({
                 request: ctx.request,
                 query: ctx.query,
-                body: ctx.request.body,
+                headers: ctx.headers,
               })
 
               ctx.body = data

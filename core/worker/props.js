@@ -68,6 +68,7 @@ export async function getPageProps(event) {
     ...(route || {}),
     event,
     request: event.request,
+    headers: event.request.headers,
   })
 
   const options = Object.assign({}, staticOptions || {}, dynamicOptions || {})
