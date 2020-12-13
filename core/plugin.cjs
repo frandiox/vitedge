@@ -20,7 +20,7 @@ module.exports = {
         }
       })
 
-      async function handleFunctionRequest(ctx, functionPath) {
+      async function handleFunctionRequest(ctx, functionPath, extra) {
         try {
           const filePath = root + '/functions' + functionPath
           let endpointMeta = await import(
@@ -31,8 +31,8 @@ module.exports = {
             endpointMeta = endpointMeta.default || endpointMeta
             if (endpointMeta.handler) {
               const { data } = await endpointMeta.handler({
+                ...(extra || {}),
                 request: ctx.request,
-                query: ctx.query,
                 headers: ctx.headers,
                 event: {
                   clientId: process.pid,
@@ -59,12 +59,21 @@ module.exports = {
 
       app.use(async (ctx, next) => {
         if (ctx.url.includes('/api/')) {
-          await handleFunctionRequest(ctx, ctx.url)
+          await handleFunctionRequest(ctx, ctx.url, {
+            query: ctx.query,
+            url: new URL(ctx.href),
+          })
+
           return
         }
 
         if (ctx.url.includes('/props/')) {
-          await handleFunctionRequest(ctx, ctx.query.propsGetter)
+          await handleFunctionRequest(
+            ctx,
+            ctx.query.propsGetter,
+            ctx.query.data && JSON.parse(decodeURIComponent(ctx.query.data))
+          )
+
           return
         }
 

@@ -30,28 +30,6 @@ function findRoutePropsGetter(route) {
   return getter ? PROPS_PREFIX + '/' + getter : false
 }
 
-function prepareRouteData(route) {
-  const data = {}
-
-  if (route.name) {
-    data.name = route.name
-  }
-
-  if (route.hash) {
-    data.hash = route.hash
-  }
-
-  if (Object.keys(route.params || {}).length > 0) {
-    data.params = route.params
-  }
-
-  if (Object.keys(route.query || {}).length > 0) {
-    data.query = route.query
-  }
-
-  return data
-}
-
 export function buildPropsRoute(route) {
   const propsGetter = findRoutePropsGetter(route)
 
@@ -59,7 +37,12 @@ export function buildPropsRoute(route) {
     return null
   }
 
-  const data = prepareRouteData(route)
+  const data = {
+    name: route.name,
+    hash: route.hash,
+    params: route.params,
+    query: route.query,
+  }
 
   const EXAMPLE_URL = 'http://e.g'
   const url = new URL(EXAMPLE_URL + route.fullPath)
@@ -67,6 +50,7 @@ export function buildPropsRoute(route) {
 
   if (process.env.NODE_ENV === 'development') {
     url.searchParams.append('propsGetter', propsGetter)
+    url.searchParams.append('data', encodeURIComponent(JSON.stringify(data)))
   }
 
   const fullPath = url.toString().replace(EXAMPLE_URL, '')

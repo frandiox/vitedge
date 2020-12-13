@@ -5,7 +5,7 @@ export default defineEdgeProps({
     return {
       data: {
         server: true,
-        msg: 'This is an EXAMPLE page ',
+        msg: `This is an EXAMPLE page ${params.resource || ''}`,
       },
     }
   },
