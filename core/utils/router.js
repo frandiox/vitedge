@@ -1,4 +1,5 @@
 import { createRouter, createMemoryHistory } from 'vue-router'
+import { createUrl, getFullPath } from 'vite-ssr/utils'
 
 const PROPS_PREFIX = '/props'
 
@@ -30,11 +31,6 @@ function findRoutePropsGetter(route) {
   return getter ? PROPS_PREFIX + '/' + getter : false
 }
 
-const EXAMPLE_URL = 'http://e.g'
-function getUrlFromPath(path) {
-  return new URL(EXAMPLE_URL + path)
-}
-
 export function buildPropsRoute(route) {
   const propsGetter = findRoutePropsGetter(route)
 
@@ -44,15 +40,15 @@ export function buildPropsRoute(route) {
 
   const { matched: _1, meta: _2, redirectedFrom: _3, ...data } = route
 
-  const url = getUrlFromPath(route.fullPath)
+  const url = createUrl(route.fullPath)
   url.pathname = PROPS_PREFIX + url.pathname
 
   if (process.env.NODE_ENV === 'development') {
-    url.searchParams.append('propsGetter', propsGetter)
-    url.searchParams.append('data', encodeURIComponent(JSON.stringify(data)))
+    url.searchParams.set('propsGetter', propsGetter)
+    url.searchParams.set('data', encodeURIComponent(JSON.stringify(data)))
   }
 
-  const fullPath = url.toString().replace(EXAMPLE_URL, '')
+  const fullPath = getFullPath(url)
 
   return {
     ...data,
@@ -62,16 +58,14 @@ export function buildPropsRoute(route) {
 }
 
 export function resolvePropsRoute(routes, path, base) {
-  const routeBase = base && base({ url: getUrlFromPath(path) })
-  let initialRoutePath = path.replace(PROPS_PREFIX + '/', '/')
-  if (routeBase && initialRoutePath.startsWith(routeBase)) {
-    initialRoutePath = initialRoutePath.replace(routeBase, '/')
-  }
+  const url = createUrl(path)
+  const routeBase = base && base({ url })
+  const fullPath = getFullPath(url, routeBase)
 
   const router = createRouter({
     routes,
     history: createMemoryHistory(routeBase),
   })
 
-  return buildPropsRoute(router.resolve(initialRoutePath))
+  return buildPropsRoute(router.resolve(fullPath))
 }

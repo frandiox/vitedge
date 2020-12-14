@@ -25,7 +25,12 @@ async function getPageProps(request) {
 
   if (propsMeta) {
     try {
-      const { data } = await propsMeta.handler({ request, ...extra })
+      const { data } = await propsMeta.handler({
+        ...extra,
+        request,
+        headers: request.headers,
+      })
+
       return data
     } catch (error) {
       console.error(error)
@@ -49,7 +54,9 @@ server.get('*', async (request, response) => {
       if (apiMeta) {
         const { data } = await apiMeta.handler({
           request: { ...request, url: href },
-          params: request.query,
+          query: request.query,
+          heders: request.headers,
+          url: new URL(href),
         })
 
         const headers = {
