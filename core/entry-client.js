@@ -29,6 +29,12 @@ export default function (App, { routes, base, pageProps = true }, hook) {
           }
         }
 
+        if (from && to.name === from.name) {
+          // Keep state when changing hash/query in the same route
+          to.meta.state = from.meta.state
+          return next()
+        }
+
         const propsRoute = buildPropsRoute(to)
 
         if (propsRoute) {
