@@ -66,7 +66,7 @@ export function resolvePropsRoute(routes, path, base) {
   const url = createUrl(path)
   url.pathname = withoutPrefix(url.pathname, PROPS_PREFIX + '/')
 
-  const routeBase = base && withoutSuffix(base({ url }))
+  const routeBase = base && withoutSuffix(base({ url }), '/')
   const fullPath = getFullPath(url, routeBase)
 
   const router = createRouter({
