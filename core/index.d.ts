@@ -8,6 +8,7 @@ declare module 'vitedge' {
       routes: RouteLocationRaw[]
       base?: (params: { url: URL }) => string
       pageProps?: boolean
+      debug?: { mount?: boolean }
     },
     hook: (params: {
       app: App
