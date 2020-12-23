@@ -1,5 +1,10 @@
 import { createRouter, createMemoryHistory } from 'vue-router'
-import { createUrl, getFullPath } from 'vite-ssr/utils'
+import {
+  createUrl,
+  getFullPath,
+  withoutPrefix,
+  withoutSuffix,
+} from 'vite-ssr/utils'
 
 const PROPS_PREFIX = '/props'
 
@@ -40,7 +45,7 @@ export function buildPropsRoute(route) {
 
   const { matched: _1, meta: _2, redirectedFrom: _3, ...data } = route
 
-  const url = createUrl(route.fullPath)
+  const url = createUrl(route.href || route.fullPath)
   url.pathname = PROPS_PREFIX + url.pathname
 
   if (process.env.NODE_ENV === 'development') {
@@ -59,7 +64,9 @@ export function buildPropsRoute(route) {
 
 export function resolvePropsRoute(routes, path, base) {
   const url = createUrl(path)
-  const routeBase = base && base({ url })
+  url.pathname = withoutPrefix(url.pathname, PROPS_PREFIX + '/')
+
+  const routeBase = base && withoutSuffix(base({ url }))
   const fullPath = getFullPath(url, routeBase)
 
   const router = createRouter({
