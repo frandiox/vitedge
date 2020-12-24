@@ -23,6 +23,7 @@ declare module 'vitedge' {
 }
 
 export type PropsOptions = {
+  status: number
   headers?: Record<string, string>
   cache?: {
     api?: number | boolean
@@ -50,6 +51,7 @@ export type EdgeProps = {
 }
 
 export type ApiOptions = {
+  status: number
   headers?: Record<string, string>
   cache?: {
     api?: number | boolean

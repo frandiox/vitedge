@@ -33,9 +33,11 @@ export function parseQuerystring(event) {
 }
 
 function buildApiResponse(data, options) {
+  options = options || {}
+
   const headers = {
     'content-type': 'application/json;charset=UTF-8',
-    ...((options && options.headers) || {}),
+    ...(options.headers || {}),
   }
 
   if ((headers['content-type'] || '').startsWith('application/json')) {
@@ -43,7 +45,7 @@ function buildApiResponse(data, options) {
   }
 
   return createResponse(data, {
-    status: 200,
+    status: options.status || 200,
     headers,
   })
 }

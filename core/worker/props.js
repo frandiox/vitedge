@@ -23,13 +23,14 @@ function resolvePropsRoute(url = '') {
 }
 
 function buildPropsResponse(props, options) {
+  options = options || {}
   const headers = {
     'content-type': 'application/json;charset=UTF-8',
-    ...((options && options.headers) || {}),
+    ...(options.headers || {}),
   }
 
   return createResponse(JSON.stringify(props), {
-    status: 200,
+    status: options.status || 200,
     headers,
   })
 }
