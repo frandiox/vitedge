@@ -5,6 +5,8 @@ import virtual from '@rollup/plugin-virtual'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import json from '@rollup/plugin-json'
 import commonjs from '@rollup/plugin-commonjs'
+import replace from '@rollup/plugin-replace'
+import multienv from 'multienv-loader'
 
 function resolveFiles(globs, extensions) {
   return fg(
@@ -16,7 +18,7 @@ function resolveFiles(globs, extensions) {
   )
 }
 
-export default async function ({ fnsInputPath, fnsOutputPath }) {
+export default async function ({ mode, fnsInputPath, fnsOutputPath }) {
   const fnsRoutes = await resolveFiles(
     [
       fnsInputPath + '/*',
@@ -25,6 +27,12 @@ export default async function ({ fnsInputPath, fnsOutputPath }) {
     ],
     ['js', 'ts']
   )
+
+  const envVariables = multienv.load({
+    envPath: fnsInputPath,
+    mode: mode || process.env.NODE_ENV || 'production',
+    dry: true,
+  })
 
   const options = {
     input: 'entry',
@@ -51,6 +59,17 @@ export default async function ({ fnsInputPath, fnsOutputPath }) {
       }),
       commonjs(),
       json({ compact: true }),
+      replace({
+        'process.env.NODE_ENV': JSON.stringify(mode),
+        ...Object.entries(envVariables).reduce(
+          (acc, [key, value]) => ({
+            ...acc,
+            [`process.env.${key}`]: JSON.stringify(value),
+          }),
+          {}
+        ),
+        'process.env': JSON.stringify(envVariables),
+      }),
     ],
   }
 

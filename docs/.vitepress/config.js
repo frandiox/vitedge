@@ -24,6 +24,10 @@ module.exports = {
         link: '/cache',
       },
       {
+        text: 'Environment Variables',
+        link: '/environment',
+      },
+      {
         text: 'Troubleshooting',
         link: '/troubleshooting',
       },

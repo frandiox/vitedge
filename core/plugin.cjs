@@ -11,6 +11,10 @@ module.exports = {
     }) => {
       // @ts-ignore
       globalThis.fetch = require('node-fetch')
+      require('multienv-loader').load({
+        mode: process.env.NODE_ENV || 'development',
+        envPath: root + '/functions',
+      })
 
       const cacheBust = new Map()
       watcher.on('change', (fullPath) => {

@@ -5,7 +5,7 @@ export default <EdgeProps>{
     return {
       data: {
         server: true,
-        msg: 'This is page ' + name.toUpperCase(),
+        msg: 'This is page ' + name.toUpperCase() + '. ' + process.env.TEST,
       },
     }
   },

@@ -42,7 +42,11 @@ const patchVite = async () => {
 ;(async () => {
   if (command === 'build') {
     const { default: build } = await import('vitedge/build/index.js')
-    await build()
+
+    const modeIndex = args.indexOf('--mode')
+    const mode = modeIndex >= -1 ? args[modeIndex + 1] : undefined
+
+    await build({ mode })
     process.exit()
   } else if (command === 'dev') {
     args.unshift('node_modules/.bin/vite')

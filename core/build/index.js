@@ -14,15 +14,17 @@ const {
   commitHash,
 } = config
 
-export default async function () {
+export default async function ({ mode } = {}) {
   await buildSSR({
     clientOptions: {
+      mode,
       outDir: path.resolve(rootDir, outDir, clientOutDir),
       alias: {
         vitedge: 'vitedge/entry-client',
       },
     },
     ssrOptions: {
+      mode,
       outDir: path.resolve(rootDir, outDir, ssrOutDir),
       alias: {
         vitedge: 'vitedge/entry-server',
@@ -36,6 +38,7 @@ export default async function () {
   })
 
   await buildFunctions({
+    mode,
     fnsInputPath: path.resolve(rootDir, fnsInDir),
     fnsOutputPath: path.resolve(rootDir, outDir, fnsOutFile),
   })
