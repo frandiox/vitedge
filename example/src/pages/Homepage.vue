@@ -1,4 +1,9 @@
 <template>
+  <Helmet
+    :html-attrs="{ lang: 'en' }"
+    :meta="[{ name: 'description', content: 'this should be moved to head' }]"
+  />
+
   <h1>This is the homepage. Server's getProps works: {{ server }}</h1>
   <p>Message from server: {{ msg }}</p>
 </template>

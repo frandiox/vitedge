@@ -1,9 +1,9 @@
 declare module 'vitedge' {
-  import { App } from 'vue'
+  import { App, Component } from 'vue'
   import { Router, RouteLocationRaw, RouteLocationNormalized } from 'vue-router'
 
   const handler: (
-    App: any,
+    App: Component,
     options: {
       routes: RouteLocationRaw[]
       base?: (params: { url: URL }) => string
@@ -20,6 +20,10 @@ declare module 'vitedge' {
   ) => void
 
   export default handler
+
+  // vite-ssr components
+  export const Helmet: Component
+  export const ClientOnly: Component
 }
 
 export type PropsOptions = {
