@@ -9,13 +9,21 @@ module.exports = {
       server, // raw http server instance
       watcher, // chokidar file watcher instance
     }) => {
-      // @ts-ignore
+      // -- Polyfill web APIs
       globalThis.fetch = require('node-fetch')
+      globalThis.Request = globalThis.fetch.Request
+      globalThis.Response = globalThis.fetch.Response
+      globalThis.atob = (str) => Buffer.from(str, 'base64').toString('binary')
+      globalThis.btoa = (str) => Buffer.from(str).toString('base64')
+      globalThis.crypto = new (require('node-webcrypto-ossl').Crypto)()
+
+      // -- Load environment variables
       require('multienv-loader').load({
         mode: process.env.NODE_ENV || 'development',
         envPath: root + '/functions',
       })
 
+      // -- Prepare HMR for backend files
       const cacheBust = new Map()
       watcher.on('change', (fullPath) => {
         if (fullPath.replace(root, '').startsWith('/functions/')) {

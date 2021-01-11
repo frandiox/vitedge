@@ -44,6 +44,7 @@
     "fast-glob": "^3.2.4",
     "multienv-loader": "^1.2.0",
     "node-fetch": "^2.6.1",
+    "node-webcrypto-ossl": "^2.1.2",
     "rollup": "^2.34.2",
     "rollup-plugin-esbuild": "^2.6.1",
     "vite-ssr": "^0.0.16"
