@@ -42,13 +42,15 @@ module.exports = {
           if (endpointMeta) {
             endpointMeta = endpointMeta.default || endpointMeta
             if (endpointMeta.handler) {
+              const fetchRequest = await nodeToFetchRequest(ctx.req)
+
               const { data } = await endpointMeta.handler({
                 ...(extra || {}),
-                request: ctx.request,
-                headers: ctx.headers,
+                request: fetchRequest,
+                headers: fetchRequest.headers,
                 event: {
                   clientId: process.pid,
-                  request: ctx.request,
+                  request: fetchRequest,
                   respondWith: () => undefined,
                   waitUntil: () => undefined,
                 },
@@ -93,4 +95,26 @@ module.exports = {
       })
     },
   ],
+}
+
+function nodeToFetchRequest(nodeRequest) {
+  return new Promise((resolve, reject) => {
+    let data = []
+    nodeRequest.on('data', (chunk) => data.push(chunk))
+    nodeRequest.on('error', (error) => reject(error))
+    nodeRequest.on('end', () => {
+      // Simulate a FetchEvent.request https://developer.mozilla.org/en-US/docs/Web/API/Request
+      resolve(
+        new Request(
+          `${nodeRequest.protocol || 'http'}://${nodeRequest.headers.host}${
+            nodeRequest.url
+          }`,
+          {
+            ...nodeRequest,
+            body: data.length === 0 ? undefined : Buffer.concat(data),
+          }
+        )
+      )
+    })
+  })
 }
