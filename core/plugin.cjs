@@ -9,7 +9,7 @@ module.exports = () => {
           : 'vitedge/entry-client',
       })
     },
-    configureServer: ({ app, config, watcher }) => {
+    configureServer: ({ app, config }) => {
       // -- Polyfill web APIs
       globalThis.fetch = require('node-fetch')
       globalThis.Request = globalThis.fetch.Request
@@ -26,21 +26,10 @@ module.exports = () => {
         envPath: root + '/functions',
       })
 
-      // -- Prepare HMR for backend files
-      const cacheBust = new Map()
-      watcher.on('change', (fullPath) => {
-        if (fullPath.replace(root, '').startsWith('/functions/')) {
-          const filePath = fullPath.replace(/\.[jt]sx?$/i, '')
-          cacheBust.set(filePath, (cacheBust.get(filePath) || 0) + 1)
-        }
-      })
-
       async function handleFunctionRequest(req, res, { functionPath, extra }) {
         try {
           const filePath = root + '/functions' + functionPath
-          let endpointMeta = await import(
-            filePath + '.js' + `?cacheBust=${cacheBust.get(filePath) || 0}`
-          )
+          let endpointMeta = await import(filePath + '.js')
 
           if (endpointMeta) {
             endpointMeta = endpointMeta.default || endpointMeta

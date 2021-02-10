@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 
-import path from 'path'
-import { promises as fs } from 'fs'
-import { createRequire } from 'module'
 import cp from 'child_process'
 
 const [, , command, ...args] = process.argv
@@ -23,9 +20,11 @@ const [, , command, ...args] = process.argv
     if (config.isTS) {
       args.unshift(
         '--loader',
-        'ts-node/esm',
+        'vitedge/dev/ts-loader.js',
         '--experimental-specifier-resolution=node'
       )
+    } else {
+      args.unshift('--loader', 'vitedge/dev/js-loader.js')
     }
 
     args.unshift('--experimental-json-modules')

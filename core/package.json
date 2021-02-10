@@ -30,9 +30,9 @@
     "node": "node >= 12.19"
   },
   "peerDependencies": {
+    "vite": "^2.0.0-beta.67",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.0",
-    "vite": "^2.0.0-beta.67"
+    "vue-router": "^4.0.0"
   },
   "dependencies": {
     "@cloudflare/kv-asset-handler": "^0.1.0",

@@ -986,8 +986,10 @@ util-deprecate@^1.0.2:
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
 
-"vite-ssr@file:../../vite-ssr/core":
-  version "0.0.16"
+vite-ssr@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.1.0.tgz#c93f50a31d17e4805b3f29ccb14876103f1aa09e"
+  integrity sha512-nxnclUbReGB4n/qiMf8wZrBDCrf5K3wKRCLyALXvq+O9Vb6S4q4bofhxrVhSjVkOXgj1WAag17bBn98FXGmz+g==
   dependencies:
     "@rollup/plugin-replace" "^2.3.3"
     "@vue/server-renderer" "^3.0.5"
@@ -1006,7 +1008,7 @@ vite@^2.0.0-beta.67:
     fsevents "~2.3.1"
 
 "vitedge@file:../core":
-  version "0.4.9"
+  version "0.5.0"
   dependencies:
     "@cloudflare/kv-asset-handler" "^0.1.0"
     "@rollup/plugin-commonjs" "^17.0.0"
@@ -1021,7 +1023,7 @@ vite@^2.0.0-beta.67:
     node-webcrypto-ossl "^2.1.2"
     rollup "^2.34.2"
     rollup-plugin-esbuild "^2.6.1"
-    vite-ssr "file:../../../Library/Caches/Yarn/v6/npm-vitedge-0.4.9-564fe3a9-d83e-4788-ae15-a05047819d72-1612966058890/vite-ssr/core"
+    vite-ssr "^0.1.0"
 
 vue-router@^4.0.0:
   version "4.0.3"
