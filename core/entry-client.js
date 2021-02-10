@@ -1,4 +1,4 @@
-export * from 'vite-ssr/components'
+export { Helmet, ClientOnly } from 'vite-ssr/components'
 import viteSSR from 'vite-ssr/entry-client'
 import { addPagePropsGetterToRoutes, buildPropsRoute } from './utils/router'
 

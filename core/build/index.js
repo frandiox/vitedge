@@ -18,16 +18,14 @@ export default async function ({ mode } = {}) {
   await buildSSR({
     clientOptions: {
       mode,
-      outDir: path.resolve(rootDir, outDir, clientOutDir),
-      alias: {
-        vitedge: 'vitedge/entry-client',
+      build: {
+        outDir: path.resolve(rootDir, outDir, clientOutDir),
       },
     },
-    ssrOptions: {
+    serverOptions: {
       mode,
-      outDir: path.resolve(rootDir, outDir, ssrOutDir),
-      alias: {
-        vitedge: 'vitedge/entry-server',
+      build: {
+        outDir: path.resolve(rootDir, outDir, ssrOutDir),
       },
       packageJson: {
         vitedge: {

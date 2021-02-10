@@ -1,6 +1,7 @@
 import { UserConfig } from 'vite'
-import vitedgePlugin from 'vitedge/plugin.cjs'
+import vitedge from 'vitedge/plugin.cjs'
+import vue from '@vitejs/plugin-vue'
 
 export default {
-  plugins: [vitedgePlugin],
+  plugins: [vitedge(), vue()],
 } as UserConfig

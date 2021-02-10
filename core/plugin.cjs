@@ -1,14 +1,15 @@
-module.exports = {
-  alias: {
-    vitedge: 'vitedge/entry-client',
-  },
-  configureServer: [
-    async ({
-      root, // project root directory, absolute path
-      app, // Koa app instance
-      server, // raw http server instance
-      watcher, // chokidar file watcher instance
-    }) => {
+module.exports = () => {
+  return {
+    name: 'vitedge',
+    configResolved: (config) => {
+      config.alias.push({
+        find: /^vitedge$/,
+        replacement: config.build.ssr
+          ? 'vitedge/entry-server'
+          : 'vitedge/entry-client',
+      })
+    },
+    configureServer: ({ app, config, watcher }) => {
       // -- Polyfill web APIs
       globalThis.fetch = require('node-fetch')
       globalThis.Request = globalThis.fetch.Request
@@ -16,6 +17,8 @@ module.exports = {
       globalThis.atob = (str) => Buffer.from(str, 'base64').toString('binary')
       globalThis.btoa = (str) => Buffer.from(str).toString('base64')
       globalThis.crypto = new (require('node-webcrypto-ossl').Crypto)()
+
+      const { root } = config
 
       // -- Load environment variables
       require('multienv-loader').load({
@@ -32,7 +35,7 @@ module.exports = {
         }
       })
 
-      async function handleFunctionRequest(ctx, functionPath, extra) {
+      async function handleFunctionRequest(req, res, { functionPath, extra }) {
         try {
           const filePath = root + '/functions' + functionPath
           let endpointMeta = await import(
@@ -42,7 +45,7 @@ module.exports = {
           if (endpointMeta) {
             endpointMeta = endpointMeta.default || endpointMeta
             if (endpointMeta.handler) {
-              const fetchRequest = await nodeToFetchRequest(ctx.req)
+              const fetchRequest = await nodeToFetchRequest(req)
 
               const { data } = await endpointMeta.handler({
                 ...(extra || {}),
@@ -56,45 +59,53 @@ module.exports = {
                 },
               })
 
-              ctx.body = data
-
-              return
+              res.statusCode = 200
+              res.setHeader('Content-Type', 'application/json; charset=utf-8')
+              return res.end(JSON.stringify(data))
             }
           }
         } catch (error) {
           console.error(error)
-          ctx.message = error.message
-          ctx.status = 500
-          return
+          res.statusMessage = error.message
+          res.statusCode = 500
+          return res.end()
         }
 
-        ctx.status = 404
+        res.statusCode = 404
+        return res.end()
       }
 
-      app.use(async (ctx, next) => {
-        if (ctx.url.includes('/api/')) {
-          await handleFunctionRequest(ctx, ctx.url, {
-            query: ctx.query,
-            url: new URL(ctx.href),
-          })
+      app.use('/api', async function vitedgeApiHandler(req, res) {
+        const url = getUrl(req)
+        await handleFunctionRequest(req, res, {
+          functionPath: req.originalUrl,
+          extra: {
+            query: url.searchParams,
+            url,
+          },
+        })
+      })
 
-          return
-        }
-
-        if (ctx.url.includes('/props/')) {
-          await handleFunctionRequest(
-            ctx,
-            ctx.query.propsGetter,
-            ctx.query.data && JSON.parse(decodeURIComponent(ctx.query.data))
-          )
-
-          return
-        }
-
-        await next()
+      app.use('/props', async function vitedgePropsHandler(req, res) {
+        const { searchParams } = getUrl(req)
+        await handleFunctionRequest(req, res, {
+          functionPath: searchParams.get('propsGetter'),
+          extra: searchParams.has('data')
+            ? JSON.parse(decodeURIComponent(searchParams.get('data')))
+            : {},
+        })
       })
     },
-  ],
+  }
+}
+
+function getUrl(req) {
+  const secure =
+    req.connection.encrypted || req.headers['x-forwarded-proto'] === 'https'
+
+  return new URL(
+    `${secure ? 'https' : 'http'}://${req.headers.host + req.originalUrl}`
+  )
 }
 
 function nodeToFetchRequest(nodeRequest) {
