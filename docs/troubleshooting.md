@@ -21,7 +21,3 @@ module.exports = {
 ## Code generation from strings disallowed for this context
 
 This happen if you (or your dependencies) run `eval` or related in a worker environment. Unsafe evaluations are not supported. For example, [`vue-i18n` is affected](https://github.com/intlify/vue-i18n-next/issues/198) by this issue.
-
-## Any error in Vite internals
-
-Try running `vitedge patch` command. This will add some temporary modifications to Vite internals. See [more details here](https://github.com/frandiox/vitedge/tree/master/core/bin/cli.js).

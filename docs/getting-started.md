@@ -34,10 +34,7 @@ First, add the following to your `package.json`:
 
 ```json
 "type": "module",
-"scripts": { "postinstall": "vitedge patch" }
 ```
-
-This will patch some issues in Vite itself related to ES Modules.
 
 Then, add Vitedge package:
 
