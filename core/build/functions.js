@@ -6,7 +6,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve'
 import json from '@rollup/plugin-json'
 import commonjs from '@rollup/plugin-commonjs'
 import replace from '@rollup/plugin-replace'
-import multienv from 'multienv-loader'
+import { loadEnv } from '../utils/env.js'
 
 function resolveFiles(globs, extensions) {
   return fg(
@@ -16,6 +16,31 @@ function resolveFiles(globs, extensions) {
       onlyFiles: true,
     }
   )
+}
+
+function resolveEnvVariables({ mode }) {
+  const actualMode = mode || process.env.NODE_ENV || 'production'
+
+  const envVariables = loadEnv({
+    mode: actualMode,
+    dry: true,
+  })
+
+  const nodeEnv = envVariables.NODE_ENV || process.env.NODE_ENV || actualMode
+
+  return {
+    'process.env.MODE': JSON.stringify(actualMode),
+    'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+    ...Object.entries(envVariables).reduce(
+      (acc, [key, value]) => ({
+        ...acc,
+        [`process.env.${key}`]: JSON.stringify(value),
+      }),
+      {}
+    ),
+    'process.env.': `({}).`,
+    'process.env': JSON.stringify(envVariables),
+  }
 }
 
 export default async function ({ mode, fnsInputPath, fnsOutputPath }) {
@@ -28,30 +53,25 @@ export default async function ({ mode, fnsInputPath, fnsOutputPath }) {
     ['js', 'ts']
   )
 
-  const envVariables = multienv.load({
-    envPath: fnsInputPath,
-    mode: mode || process.env.NODE_ENV || 'production',
-    dry: true,
-  })
+  const virtualEntry =
+    fnsRoutes
+      .map((route, index) => `import dep${index} from '${route}'`)
+      .join('\n') +
+    '\n' +
+    `export default { ${fnsRoutes
+      .map(
+        (route, index) =>
+          `"${route
+            .replace(fnsInputPath, '')
+            .replace(/\.[tj]sx?$/i, '')}": dep${index}`
+      )
+      .join(',\n')} }`
 
-  const options = {
+  const bundle = await rollup({
     input: 'entry',
     plugins: [
-      virtual({
-        entry:
-          fnsRoutes
-            .map((route, index) => `import dep${index} from '${route}'`)
-            .join('\n') +
-          '\n' +
-          `export default { ${fnsRoutes
-            .map(
-              (route, index) =>
-                `"${route
-                  .replace(fnsInputPath, '')
-                  .replace(/\.[tj]sx?$/i, '')}": dep${index}`
-            )
-            .join(',\n')} }`,
-      }),
+      virtual({ entry: virtualEntry }),
+      replace(resolveEnvVariables({ mode })),
       esbuild(),
       nodeResolve({
         preferBuiltins: false,
@@ -59,21 +79,9 @@ export default async function ({ mode, fnsInputPath, fnsOutputPath }) {
       }),
       commonjs(),
       json({ compact: true }),
-      replace({
-        'process.env.NODE_ENV': JSON.stringify(mode),
-        ...Object.entries(envVariables).reduce(
-          (acc, [key, value]) => ({
-            ...acc,
-            [`process.env.${key}`]: JSON.stringify(value),
-          }),
-          {}
-        ),
-        'process.env': JSON.stringify(envVariables),
-      }),
     ],
-  }
+  })
 
-  const bundle = await rollup(options)
   await bundle.write({
     file: fnsOutputPath,
     format: 'es',
