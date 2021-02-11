@@ -8,5 +8,6 @@ Follow Vite's indications.
 
 ## Backend
 
-Place dotenv files in `<root>/functions/` and Vitedge will load them according to Vite's behavior.
-Variables can later be referenced as `process.env.MY_VARIABLE` in the backend handlers.
+Place dotenv files in `<root>/functions/` and Vitedge will load them according to Vite's behavior. Only variables prefixed with `VITEDGE_` will be loaded.
+
+Variables can later be referenced as `process.env.VITEDGE_MY_VARIABLE` in the backend handlers.

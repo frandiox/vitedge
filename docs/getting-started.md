@@ -48,10 +48,10 @@ yarn add vitedge
 
 ### 3. Import Vitedge plugin
 
-Import `vitedge/plugin.cjs` in your `vite.config.js`:
+Import `vitedge/plugin.js` in your `vite.config.js`:
 
 ```js
-import vitedgePlugin from 'vitedge/plugin.cjs'
+import vitedgePlugin from 'vitedge/plugin.js'
 
 export default {
   plugins: [vitedgePlugin],

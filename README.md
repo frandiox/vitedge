@@ -26,20 +26,21 @@ See [docs](https://vitedge.netlify.app).
 
 ## Roadmap
 
-- [x] Support TypeScript projects
-- [x] Custom Vite dev-server that serves API/Props during development
-- [x] Docs website
-- [x] Extract CF worker boilerplate as utilities
-- [x] Cache props/html in worker and make it configurable
-- [x] i18n compatible
-- [ ] Auth utilities (passing JWT in requests)
-- [ ] List of pages that should be prerrendered automatically after deployment
-- [x] Compatibility with Node runtime for other providers (Vercel/Netlify...)
+- [x] Support TypeScript projects.
+- [x] Custom Vite dev-server that serves API/Props during development.
+- [x] Docs website.
+- [x] Extract CF worker boilerplate as utilities.
+- [x] Cache props/html in worker and make it configurable.
+- [x] i18n compatible.
+- [ ] Auth utilities (passing JWT in requests).
+- [x] Compatibility with Node runtime for other providers (Vercel/Netlify...).
 - [ ] Add example using Vercel's edge cache.
-- [x] Detect imported files in HTML and push them with HTTP/2
-- [ ] Add a "preview" mode that runs SSR for local development (web worker?)
-- [x] Support GraphQL, sitemap and other dynamic endpoints
-- [ ] React/Preact compatibility.
+- [x] Detect imported files in HTML and push them with HTTP/2.
+- [ ] Add a "preview" mode that runs SSR for local development (web worker?).
+- [x] Support GraphQL, sitemap and other dynamic endpoints.
+- [ ] React/Svelte compatibility.
+- [x] Support Vite 2.
+- [x] HMR for API side.
 
 ## Contributing
 
