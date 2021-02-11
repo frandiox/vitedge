@@ -41,6 +41,7 @@ See [docs](https://vitedge.netlify.app).
 - [ ] React/Svelte compatibility.
 - [x] Support Vite 2.
 - [x] HMR for API side.
+- [ ] Preload assets using Vite's manifest.
 
 ## Contributing
 
