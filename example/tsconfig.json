@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "es2015",
+    "module": "esnext",
     "target": "es2019",
     "strict": true,
     "moduleResolution": "node",
@@ -11,7 +11,9 @@
     "noImplicitAny": false,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "lib": ["WebWorker"]
+    "types": ["@types/node", "vite/client"],
+    "lib": ["WebWorker"],
+    "plugins": [{ "name": "@vuedx/typescript-plugin-vue" }]
   },
   "include": [
     "src/**/*",
