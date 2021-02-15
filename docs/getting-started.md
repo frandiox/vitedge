@@ -54,7 +54,7 @@ Import `vitedge/plugin.js` in your `vite.config.js`:
 import vitedgePlugin from 'vitedge/plugin.js'
 
 export default {
-  plugins: [vitedgePlugin],
+  plugins: [vitedgePlugin()],
 }
 ```
 
