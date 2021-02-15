@@ -1471,10 +1471,10 @@ vite-ssr@^0.1.0:
     "@vue/server-renderer" "^3.0.5"
     merge-options "^3.0.3"
 
-vite@^2.0.0-beta.67:
-  version "2.0.0-beta.67"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-2.0.0-beta.67.tgz#2d4e7a62a925539448bd18154008afb2b4484a07"
-  integrity sha512-QNxIRajidVG3ejikBUb17NgCV1bJ9UyKHBdItgw1O/ljQ1hBoph5I2/DrviqV4G9H3WP7teXk5vwQWuCVS9fqQ==
+vite@^2.0.0-beta.69:
+  version "2.0.0-beta.69"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-2.0.0-beta.69.tgz#dd10b4c366d64e670a0da612097fe9645c40212b"
+  integrity sha512-Wf4bWOK/b6Q+06Wyk7uJIBy/LiENGx26do6tn9gOMRRZLEuLizN/cDzGqnQkGVVevbb18xdilyxhnTes0lFjZg==
   dependencies:
     esbuild "^0.8.34"
     postcss "^8.2.1"
