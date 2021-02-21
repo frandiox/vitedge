@@ -5,7 +5,7 @@ import buildFunctions from './functions.js'
 import config from '../config.cjs'
 
 const {
-  rootDir,
+  getProjectInfo,
   outDir,
   clientOutDir,
   ssrOutDir,
@@ -13,6 +13,8 @@ const {
   fnsOutFile,
   commitHash,
 } = config
+
+const { rootDir } = getProjectInfo()
 
 export default async function ({ mode } = {}) {
   await buildSSR({

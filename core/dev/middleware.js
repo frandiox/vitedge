@@ -1,5 +1,7 @@
 import projectConfig from '../config.cjs'
 
+const { fnsInDir } = projectConfig
+
 function getUrl(req) {
   const secure =
     req.connection.encrypted || req.headers['x-forwarded-proto'] === 'https'
@@ -65,7 +67,7 @@ async function handleFunctionRequest(
   { config, functionPath, extra }
 ) {
   try {
-    const filePath = `${config.root}/${projectConfig.fnsInDir}${functionPath}`
+    const filePath = `${config.root}/${fnsInDir}${functionPath}`
     let endpointMeta = await import(filePath + '.js')
 
     if (endpointMeta) {

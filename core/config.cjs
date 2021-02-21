@@ -9,7 +9,7 @@ try {
 } catch (_) {}
 
 module.exports = {
-  ...getProjectInfo(),
+  getProjectInfo,
   outDir: 'dist',
   clientOutDir: 'client',
   ssrOutDir: 'ssr',

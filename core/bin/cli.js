@@ -29,7 +29,8 @@ const [command] = args
     }
 
     const { default: config } = await import('vitedge/config.cjs')
-    if (config.isTS) {
+    const { isTS } = config.getProjectInfo()
+    if (isTS) {
       args.unshift(
         '--loader',
         'vitedge/dev/ts-loader.js',
