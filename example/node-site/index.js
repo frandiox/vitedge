@@ -2,17 +2,18 @@ import path from 'path'
 import express from 'express'
 import fetch from 'node-fetch'
 import api from '../dist/functions.js'
-import ssrBuild from '../dist/ssr/main.js'
 import pkgJson from '../dist/ssr/package.json'
 import manifest from '../dist/client/ssr-manifest.json'
+import ssrBuild from '../dist/ssr/main.js'
+const router = ssrBuild.default
 
-// @ts-ignore
-global.fetch = fetch // Must be polyfilled for SSR
+// Must be polyfilled for SSR
+globalThis.fetch = fetch
 
-const { default: router } = ssrBuild
-
+// This could be Polka, Fastify or any other server
 const server = express()
 
+// Serve static files
 for (const asset of pkgJson.ssr.assets || []) {
   server.use(
     '/' + asset,
@@ -20,6 +21,7 @@ for (const asset of pkgJson.ssr.assets || []) {
   )
 }
 
+// This finds the correct props-getter function from a request URL
 async function getPageProps(request) {
   const { propsGetter, ...extra } = router.resolve(request.url) || {}
   const propsMeta = api[propsGetter]
@@ -42,12 +44,13 @@ async function getPageProps(request) {
   }
 }
 
-server.get('*', async (request, response) => {
+server.use(express.json(), async (request, response) => {
   const href =
     request.protocol + '://' + request.get('host') + request.originalUrl
   const normalizedPathname = request.path.replace(/(\/|\.\w+)$/, '')
 
   try {
+    // This handles API endpoints and also dynamic files like `/sitemap` or `/graphql`.
     if (normalizedPathname.startsWith('/api/') || !!api[normalizedPathname]) {
       console.log(request.path, request.query)
       const apiMeta = api[normalizedPathname]
@@ -62,7 +65,7 @@ server.get('*', async (request, response) => {
 
         const headers = {
           'content-type': 'application/json',
-          ...(apiMeta.options.headers || {}),
+          ...(apiMeta.options || {}).headers,
         }
 
         response.set(headers)
@@ -78,19 +81,30 @@ server.get('*', async (request, response) => {
       }
     }
 
+    // From here, only GET method is supported
+    if (request.method !== 'GET') {
+      response.status(404)
+      return response.end()
+    }
+
+    // This handles SPA page props requests from the browser
     if (request.path.startsWith('/props/')) {
       console.log(request.path, request.query)
       const props = await getPageProps(request)
       return response.end(JSON.stringify(props))
     }
 
+    // If it didn't match anything else up to here, fallback to HTML rendering
     const initialState = await getPageProps(request)
     const { html } = await router.render(href, {
       request,
       initialState,
+      // This is used for preloading assets
+      // and avoid waterfall requests
       manifest,
       preload: true,
     })
+
     response.end(html)
   } catch (error) {
     console.error(error)

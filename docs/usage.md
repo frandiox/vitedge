@@ -4,13 +4,16 @@ Once Vitedge is installed, you can use its CLI for develoing and building. See a
 
 ## Development
 
-Run `vitedge dev` to start a local Vite server that serves API and page props.
+There are 2 ways to run the app locally for development:
 
-Note that this is all running in your browser without doing SSR.
+- SPA mode: `vitedge dev` command runs Vite directly without any SSR.
+- SSR mode: `vitedge dev --ssr` command spins up a local SSR server.
+
+SPA mode will be somewhat faster but the SSR one will have closer behavior to a production environment.
 
 You can pass any Vite's CLI option to this command. E.g. `vitedge dev --open --port 1337`.
 
-## Build
+## Production
 
 Once the app is ready, run `vitedge build` to create 3 different builds:
 
@@ -18,7 +21,11 @@ Once the app is ready, run `vitedge build` to create 3 different builds:
 - SSR build in `dist/ssr`
 - API build in `dist/functions`
 
-### Cloudflare worker
+### Deploying to a Node.js environment
+
+Any Node.js environment, such as a full server or a serverless function (Netlify, Vercel, GCP, AWS...) just need to import the built files and use them. You can find a simple Express.js example [here](https://github.com/frandiox/vitedge/tree/master/example/node-site/index.js).
+
+### Deploying to Cloudflare Workers
 
 Import Vitedge's webpack configuration in your worker's webpack config file:
 
@@ -40,7 +47,3 @@ addEventListener('fetch', (event) => {
 ```
 
 See a full example [here](https://github.com/frandiox/vitedge/tree/master/example/worker-site/index.js).
-
-### Other Node environments
-
-For a normal Node.js server or any serverless function running in a Node.js environment, you can find a full example [here](https://github.com/frandiox/vitedge/tree/master/example/node-site/index.js).

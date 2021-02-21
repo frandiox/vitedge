@@ -14,7 +14,7 @@ See a demo [here](https://vitedge.zable.workers.dev/). Full code example [here](
 
 ## Features
 
-- ⚡ Ultrafast development and HMR powered by Vite.
+- ⚡ Ultrafast development and HMR powered by Vite and ES Modules.
 - ⚔️ Renders and caches at the edge for maximum performance in production. Cache is configurable.
 - 💁‍♂️ Each page gets its server data as props by default but can be set in Vuex instead.
 - 🔽 HTTP/2 server push for your assets to speed up the loading time without waterfall requests.
