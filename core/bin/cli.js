@@ -2,7 +2,9 @@
 
 import cp from 'child_process'
 
-const [, , command, ...args] = process.argv
+const [, , ...args] = process.argv
+
+const [command] = args
 
 ;(async () => {
   if (command === 'build') {
