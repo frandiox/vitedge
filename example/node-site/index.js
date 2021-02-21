@@ -85,8 +85,8 @@ server.get('*', async (request, response) => {
     }
 
     const initialState = await getPageProps(request)
-    const { html } = await router.render({
-      request: { ...request, url: href },
+    const { html } = await router.render(href, {
+      request,
       initialState,
       manifest,
       preload: true,

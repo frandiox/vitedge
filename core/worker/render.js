@@ -68,7 +68,7 @@ export async function handleViewRendering(event, { http2ServerPush }) {
 
   const initialState = page ? await page.response.json() : {}
 
-  const { html } = await router.render({
+  const { html } = await router.render(event.request.url, {
     initialState,
     request: event.request,
     manifest,
