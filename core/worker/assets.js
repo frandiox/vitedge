@@ -1,5 +1,5 @@
 import meta from '__vitedge_meta__'
-import { getAssetFromKV } from '@cloudflare/kv-asset-handler'
+import { getAssetFromKV, mapRequestToAsset } from '@cloudflare/kv-asset-handler'
 
 export function isStaticAsset(event) {
   const url = new URL(event.request.url)
@@ -24,4 +24,25 @@ export async function handleStaticAsset(event) {
   }
 
   return response
+}
+
+export async function getSsrManifest(event) {
+  try {
+    const response = await getAssetFromKV(event, {
+      mapRequestToAsset: (request) => {
+        const url = new URL(request.url)
+        url.pathname = '/ssr-manifest.json'
+        return mapRequestToAsset(new Request(url.toString(), request))
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('SSR Manifest was not found in KV')
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error(error)
+    return {}
+  }
 }

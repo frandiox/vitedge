@@ -1,4 +1,5 @@
 import router from '__vitedge_router__'
+import { getSsrManifest } from './assets'
 import { getCachedResponse, setCachedResponse } from './cache'
 import { getPageProps } from './props'
 import { createResponse } from './utils'
@@ -15,8 +16,12 @@ function extractAttribute(string, attr) {
 function buildLinkHeader(html, { destinations = [] } = {}) {
   let filesToPush = []
 
+  // Only care about head part
+  const [head = ''] = html.split('</head>')
+
   const matches =
-    html.match(/<(script[\s\w="]+src.+?)>|<(link[\s\w="]+href.+?)>/gm) || []
+    // Regexp should be OK for parsing this HTML subset
+    head.match(/<(script[\s\w="]+src.+?)>|<(link[\s\w="]+href.+?)>/gm) || []
 
   for (const match of matches) {
     if (match) {
@@ -56,12 +61,18 @@ export async function handleViewRendering(event, { http2ServerPush }) {
     return cachedResponse
   }
 
-  const page = await getPageProps(event)
+  const [page, manifest] = await Promise.all([
+    getPageProps(event),
+    getSsrManifest(event),
+  ])
+
   const initialState = page ? await page.response.json() : {}
 
   const { html } = await router.render({
     initialState,
     request: event.request,
+    manifest,
+    preload: true,
   })
 
   const headers = {

@@ -4,6 +4,7 @@ import fetch from 'node-fetch'
 import api from '../dist/functions.js'
 import ssrBuild from '../dist/ssr/main.js'
 import pkgJson from '../dist/ssr/package.json'
+import manifest from '../dist/client/ssr-manifest.json'
 
 // @ts-ignore
 global.fetch = fetch // Must be polyfilled for SSR
@@ -87,6 +88,8 @@ server.get('*', async (request, response) => {
     const { html } = await router.render({
       request: { ...request, url: href },
       initialState,
+      manifest,
+      preload: true,
     })
     response.end(html)
   } catch (error) {
