@@ -127,3 +127,34 @@ export async function configureServer({ middlewares, config }) {
     })
   })
 }
+
+/**
+ * Returns the initial state used for the first server-side rendered page.
+ * It mimics entry-client logic, but runs in the server.
+ */
+export async function getRenderContext({
+  url,
+  resolvedEntryPoint: { resolve },
+}) {
+  url = new URL(url)
+  const propsRoute = resolve(url)
+
+  if (propsRoute) {
+    const [pathname, search] = propsRoute.fullPath.split('?')
+    url.pathname = pathname
+    url.search = search
+
+    try {
+      const res = await fetch(url.toString(), {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      })
+
+      const initialState = await res.json()
+      return { initialState }
+    } catch (error) {
+      console.log(`Could not get page props for route "${propsRoute.name}"`)
+      console.error(error)
+    }
+  }
+}

@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "setup": "yarn && (cd node-site && yarn) && (cd worker-site && yarn)",
-    "dev": "vitedge dev --force",
+    "dev": "vitedge --force",
+    "dev:ssr": "vitedge --ssr --force",
     "build": "rm -rf dist && vitedge build",
     "refresh": "rm -rf node_modules/vitedge && cp -r ../core node_modules/vitedge && cp ../core/bin/cli.js node_modules/.bin/vitedge",
     "serve:worker": "cd worker-site && yarn serve",

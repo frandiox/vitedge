@@ -13,8 +13,18 @@ const [, , command, ...args] = process.argv
 
     await build({ mode })
     process.exit()
-  } else if (command === 'dev') {
-    args.unshift('node_modules/.bin/vite')
+  } else if (
+    command === 'dev' ||
+    command === undefined ||
+    command.startsWith('-')
+  ) {
+    const ssrIndex = args.indexOf('--ssr')
+    if (ssrIndex >= 0) {
+      args.splice(ssrIndex, 1)
+      args.unshift('node_modules/.bin/vite-ssr', '--plugin', 'vitedge')
+    } else {
+      args.unshift('node_modules/.bin/vite')
+    }
 
     const { default: config } = await import('vitedge/config.cjs')
     if (config.isTS) {

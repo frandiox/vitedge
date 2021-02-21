@@ -1,9 +1,9 @@
-import { configureServer } from './dev/middleware.js'
+import { configureServer, getRenderContext } from './dev/middleware.js'
 
 export default () => {
   return {
     name: 'vitedge',
-    configureServer,
+    configureServer, // Provide API/Props during development
     configResolved: (config) => {
       // Vite-beta>=69 wraps 'alias' in 'resolve'
       ;(config.resolve.alias || config.alias).push({
@@ -12,6 +12,9 @@ export default () => {
           ? 'vitedge/entry-server'
           : 'vitedge/entry-client',
       })
+    },
+    viteSsr: {
+      getRenderContext, // Provide props during SSR development
     },
   }
 }

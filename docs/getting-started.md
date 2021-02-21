@@ -2,31 +2,23 @@
 
 ## Requirements
 
-### Development
-
-Vitedge relies on native ES Modules. Therefore, during development, it is recommended using Node version `>=14`, but `12.x` should also work.
-
-### Production
-
-For deploying to Cloudflare workers, you will need an account with the [Workers Bundled plan](https://workers.cloudflare.com/sites#plans).
-
-Other providers (Netlify, Vercel, etc.) offer free tier generally.
+Vitedge relies on native ES Modules. Therefore, during development, it is recommended using Node version `>=14`, but `12.x` should also work in production.
 
 ## Installation
 
 ### 1. Create a Vite app
 
-Since Vitedge is just a Vite app, first of all you must create one:
+Since Vitedge is just a [Vite app](https://vitejs.dev/guide/#scaffolding-your-first-vite-project), first of all you must create one:
 
 ```sh
 # Using NPM
-npm init vite-app my-vitedge-project --template vue
+npm init @vitejs/app my-vue-app --template vue # or vue-ts
 
 # Using Yarn
-yarn create vite-app my-vitedge-project --template vue
+yarn create @vitejs/app my-vue-app --template vue # or vue-ts
 ```
 
-**Currently, only Vue is supported in Vitedge. Other frameworks might come later.**
+**Currently, only Vue is supported in Vitedge. Other frameworks might come later. Open feature requests if you are interested.**
 
 ### 2. Install Vitedge
 
@@ -58,7 +50,7 @@ export default {
 }
 ```
 
-This will enable Vite to serve API and server props during development.
+This will enable Vite to serve API and page props during development.
 
 ### 4. Use Vitedge in your entry point
 

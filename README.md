@@ -36,7 +36,7 @@ See [docs](https://vitedge.netlify.app).
 - [x] Compatibility with Node runtime for other providers (Vercel/Netlify...).
 - [ ] Add example using Vercel's edge cache.
 - [x] Detect imported files in HTML and push them with HTTP/2.
-- [ ] Add a "preview" mode that runs SSR for local development (web worker?).
+- [x] Add an SSR mode for local development (web worker?).
 - [x] Support GraphQL, sitemap and other dynamic endpoints.
 - [ ] React/Svelte compatibility.
 - [x] Support Vite 2.
