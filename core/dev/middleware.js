@@ -101,10 +101,10 @@ async function handleFunctionRequest(
   return res.end()
 }
 
-export async function configureServer({ app, config }) {
+export async function configureServer({ middlewares, config }) {
   await prepareEnvironment()
 
-  app.use('/api', async function vitedgeApiHandler(req, res) {
+  middlewares.use('/api', async function vitedgeApiHandler(req, res) {
     const url = getUrl(req)
     await handleFunctionRequest(req, res, {
       config,
@@ -116,7 +116,7 @@ export async function configureServer({ app, config }) {
     })
   })
 
-  app.use('/props', async function vitedgePropsHandler(req, res) {
+  middlewares.use('/props', async function vitedgePropsHandler(req, res) {
     const { searchParams } = getUrl(req)
     await handleFunctionRequest(req, res, {
       config,
