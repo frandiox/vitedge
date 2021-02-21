@@ -1,5 +1,5 @@
 export { Helmet, ClientOnly } from 'vite-ssr/components'
-import viteSSR from 'vite-ssr/entry-server'
+import viteSSR from 'vite-ssr/vue/entry-server'
 import { addPagePropsGetterToRoutes, resolvePropsRoute } from './utils/router'
 
 export default function (
