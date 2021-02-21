@@ -32,9 +32,11 @@ Import Vitedge's webpack configuration in your worker's webpack config file:
 ```js
 module.exports = {
   // Add your own config here if you need
-  ...require('vitedge/webpack.cjs'),
+  ...require('vitedge/webpack.cjs')(options),
 }
 ```
+
+It will figure out the project root if this is under a Vite project directory. If it's not, then pass { root: '/path/to/project' }` as the options.
 
 Then, simply import `handleEvent` in your worker entry point:
 
