@@ -11,7 +11,7 @@ const [command] = args
     const { default: build } = await import('vitedge/build/index.js')
 
     const modeIndex = args.indexOf('--mode')
-    const mode = modeIndex >= -1 ? args[modeIndex + 1] : undefined
+    const mode = modeIndex >= 0 ? args[modeIndex + 1] : undefined
 
     await build({ mode })
     process.exit()
