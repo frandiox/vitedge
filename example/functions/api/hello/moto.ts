@@ -8,7 +8,12 @@ export default <ApiEndpoint>{
 
     let body
     try {
-      body = await request.json()
+      if (request.json) {
+        body = await request.json()
+      } else {
+        // When running on Express.js, body should already be provided
+        body = request.body
+      }
     } catch (error) {
       console.error(error)
       body = {}
