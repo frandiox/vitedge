@@ -1,6 +1,6 @@
 # Usage
 
-Once Vitedge is installed, you can use its CLI for develoing and building. See a full example project [here](https://github.com/frandiox/vitedge/tree/master/example).
+Once Vitedge is installed, you can use its CLI for develoing and building. See a full example project [here](https://github.com/frandiox/vitedge/tree/master/examples/vue).
 
 ## Development
 
@@ -23,7 +23,7 @@ Once the app is ready, run `vitedge build` to create 3 different builds:
 
 ### Deploying to a Node.js environment
 
-Any Node.js environment, such as a full server or a serverless function (Netlify, Vercel, GCP, AWS...) just need to import the built files and use them. You can find a simple Express.js example [here](https://github.com/frandiox/vitedge/tree/master/example/node-site/index.js).
+Any Node.js environment, such as a full server or a serverless function (Netlify, Vercel, GCP, AWS...) just need to import the built files and use them. You can find a simple Express.js example [here](https://github.com/frandiox/vitedge/tree/master/examples/node-server/index.js).
 
 ### Deploying to Cloudflare Workers
 
@@ -46,4 +46,4 @@ addEventListener('fetch', (event) => {
 })
 ```
 
-See a full example [here](https://github.com/frandiox/vitedge/tree/master/example/worker-site/index.js).
+See a full example [here](https://github.com/frandiox/vitedge/tree/master/examples/worker-site/index.js).

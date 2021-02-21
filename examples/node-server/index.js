@@ -1,10 +1,10 @@
 import path from 'path'
 import express from 'express'
 import fetch from 'node-fetch'
-import api from '../dist/functions.js'
-import pkgJson from '../dist/ssr/package.json'
-import manifest from '../dist/client/ssr-manifest.json'
-import ssrBuild from '../dist/ssr/main.js'
+import api from '../vue/dist/functions.js'
+import pkgJson from '../vue/dist/ssr/package.json'
+import manifest from '../vue/dist/client/ssr-manifest.json'
+import ssrBuild from '../vue/dist/ssr/main.js'
 const router = ssrBuild.default
 
 // Must be polyfilled for SSR
@@ -17,7 +17,7 @@ const server = express()
 for (const asset of pkgJson.ssr.assets || []) {
   server.use(
     '/' + asset,
-    express.static(path.join(process.cwd(), '../dist/client/' + asset))
+    express.static(path.join(process.cwd(), '../vue/dist/client/' + asset))
   )
 }
 

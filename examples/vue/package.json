@@ -7,13 +7,13 @@
     "dev": "vitedge --force",
     "dev:ssr": "vitedge --ssr --force",
     "build": "rm -rf dist && vitedge build",
-    "refresh": "rm -rf node_modules/vitedge && cp -r ../core node_modules/vitedge && cp ../core/bin/cli.js node_modules/.bin/vitedge",
-    "serve:worker": "cd worker-site && yarn serve",
-    "serve:node": "cd node-site && yarn serve"
+    "refresh": "rm -rf node_modules/vitedge && cp -r ../../core node_modules/vitedge && cp ../../core/bin/cli.js node_modules/.bin/vitedge",
+    "serve:worker": "cd ../worker-site && yarn serve",
+    "serve:node": "cd ../node-server && yarn serve"
   },
   "dependencies": {
     "vite": "^2.0.0",
-    "vitedge": "file:../core",
+    "vitedge": "file:../../core",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0"
   },

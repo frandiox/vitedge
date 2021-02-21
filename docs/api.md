@@ -83,6 +83,6 @@ Add `<root>/functions/graphql.js` and setup a GraphQL server using [`apollo-serv
 
 ### Dynamic sitemap, robots, and other files
 
-Add `<root>/functions/sitemap.js` or `<root>/functions/robots.js` and return the corresponding content with cache options. See example [here](https://github.com/frandiox/vitedge/blob/master/example/functions/sitemap.ts). Both `/sitemap.xml` and `sitemap.txt` will match and run the handler (check the request's URL if you want to return different values for each extension).
+Add `<root>/functions/sitemap.js` or `<root>/functions/robots.js` and return the corresponding content with cache options. See example [here](https://github.com/frandiox/vitedge/blob/master/examples/vue/functions/sitemap.ts). Both `/sitemap.xml` and `sitemap.txt` will match and run the handler (check the request's URL if you want to return different values for each extension).
 
 Note that static files have higher priority than dynamic files. For example, if you have both `<root>/public/sitemap.xml` and `<root>/functions/sitemap.js`, the former will be served.
