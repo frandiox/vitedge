@@ -1,6 +1,6 @@
 name = "vitedge"
 type = "webpack"
-account_id = "<YOUR ID>"
+account_id = "f2f4cc760b9f87feb141a07838e85f5d"
 workers_dev = true
 route = ""
 zone_id = ""
