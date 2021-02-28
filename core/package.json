@@ -30,6 +30,7 @@
     "node": "node >= 12.19"
   },
   "peerDependencies": {
+    "@vueuse/head": "^0.3.1",
     "vite": "^2.0.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0"
@@ -47,6 +48,6 @@
     "node-fetch": "^2.6.1",
     "rollup": "^2.34.2",
     "rollup-plugin-esbuild": "^2.6.1",
-    "vite-ssr": "0.4.0"
+    "vite-ssr": "0.5.0"
   }
 }

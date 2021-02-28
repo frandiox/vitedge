@@ -1,6 +1,6 @@
-export { Helmet, ClientOnly } from 'vite-ssr/components'
-import viteSSR from 'vite-ssr/vue/entry-server'
+import viteSSR, { ClientOnly } from 'vite-ssr/vue/entry-server'
 import { addPagePropsGetterToRoutes, resolvePropsRoute } from './utils/router'
+import { createHead } from '@vueuse/head'
 
 export default function (
   App,
@@ -17,6 +17,11 @@ export default function (
       App,
       { routes, base, ...options },
       async ({ app, router, isClient, initialState, initialRoute }) => {
+        const head = createHead()
+        app.use(head)
+
+        app.component(ClientOnly.name, ClientOnly)
+
         router.beforeEach((to, from, next) => {
           to.meta.state = initialState || {}
           next()
@@ -31,6 +36,8 @@ export default function (
             initialRoute,
           })
         }
+
+        return { head }
       }
     ),
   }

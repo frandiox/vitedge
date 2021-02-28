@@ -20,10 +20,6 @@ declare module 'vitedge' {
   ) => void
 
   export default handler
-
-  // vite-ssr components
-  export const Helmet: Component
-  export const ClientOnly: Component
 }
 
 export type PropsOptions = {

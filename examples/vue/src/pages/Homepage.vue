@@ -1,9 +1,4 @@
 <template>
-  <Helmet
-    :html-attrs="{ lang: 'en' }"
-    :meta="[{ name: 'description', content: 'this should be moved to head' }]"
-  />
-
   <h1>This is the homepage. Server's getProps works: {{ server }}</h1>
   <p>Message from server: {{ msg }}</p>
 
@@ -24,6 +19,7 @@
 
 <script>
 import { ref } from 'vue'
+import { useHead } from '@vueuse/head'
 
 export default {
   name: 'Homepage',
@@ -39,6 +35,11 @@ export default {
   },
   setup() {
     const apiResult = ref(null)
+
+    useHead({
+      html: { lang: 'en' },
+      meta: [{ name: 'description', content: 'this should be moved to head' }],
+    })
 
     return {
       apiResult,
