@@ -10,7 +10,7 @@ It can replace static site generators in some situations since it builds on the 
 
 Even though running it at the edge is ideal, it is actually compatible with any Node environment.
 
-See a demo [here](https://vitedge.zable.workers.dev/). Full code example [here](./examples/vue).
+See [live demo](https://vitessedge.zable.workers.dev/) and [starter template](https://github.com/frandiox/vitessedge-template).
 
 ## Features
 
