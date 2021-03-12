@@ -1,6 +1,9 @@
-import fns from '__vitedge_functions__'
+import {
+  createResponse,
+  createNotFoundResponse,
+  resolveFnsEndpoint,
+} from './utils'
 import { getCachedResponse, setCachedResponse } from './cache'
-import { createResponse, createNotFoundResponse } from './utils'
 
 const API_PREFIX = '/api'
 
@@ -12,10 +15,7 @@ function normalizeRoute(pathname) {
 export function isApiRequest(event) {
   const pathname = normalizeRoute(new URL(event.request.url).pathname)
 
-  return (
-    pathname.startsWith(API_PREFIX + '/') ||
-    Object.prototype.hasOwnProperty.call(fns, pathname)
-  )
+  return pathname.startsWith(API_PREFIX + '/') || !!resolveFnsEndpoint(pathname)
 }
 
 export function parseQuerystring(event) {
@@ -58,10 +58,10 @@ export async function handleApiRequest(event) {
   }
 
   const url = new URL(event.request.url)
-  const endpoint = normalizeRoute(url.pathname)
+  const resolvedFn = resolveFnsEndpoint(normalizeRoute(url.pathname))
 
-  if (Object.prototype.hasOwnProperty.call(fns, endpoint)) {
-    const { handler, options: staticOptions } = fns[endpoint]
+  if (resolvedFn) {
+    const { handler, options: staticOptions } = resolvedFn
 
     const { url, query } = parseQuerystring(event)
     const { data, options: dynamicOptions } = await handler({

@@ -1,7 +1,10 @@
 import router from '__vitedge_router__'
-import fns from '__vitedge_functions__'
 import { getCachedResponse, setCachedResponse } from './cache'
-import { createNotFoundResponse, createResponse } from './utils'
+import {
+  createNotFoundResponse,
+  createResponse,
+  resolveFnsEndpoint,
+} from './utils'
 
 const PROPS_PREFIX = '/props'
 export function isPropsRequest(event) {
@@ -12,9 +15,11 @@ function resolvePropsRoute(url = '') {
   const { href, origin } = new URL(url)
   const route = router.resolve(href.replace(origin, ''))
 
-  if (route && Object.prototype.hasOwnProperty.call(fns, route.propsGetter)) {
+  const resolvedFn = route && resolveFnsEndpoint(route.propsGetter)
+
+  if (resolvedFn) {
     return {
-      ...fns[route.propsGetter],
+      ...resolvedFn,
       route,
     }
   }
