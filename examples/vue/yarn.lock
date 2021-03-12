@@ -598,10 +598,10 @@
     vscode-languageserver-textdocument "^1.0.1"
     vscode-uri "^2.1.2"
 
-"@vueuse/head@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@vueuse/head/-/head-0.3.1.tgz#bf09415c2a4ae5ab6a9686acdf14398ef5302414"
-  integrity sha512-SaKib18YjFLrErxHYDxLXsBBY4/Q93b6rYer8WRMaRSBqotmZYGEBaoRURhtVYfneBf5dX9O9P3EdjkSn+gL0g==
+"@vueuse/head@^0.5.0":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@vueuse/head/-/head-0.5.1.tgz#7d8a31ba4d214fff75c1d0845148d7f0bdf5b68f"
+  integrity sha512-xt6qgtItb4z/7vp664opQc0c2+ZoU9itMfvpmg4+h0uJcEnhl7LYxO4V+G8H7EVki7SyXDIFMfoCiCFaJrArmg==
 
 agent-base@6:
   version "6.0.2"
@@ -1586,8 +1586,8 @@ vite@^2.0.0:
   optionalDependencies:
     fsevents "~2.3.1"
 
-"vitedge@file:../../core":
-  version "0.7.0"
+"vitedge@file:../../src":
+  version "0.8.0"
   dependencies:
     "@cloudflare/kv-asset-handler" "^0.1.0"
     "@rollup/plugin-commonjs" "^17.0.0"

@@ -12,7 +12,7 @@
     "serve:node": "cd ../node-server && yarn serve"
   },
   "dependencies": {
-    "@vueuse/head": "^0.3.1",
+    "@vueuse/head": "^0.5.0",
     "vite": "^2.0.0",
     "vitedge": "file:../../src",
     "vue": "^3.0.0",
