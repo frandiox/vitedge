@@ -1,3 +1,4 @@
+import { promises as fs } from 'fs'
 import projectConfig from '../config.cjs'
 
 const { fnsInDir } = projectConfig
@@ -6,9 +7,7 @@ function getUrl(req) {
   const secure =
     req.connection.encrypted || req.headers['x-forwarded-proto'] === 'https'
 
-  return new URL(
-    `${secure ? 'https' : 'http'}://${req.headers.host + req.originalUrl}`
-  )
+  return new URL(`${secure ? 'https' : 'http'}://${req.headers.host + req.url}`)
 }
 
 function nodeToFetchRequest(nodeRequest) {
@@ -67,8 +66,9 @@ async function handleFunctionRequest(
   { config, functionPath, extra }
 ) {
   try {
-    const filePath = `${config.root}/${fnsInDir}${functionPath}`
-    let endpointMeta = await import(filePath + '.js')
+    let endpointMeta = await import(
+      `${config.root}/${fnsInDir}${functionPath}.js`
+    )
 
     if (endpointMeta) {
       endpointMeta = endpointMeta.default || endpointMeta
@@ -103,30 +103,72 @@ async function handleFunctionRequest(
   return res.end()
 }
 
-export async function configureServer({ middlewares, config }) {
-  await prepareEnvironment()
+async function watchDynamicFiles({ config, watcher }) {
+  const getFileFromPath = (filepath) => {
+    const file = filepath.includes('/')
+      ? filepath.split(`/${fnsInDir}/`)[1]
+      : filepath
 
-  middlewares.use('/api', async function vitedgeApiHandler(req, res) {
-    const url = getUrl(req)
-    await handleFunctionRequest(req, res, {
-      config,
-      functionPath: req.originalUrl,
-      extra: {
-        query: url.searchParams,
-        url,
-      },
-    })
+    if (file && !file.includes('/') && /\.[jt]sx?$/i.test(file)) {
+      return file.split('.')[0]
+    }
+  }
+
+  // Dynamic files to serve (functions/sitemap.js, functions/graphql.js, etc.)
+  const fnsDirFiles = new Set(
+    (await fs.readdir(`${config.root}/${fnsInDir}`))
+      .map(getFileFromPath)
+      .filter(Boolean)
+  )
+
+  watcher.on('add', (path) => {
+    const file = getFileFromPath(path)
+    file && fnsDirFiles.add(file)
   })
 
-  middlewares.use('/props', async function vitedgePropsHandler(req, res) {
-    const { searchParams } = getUrl(req)
-    await handleFunctionRequest(req, res, {
-      config,
-      functionPath: searchParams.get('propsGetter'),
-      extra: searchParams.has('data')
-        ? JSON.parse(decodeURIComponent(searchParams.get('data')))
-        : {},
-    })
+  watcher.on('unlink', (path) => {
+    const file = getFileFromPath(path)
+    file && fnsDirFiles.delete(file)
+  })
+
+  return fnsDirFiles
+}
+
+export async function configureServer({ middlewares, config, watcher }) {
+  await prepareEnvironment()
+
+  const fnsDirFiles = await watchDynamicFiles({ config, watcher })
+
+  middlewares.use(async function (req, res, next) {
+    const url = getUrl(req)
+
+    if (url.pathname.startsWith('/props/')) {
+      return await handleFunctionRequest(req, res, {
+        config,
+        functionPath: url.searchParams.get('propsGetter'),
+        extra: url.searchParams.has('data')
+          ? JSON.parse(decodeURIComponent(url.searchParams.get('data')))
+          : {},
+      })
+    }
+
+    const normalizedPathname = url.pathname.split('.')[0]
+
+    if (
+      url.pathname.startsWith('/api/') ||
+      fnsDirFiles.has(normalizedPathname.slice(1))
+    ) {
+      return await handleFunctionRequest(req, res, {
+        config,
+        functionPath: normalizedPathname,
+        extra: {
+          query: url.searchParams,
+          url,
+        },
+      })
+    }
+
+    next()
   })
 }
 
