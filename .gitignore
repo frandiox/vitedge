@@ -6,3 +6,4 @@ dist-ssr
 _*
 
 examples/**/worker/*
+**/wrangler.toml
