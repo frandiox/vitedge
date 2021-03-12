@@ -36,7 +36,7 @@ export default const routes [
 
 This will ignore the route's name and use `<root>/functions/props/something-else.js` as a handler instead.
 
-### Disabling page props
+### Disabling page props request for a route
 
 If a specific page does not need any props at all, it can be disabled with `meta.propsGetter: false`.
 
@@ -89,4 +89,68 @@ import { defineEdgeProps } from 'vitedge/define'
 export default defineEdgeProps({
   // handler, options, ...
 })
+```
+
+## Using props
+
+Vitedge will pass the result of this request to your page component as props.
+
+```js
+export default {
+  name: 'MyPage',
+  props: {
+    server: Boolean,
+    msg: String,
+  },
+  // ...
+}
+```
+
+Alternatively, you can disable passing props to components globally from the main entry point if you prefer relying on stores:
+
+```js
+export default vitedge(
+  App,
+  { routes, pageProps: { passToPage: false } }, // Disable page component props
+  ({ app, router, initialState }) => {
+    // You can pass it to your state management (Vuex/Pinia/etc)
+    const store = createStore(initialState)
+    app.use(store)
+
+    router.beforeEach((to) => {
+      // Page props requests are available
+      // in each route's meta.state
+      store.update(to.meta.state)
+    })
+  }
+)
+```
+
+## Alternatives to page props
+
+It is also possible to get data in your page components by directly calling your API instead. In order to do this, you can rely on Suspense to await for the data:
+
+```html
+<template>
+  <RouterView v-slot="{ Component }">
+    <Suspense>
+      <component :is="Component" />
+    </Suspense>
+  </RouterView>
+</template>
+```
+
+```js
+export default {
+  name: 'MyPage',
+  // This will be awaited by Suspense in both browser and SSR
+  async setup() {
+    // In Browser rendering, this behaves as a normal fetch.
+    // In SSR, it directly calls the corresponding API handler.
+    const response = await fetch('/api/hello/world')
+    const data = await response.json()
+
+    return { data }
+  },
+}
 ```
