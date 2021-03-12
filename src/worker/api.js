@@ -88,3 +88,24 @@ export async function handleApiRequest(event) {
 
   return createNotFoundResponse()
 }
+
+const originalFetch = globalThis.fetch
+
+export function createLocalFetch(instanceRequest) {
+  return function localFetch(resource, options = {}) {
+    if (typeof resource === 'string' && resource.startsWith('/')) {
+      const event = {
+        request: new Request(
+          new URL(instanceRequest.url).origin + resource,
+          new Request(instanceRequest, options)
+        ),
+      }
+
+      if (isApiRequest(event)) {
+        return handleApiRequest(event)
+      }
+    }
+
+    return originalFetch(resource, options)
+  }
+}

@@ -18,19 +18,16 @@ function nodeToFetchRequest(nodeRequest) {
     nodeRequest.on('end', () => {
       // Simulate a FetchEvent.request https://developer.mozilla.org/en-US/docs/Web/API/Request
       resolve(
-        new Request(
-          `${nodeRequest.protocol || 'http'}://${nodeRequest.headers.host}${
-            nodeRequest.url
-          }`,
-          {
-            ...nodeRequest,
-            body: data.length === 0 ? undefined : Buffer.concat(data),
-          }
-        )
+        new Request(getUrl(nodeRequest), {
+          ...nodeRequest,
+          body: data.length === 0 ? undefined : Buffer.concat(data),
+        })
       )
     })
   })
 }
+
+let originalFetch
 
 async function polyfillWebAPIs() {
   globalThis.atob = (str) => Buffer.from(str, 'base64').toString('binary')
@@ -43,7 +40,7 @@ async function polyfillWebAPIs() {
 
   try {
     const fetch = await import('node-fetch')
-    globalThis.fetch = fetch.default || fetch
+    globalThis.fetch = originalFetch = fetch.default || fetch
     globalThis.Request = fetch.Request
     globalThis.Response = fetch.Response
   } catch {}
@@ -172,6 +169,7 @@ export async function configureServer({ middlewares, config, watcher }) {
   })
 }
 
+let fetchWrapApplied = false
 /**
  * Returns the initial state used for the first server-side rendered page.
  * It mimics entry-client logic, but runs in the server.
@@ -181,6 +179,19 @@ export async function getRenderContext({
   resolvedEntryPoint: { resolve },
 }) {
   url = new URL(url)
+
+  if (!fetchWrapApplied) {
+    fetchWrapApplied = true
+
+    globalThis.fetch = function (resource, options) {
+      if (typeof resource === 'string' && resource.startsWith('/')) {
+        resource = url.origin + resource
+      }
+
+      return originalFetch(resource, options)
+    }
+  }
+
   const propsRoute = resolve(url)
 
   if (propsRoute) {
