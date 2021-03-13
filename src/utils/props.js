@@ -1,21 +1,6 @@
-import { createRouter, createMemoryHistory } from 'vue-router'
-import {
-  createUrl,
-  getFullPath,
-  withoutPrefix,
-  withoutSuffix,
-} from 'vite-ssr/utils/route'
+import { createUrl, getFullPath } from 'vite-ssr/utils/route'
 
-const PROPS_PREFIX = '/props'
-
-export function addPagePropsGetterToRoutes(routes) {
-  routes.forEach((route) => {
-    route.props = (r) => ({
-      ...(r.meta.state || {}),
-      ...((r.props === true ? r.params : r.props) || {}),
-    })
-  })
-}
+export const PROPS_PREFIX = '/props'
 
 function findRoutePropsGetter(route) {
   if (route.meta.propsGetter === false) {
@@ -60,19 +45,4 @@ export function buildPropsRoute(route) {
     propsGetter,
     fullPath,
   }
-}
-
-export function resolvePropsRoute(routes, path, base) {
-  const url = createUrl(path)
-  url.pathname = withoutPrefix(url.pathname, PROPS_PREFIX + '/')
-
-  const routeBase = base && withoutSuffix(base({ url }), '/')
-  const fullPath = getFullPath(url, routeBase)
-
-  const router = createRouter({
-    routes,
-    history: createMemoryHistory(routeBase),
-  })
-
-  return buildPropsRoute(router.resolve(fullPath))
 }

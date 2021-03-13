@@ -1,5 +1,5 @@
 import viteSSR, { ClientOnly } from 'vite-ssr/vue/entry-server'
-import { addPagePropsGetterToRoutes, resolvePropsRoute } from './utils/router'
+import { addPagePropsGetterToRoutes, resolvePropsRoute } from './utils'
 import { createHead } from '@vueuse/head'
 
 export default function (
