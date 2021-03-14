@@ -1,16 +1,8 @@
 import viteSSR, { ClientOnly } from 'vite-ssr/vue/entry-server'
-import { addPagePropsGetterToRoutes, resolvePropsRoute } from './utils'
+import { resolvePropsRoute } from './utils'
 import { createHead } from '@vueuse/head'
 
-export default function (
-  App,
-  { routes, base, pageProps = { passToPage: true }, ...options },
-  hook
-) {
-  if (pageProps.passToPage) {
-    addPagePropsGetterToRoutes(routes)
-  }
-
+export default function (App, { routes, base, ...options }, hook) {
   return {
     resolve: (url) => resolvePropsRoute(routes, url, base),
     render: viteSSR(

@@ -7,15 +7,6 @@ import {
 } from 'vite-ssr/utils/route'
 import { buildPropsRoute, PROPS_PREFIX } from '../utils/props'
 
-export function addPagePropsGetterToRoutes(routes) {
-  routes.forEach((route) => {
-    route.props = (r) => ({
-      ...(r.meta.state || {}),
-      ...((r.props === true ? r.params : r.props) || {}),
-    })
-  })
-}
-
 export function resolvePropsRoute(routes, path, base) {
   const url = createUrl(path)
   url.pathname = withoutPrefix(url.pathname, PROPS_PREFIX + '/')
