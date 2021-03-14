@@ -3,17 +3,18 @@ import { createUrl, getFullPath } from 'vite-ssr/utils/route'
 export const PROPS_PREFIX = '/props'
 
 function findRoutePropsGetter(route) {
-  if (route.meta.propsGetter === false) {
+  const { meta = {} } = route
+  if (meta.propsGetter === false) {
     return false
   }
 
   let getter
 
-  if (route.meta.propsGetter) {
+  if (meta.propsGetter) {
     getter =
-      route.meta.propsGetter instanceof Function
-        ? route.meta.propsGetter(route)
-        : route.meta.propsGetter
+      meta.propsGetter instanceof Function
+        ? meta.propsGetter(route)
+        : meta.propsGetter
   }
 
   getter = getter || route.name

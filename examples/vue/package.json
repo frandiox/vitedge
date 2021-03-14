@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "setup": "yarn && (cd node-site && yarn) && (cd worker-site && yarn)",
     "dev": "vitedge --force",
     "dev:ssr": "vitedge --ssr --force",
     "build": "rm -rf dist && vitedge build",

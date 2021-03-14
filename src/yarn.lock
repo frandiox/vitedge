@@ -492,6 +492,11 @@ picomatch@^2.0.5, picomatch@^2.2.1, picomatch@^2.2.2:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.2.2.tgz#21f333e9b6b8eaff02468f5146ea406d345f4dad"
   integrity sha512-q0M/9eZHzmr0AulXyPwNfZjtwZ/RBZlbN3K3CErVrk50T2ASYI7Bye0EvekFY3IP1Nt2DHu0re+V2ZHIpMkuWg==
 
+react-ssr-prepass@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/react-ssr-prepass/-/react-ssr-prepass-1.3.0.tgz#6b6b1193b6d8b750c3674c20b58bc3ee7e75deac"
+  integrity sha512-BshcTNrfDrAiVFMm6PSj7d/LlE1LoLajMxvsbZtqqSY3xTOkt8dCs66xG+RljpZ6QyAJzKTbH4ObbhgUEe6G8A==
+
 resolve@^1.17.0, resolve@^1.19.0:
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.19.0.tgz#1af5bf630409734a067cae29318aac7fa29a267c"
@@ -568,15 +573,16 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
-vite-ssr@0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.5.0.tgz#a0f45c349a2d3a8df7ae22179f8d11cfbdf58dd0"
-  integrity sha512-MukKvvfFBU6TXnHOz71xgJgsioleTKkIAmFhqCsdiWiYb4bMdwP607NV/sfWuZQcG76Pgl3exRwqYdKDgkk5gw==
+vite-ssr@0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.6.1.tgz#a3c0a784ba70129168ad35ad171995ebe8cee339"
+  integrity sha512-6J6FFjWVvFlFpYY6S5fC6LPa9Omz+NvcoysbRyUd0r/GXzxmexCx8k9b5HIIzuFOvr/o+h/J3sES2LH6iuhtuQ==
   dependencies:
     "@rollup/plugin-replace" "^2.3.3"
     "@vue/server-renderer" "^3.0.0"
     connect "^3.7.0"
     node-fetch "^2.6.1"
+    react-ssr-prepass "^1.3.0"
 
 wrappy@1:
   version "1.0.2"

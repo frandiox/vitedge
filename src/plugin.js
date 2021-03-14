@@ -9,6 +9,17 @@ export default () => {
     configResolved: (config) => {
       let lib = '/vue' // default
 
+      if (
+        config.plugins.findIndex((plugin) => plugin.name === 'react-refresh') >=
+        0
+      ) {
+        lib = '/react'
+
+        config.optimizeDeps = config.optimizeDeps || {}
+        config.optimizeDeps.include = config.optimizeDeps.include || []
+        config.optimizeDeps.include.push('react-ssr-prepass')
+      }
+
       const file = config.build.ssr ? '/entry-server' : '/entry-client'
 
       // config.alias is pre-beta.69
