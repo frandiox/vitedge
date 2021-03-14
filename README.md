@@ -1,6 +1,6 @@
 # Vitedge
 
-[Vite](https://github.com/vitejs/vite) _Edge Side Rendering_ (ESR) framework.
+[Vite](https://github.com/vitejs/vite) _Edge Side Rendering_ (ESR) framework for Vue and React.
 
 > What's ESR? Think of SSR (Server Side Rendering) in CDN nodes instead of actual servers. This is possible today thanks to [Cloudflare Workers](https://workers.cloudflare.com/) (and maybe some other platforms in the near future).
 
@@ -10,13 +10,13 @@ It can replace static site generators in some situations since it builds on the 
 
 Even though running it at the edge is ideal, it is actually compatible with any Node environment.
 
-See [live demo](https://vitessedge.zable.workers.dev/) and [starter template](https://github.com/frandiox/vitessedge-template).
+See [live demo](https://vitessedge.zable.workers.dev/) and [Vue starter template](https://github.com/frandiox/vitessedge-template).
 
 ## Features
 
 - ⚡ Ultrafast development and HMR powered by Vite and ES Modules.
 - ⚔️ Renders and caches at the edge for maximum performance in production. Cache is configurable.
-- 💁‍♂️ Each page gets its server data as props by default but can be set in Vuex instead.
+- 💁‍♂️ Each page gets its server data as props by default but can be set in a store instead.
 - 🔽 HTTP/2 server push for your assets to speed up the loading time without waterfall requests.
 - 🧱 Automatically creates endpoints for your API based on filesystem routes.
 
@@ -39,7 +39,8 @@ See [docs](https://vitedge.netlify.app).
 - [x] Detect imported files in HTML and push them with HTTP/2.
 - [x] Add an SSR mode for local development (web worker?).
 - [x] Support GraphQL, sitemap and other dynamic endpoints.
-- [ ] React compatibility.
+- [x] React compatibility.
+- [ ] Provide React starter template.
 - [ ] Svelte compatibility.
 - [x] Support Vite 2.
 - [x] HMR for API side.

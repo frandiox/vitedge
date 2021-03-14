@@ -2,7 +2,8 @@
 
 ## Requirements
 
-Vitedge relies on native ES Modules. Therefore, during development, it is recommended using Node version `>=14`, but `12.x` should also work in production.
+- Vitedge relies on native ES Modules. Therefore, during development, it is recommended using Node version `>=14`, but `12.x` should also work in production.
+- Currently, Vitedge supports Vue and React. For other frameworks, please open feature requests.
 
 ## Installation
 
@@ -14,13 +15,11 @@ Since Vitedge is just a [Vite app](https://vitejs.dev/guide/#scaffolding-your-fi
 
 ```sh
 # Using NPM
-npm init @vitejs/app my-vue-app --template vue # or vue-ts
+npm init @vitejs/app my-vue-app --template [vue|vue-ts|react|react-ts]
 
 # Using Yarn
-yarn create @vitejs/app my-vue-app --template vue # or vue-ts
+yarn create @vitejs/app my-vue-app --template [vue|vue-ts|react|react-ts]
 ```
-
-**Currently, only Vue is supported in Vitedge. Other frameworks might come later. Open feature requests if you are interested.**
 
 ### 2. Install Vitedge
 
@@ -46,9 +45,11 @@ Import `vitedge/plugin.js` in your `vite.config.js`:
 
 ```js
 import vitedgePlugin from 'vitedge/plugin.js'
+import vue from '@vitejs/plugin-vue'
+// import reactRefresh from '@vitejs/plugin-react-refresh'
 
 export default {
-  plugins: [vitedgePlugin()],
+  plugins: [vitedgePlugin(), vue() /* reactRefresh() */],
 }
 ```
 
@@ -60,7 +61,7 @@ Modify your entry point to call and export Vitedge like this:
 
 ```js
 import './index.css'
-import App from './App.vue'
+import App from './App.vue' // App.jsx
 import routes from './routes'
 import vitedge from 'vitedge'
 
@@ -69,7 +70,7 @@ export default vitedge(
   { routes },
   ({ app, router, isClient, initialState }) => {
     // Custom setup hook.
-    // E.g. set initialState in a Vuex store, install plugins, etc.
+    // E.g. set initialState in a store, install plugins, etc.
   }
 )
 ```
