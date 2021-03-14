@@ -10,7 +10,7 @@ export const routes = Object.keys(pages).map((path) => {
   let component = null
 
   return {
-    name,
+    name: name.toLowerCase(),
     path: name === 'Home' ? '/' : `/${name.toLowerCase()}`,
     // Async pages
     component: (props) => {
