@@ -1,16 +1,31 @@
 import { configureServer, getRenderContext } from './dev/middleware.js'
 
+const name = 'vitedge'
+
 export default () => {
   return {
-    name: 'vitedge',
+    name,
     configureServer, // Provide API/Props during development
     configResolved: (config) => {
-      // Vite-beta>=69 wraps 'alias' in 'resolve'
+      let lib = '/vue' // default
+
+      if (
+        config.plugins.findIndex((plugin) => plugin.name === 'react-refresh') >=
+        0
+      ) {
+        lib = '/react'
+
+        config.optimizeDeps = config.optimizeDeps || {}
+        config.optimizeDeps.include = config.optimizeDeps.include || []
+        config.optimizeDeps.include.push('react-ssr-prepass')
+      }
+
+      const file = config.build.ssr ? '/entry-server' : '/entry-client'
+
+      // config.alias is pre-beta.69
       ;(config.resolve.alias || config.alias).push({
         find: /^vitedge$/,
-        replacement: config.build.ssr
-          ? 'vitedge/entry-server'
-          : 'vitedge/entry-client',
+        replacement: name + lib + file,
       })
     },
     viteSsr: {
