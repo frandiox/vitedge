@@ -4,10 +4,10 @@ import { createHead } from '@vueuse/head'
 
 export default function (
   App,
-  { routes, base, pageProps = true, ...options },
+  { routes, base, pageProps = { passToPage: true }, ...options },
   hook
 ) {
-  if (pageProps) {
+  if (pageProps.passToPage) {
     addPagePropsGetterToRoutes(routes)
   }
 

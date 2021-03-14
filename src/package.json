@@ -1,6 +1,6 @@
 {
   "name": "vitedge",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Vite for edge side rendering",
   "main": "./entry-server.js",
   "type": "module",
@@ -27,10 +27,10 @@
   "homepage": "https://github.com/frandiox/vitedge#readme",
   "bin": "./bin/cli.js",
   "engines": {
-    "node": "node >= 12.19"
+    "node": "node >= 14"
   },
   "peerDependencies": {
-    "@vueuse/head": "^0.3.1",
+    "@vueuse/head": "^0.5.0",
     "react": "^16.8 || ^17",
     "react-dom": "^16 || ^17",
     "react-helmet-async": "^1.0.0",

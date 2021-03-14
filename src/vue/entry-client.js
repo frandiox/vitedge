@@ -3,8 +3,12 @@ import { buildPropsRoute } from '../utils/props'
 import { addPagePropsGetterToRoutes } from './utils'
 import { createHead } from '@vueuse/head'
 
-export default function (App, { routes, pageProps = true, ...options }, hook) {
-  if (pageProps) {
+export default function (
+  App,
+  { routes, pageProps = { passToPage: true }, ...options },
+  hook
+) {
+  if (pageProps && pageProps.passToPage) {
     addPagePropsGetterToRoutes(routes)
   }
 

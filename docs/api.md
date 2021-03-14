@@ -1,6 +1,6 @@
 # API
 
-Vitedge can optionally create API endpoints. The advantge of this is having frontend and backend running in the same domain to prevent cross-origin issues and preflight requests.
+Vitedge can optionally create API endpoints. The advantage of this is having frontend and backend running in the same domain to prevent cross-origin issues and preflight requests.
 
 ## Rest
 
@@ -69,6 +69,26 @@ import { defineApiEndpoint } from 'vitedge/define'
 export default defineApiEndpoint({
   // handler, options, ...
 })
+```
+
+## Consuming the API
+
+You can freely call your API from the frontend. In order to make the API available in from other domains, [configure CORS](https://developers.cloudflare.com/workers/examples/cors-header-proxy) in the worker/node entry point.
+
+Generally, it is not possible to make self-requests when running on CF Workers (e.g. calling your own API during SSR, from worker to worker). However, Vitedge will automatically redirect these API requests to local function calls during SSR. Simply make sure you use `fetch` or any library that uses it internally.
+
+```js
+export default {
+  name: 'MyPage',
+  async setup() {
+    // In Browser rendering, this behaves as a normal fetch.
+    // In SSR, it directly calls the corresponding API handler.
+    const response = await fetch('/api/hello/world')
+    const data = await response.json()
+
+    return { data }
+  },
+}
 ```
 
 ## Other endpoints

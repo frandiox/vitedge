@@ -6,6 +6,8 @@ Vitedge relies on native ES Modules. Therefore, during development, it is recomm
 
 ## Installation
 
+For a complete **starter template** with i18n, file routing and layout system, see [Vitessedge Template](https://github.com/frandiox/vitessedge-template). Otherwise, create a new project from scratch following these steps:
+
 ### 1. Create a Vite app
 
 Since Vitedge is just a [Vite app](https://vitejs.dev/guide/#scaffolding-your-first-vite-project), first of all you must create one:
@@ -74,9 +76,21 @@ export default vitedge(
 
 Note that you don't need to create a router yourself. Vitedge will do this automatically after you provide the raw routes array.
 
+### 5. Add backend functions
+
+Create a `<root>/functions/` directory and populate [`<root>/functions/api/`](./api) and [`<root>/functions/props/`](./props) with your backend logic.
+
+You can also add [environment files](./environment) in this directory.
+
 ### TypeScript (optional)
 
 TypeScript is fully supported but needs some extra setup:
 
 - Rename all your files (including `vite.config`) to have `*.ts` extension.
 - Install `typescript` and `ts-node>=9.1` as `devDependencies`.
+
+### Web Polyfills (optional)
+
+Vitedge automatically polyfills some Web-only functionaly during development in Node.js, such as `fetch`, `btoa`, etc. If you need WebCrypto, simply install it as a dev-dependency and Vitedge will use it automatically.
+
+For other polyfills, please open feature requests in the repo.

@@ -4,11 +4,11 @@
 
   <p><strong>API:</strong></p>
   <div style="display: flex; justify-content: center">
-    <button @click="api('GET:hello/world')" style="margin: 0 6px">
+    <button @click="callApi('GET:hello/world')" style="margin: 0 6px">
       GET:hello/world
     </button>
     <button
-      @click="api('POST:hello/moto', { boomerang: true })"
+      @click="callApi('POST:hello/moto', { boomerang: true })"
       style="margin: 0 6px"
     >
       POST:hello/moto
@@ -33,31 +33,36 @@ export default {
       default: '',
     },
   },
-  setup() {
-    const apiResult = ref(null)
-
+  async setup() {
     useHead({
       html: { lang: 'en' },
       meta: [{ name: 'description', content: 'this should be moved to head' }],
     })
 
+    const apiResult = ref(null)
+
+    const callApi = async function (resource, json) {
+      const [method, endpoint] = resource.split(':')
+
+      try {
+        const res = await fetch('/api/' + endpoint, {
+          method,
+          headers: { 'content-type': 'application/json' },
+          body: json && JSON.stringify(json),
+        })
+
+        apiResult.value = await res.json()
+      } catch (error) {
+        apiResult.value = error.message
+      }
+    }
+
+    // This will be awaited in both browser and server with Suspense
+    await callApi('GET:hello/world')
+
     return {
       apiResult,
-      async api(resource, json) {
-        const [method, endpoint] = resource.split(':')
-
-        try {
-          const res = await fetch('/api/' + endpoint, {
-            method,
-            headers: { 'content-type': 'application/json' },
-            body: json && JSON.stringify(json),
-          })
-
-          apiResult.value = await res.json()
-        } catch (error) {
-          apiResult.value = error.message
-        }
-      },
+      callApi,
     }
   },
 }

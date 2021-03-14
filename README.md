@@ -32,16 +32,21 @@ See [docs](https://vitedge.netlify.app).
 - [x] Extract CF worker boilerplate as utilities.
 - [x] Cache props/html in worker and make it configurable.
 - [x] i18n compatible.
-- [ ] Auth utilities (passing JWT in requests).
+- [x] Starter template.
+- [ ] Auth utilities/guide (passing JWT in requests as cookies).
 - [x] Compatibility with Node runtime for other providers (Vercel/Netlify...).
 - [ ] Add example using Vercel's edge cache.
 - [x] Detect imported files in HTML and push them with HTTP/2.
 - [x] Add an SSR mode for local development (web worker?).
 - [x] Support GraphQL, sitemap and other dynamic endpoints.
-- [ ] React/Svelte compatibility.
+- [ ] React compatibility.
+- [ ] Svelte compatibility.
 - [x] Support Vite 2.
 - [x] HMR for API side.
 - [x] Preload assets using Vite's manifest.
+- [x] Support self-requests to API endpoints during SSR.
+- [ ] Support parameters and wildcards in API file routes (`api/path/[param].js`).
+- [ ] Stale-while-revalidate cache for pages.
 
 ## Contributing
 
