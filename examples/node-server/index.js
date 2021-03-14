@@ -1,10 +1,20 @@
 import path from 'path'
 import express from 'express'
 import fetch from 'node-fetch'
-import api from '../vue/dist/functions.js'
-import pkgJson from '../vue/dist/ssr/package.json'
-import manifest from '../vue/dist/client/ssr-manifest.json'
-import ssrBuild from '../vue/dist/ssr/main.js'
+
+const example = process.argv[2]
+
+if (!example) {
+  throw new Error('Specify example name in the first argument')
+}
+
+const { default: api } = await import(`../${example}/dist/functions.js`)
+const { default: pkgJson } = await import(`../${example}/dist/ssr/package.json`)
+const { default: ssrBuild } = await import(`../${example}/dist/ssr/main.js`)
+const { default: manifest } = await import(
+  `../${example}/dist/client/ssr-manifest.json`
+)
+
 const router = ssrBuild.default
 
 // Must be polyfilled for SSR
@@ -17,7 +27,9 @@ const server = express()
 for (const asset of pkgJson.ssr.assets || []) {
   server.use(
     '/' + asset,
-    express.static(path.join(process.cwd(), '../vue/dist/client/' + asset))
+    express.static(
+      path.join(process.cwd(), `../${example}/dist/client/${asset}`)
+    )
   )
 }
 
@@ -82,7 +94,7 @@ server.use(express.json(), async (request, response) => {
     }
 
     // From here, only GET method is supported
-    if (request.method !== 'GET') {
+    if (request.method !== 'GET' || request.url.includes('favicon.ico')) {
       response.status(404)
       return response.end()
     }
