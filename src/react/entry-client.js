@@ -3,11 +3,7 @@ import viteSSR from 'vite-ssr/react/entry-client'
 import { buildPropsRoute } from '../utils/props'
 
 export default function (App, { routes, ...options }, hook) {
-  return viteSSR(
-    App,
-    { routes, PropsProvider, debug: { mount: false }, ...options },
-    hook
-  )
+  return viteSSR(App, { routes, PropsProvider, ...options }, hook)
 }
 
 let lastRouteName
