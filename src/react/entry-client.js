@@ -8,7 +8,13 @@ export default function (App, { routes, ...options }, hook) {
 
 let lastRouteName
 
-export function PropsProvider({ from, to, children: Page, ...rest }) {
+export function PropsProvider({
+  from,
+  to,
+  pagePropsOptions,
+  children: Page,
+  ...rest
+}) {
   // This code can run because of a rerrender (same route) or because changing routes.
   // We only want to refresh props in the second case.
   const isChangingRoute = !!lastRouteName && lastRouteName !== to.name
@@ -43,5 +49,9 @@ export function PropsProvider({ from, to, children: Page, ...rest }) {
     }
   }
 
-  return React.createElement(Page, { ...rest, ...to.meta.state })
+  const { passToPage } = pagePropsOptions || {}
+  return React.createElement(Page, {
+    ...(passToPage ? to.meta.state : {}),
+    ...rest,
+  })
 }
