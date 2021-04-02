@@ -25,9 +25,10 @@ export function PropsProvider({
       // Keep state when changing hash/query in the same route
       to.meta.state = from.meta.state
     } else {
+      const { pathname, search } = window.location
       const propsRoute = buildPropsRoute({
         ...to,
-        fullPath: to.path,
+        fullPath: pathname + search,
       })
 
       if (propsRoute) {
