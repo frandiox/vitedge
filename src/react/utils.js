@@ -14,7 +14,14 @@ export function resolvePropsRoute(routes, path, base) {
   const routeBase = base && withoutSuffix(base({ url }), '/')
   const fullPath = getFullPath(url, routeBase)
 
-  const [{ route } = {}] = matchRoutes(routes, url.pathname)
+  const [{ route, match } = {}] = matchRoutes(routes, url.pathname + url.search)
 
-  return buildPropsRoute({ ...route, fullPath })
+  const data = {
+    ...route,
+    fullPath,
+    query: Object.fromEntries(url.searchParams),
+    params: match.params,
+  }
+
+  return buildPropsRoute(data)
 }
