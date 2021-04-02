@@ -1,29 +1,26 @@
-import React from 'react'
+import { lazy } from 'react'
+import Home from './pages/Home'
+import About from './pages/About'
+import Post from './pages/post'
 
-// Auto generates routes from files under ./pages
-// https://vitejs.dev/guide/features.html#glob-import
-const pages = import.meta.glob('./pages/*.jsx')
-
-// Follow `react-router-config` route structure
-export const routes = Object.keys(pages).map((path) => {
-  const name = path.match(/\.\/pages\/(.*)\.jsx$/)[1]
-  let component = null
-
-  return {
-    name: name.toLowerCase(),
-    path: name === 'Home' ? '/' : `/${name.toLowerCase()}`,
-    // Async pages
-    component: (props) => {
-      if (!component) {
-        const loadingComponent = pages[path]().then((result) => {
-          component = result.default
-        })
-
-        // Suspense will re-render when component is ready
-        throw loadingComponent
-      }
-
-      return React.createElement(component, props)
+export default [
+  {
+    path: '/',
+    name: 'home',
+    exact: true,
+    component: Home,
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: About,
+  },
+  {
+    path: '/post/:postId',
+    name: 'post',
+    component: Post,
+    meta: {
+      propsGetter: 'post',
     },
-  }
-})
+  },
+]

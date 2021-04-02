@@ -1,5 +1,5 @@
 import './App.css'
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import { Link, Route, Switch } from 'react-router-dom'
 import logo from './logo.svg'
 
@@ -19,20 +19,26 @@ export default function App({ router }) {
 
         <nav>
           <ul>
-            {router.routes.map(({ name, path }) => {
-              return (
-                <li key={path}>
-                  <Link to={path}>{name}</Link>
-                </li>
-              )
-            })}
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/about">About</Link>
+            </li>
+            <li>
+              <Link to="/post/1">Post #1</Link>
+            </li>
+            <li>
+              <Link to="/post/2">Post #2</Link>
+            </li>
           </ul>
         </nav>
       </header>
+
       <Switch>
         {router.routes.map((route) => {
           return (
-            <Route exact key={route.path} path={route.path}>
+            <Route exact={route.exact} key={route.path} path={route.path}>
               <route.component />
             </Route>
           )
