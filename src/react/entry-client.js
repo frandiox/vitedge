@@ -2,6 +2,8 @@ import React from 'react'
 import viteSSR from 'vite-ssr/react/entry-client'
 import { buildPropsRoute } from '../utils/props'
 
+export { ClientOnly } from 'vite-ssr/react/components'
+
 export default function (App, { routes, ...options }, hook) {
   return viteSSR(App, { routes, PropsProvider, ...options }, hook)
 }
