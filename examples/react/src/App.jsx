@@ -1,5 +1,5 @@
 import './App.css'
-import React, { useState, Suspense } from 'react'
+import React, { useState } from 'react'
 import { Link, Route, Switch } from 'react-router-dom'
 import logo from './logo.svg'
 
