@@ -1,6 +1,9 @@
 import { configureServer, getRenderContext } from './dev/middleware.js'
 
 const name = 'vitedge'
+const viteSsrName = 'vite-ssr'
+const entryServer = '/entry-server'
+const entryClient = '/entry-client'
 
 export default () => {
   return {
@@ -16,13 +19,21 @@ export default () => {
         lib = '/react'
       }
 
-      const file = config.build.ssr ? '/entry-server' : '/entry-client'
-
       // config.alias is pre-beta.69
       ;(config.resolve.alias || config.alias).push({
         find: /^vitedge$/,
-        replacement: name + lib + file,
+        replacement:
+          name + lib + (config.build.ssr ? entryServer : entryClient),
       })
+
+      config.optimizeDeps = config.optimizeDeps || {}
+      config.optimizeDeps.include = config.optimizeDeps.include || []
+      config.optimizeDeps.include.push(
+        name + lib + entryClient,
+        name + lib + entryServer,
+        viteSsrName + lib + entryClient,
+        viteSsrName + lib + entryServer
+      )
     },
     viteSsr: {
       getRenderContext, // Provide props during SSR development
