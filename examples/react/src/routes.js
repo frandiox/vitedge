@@ -1,26 +1,39 @@
-import { lazy } from 'react'
-import Home from './pages/Home'
-import About from './pages/About'
-import Post from './pages/post'
+import { createElement } from 'react'
 
 export default [
   {
     path: '/',
     name: 'home',
     exact: true,
-    component: Home,
+    component: () => import('./pages/Home'),
   },
   {
     path: '/about',
     name: 'about',
-    component: About,
+    component: () => import('./pages/About'),
   },
   {
     path: '/post/:postId',
     name: 'post',
-    component: Post,
+    component: () => import('./pages/post'),
     meta: {
       propsGetter: 'post',
     },
   },
-]
+].map(({ component: fn, ...route }) => {
+  let component = null
+  return {
+    ...route,
+    component: (props) => {
+      if (!component) {
+        const loadingComponent = fn().then(({ default: page }) => {
+          component = page
+        })
+        // Suspense will re-render when component is ready
+        throw loadingComponent
+      }
+
+      return createElement(component, props)
+    },
+  }
+})
