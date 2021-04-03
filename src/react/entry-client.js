@@ -6,7 +6,7 @@ export default function (App, { routes, ...options }, hook) {
   return viteSSR(App, { routes, PropsProvider, ...options }, hook)
 }
 
-let lastRouteName
+let lastRoutePath
 
 export function PropsProvider({
   from,
@@ -17,19 +17,15 @@ export function PropsProvider({
 }) {
   // This code can run because of a rerrender (same route) or because changing routes.
   // We only want to refresh props in the second case.
-  const isChangingRoute = !!lastRouteName && lastRouteName !== to.name
-  lastRouteName = to.name
+  const isChangingRoute = !!lastRoutePath && lastRoutePath !== to.path
+  lastRoutePath = to.path
 
   if (!to.meta.state || isChangingRoute) {
-    if (from && to.name === from.name) {
+    if (from && to.path === from.path) {
       // Keep state when changing hash/query in the same route
       to.meta.state = from.meta.state
     } else {
-      const { pathname, search } = window.location
-      const propsRoute = buildPropsRoute({
-        ...to,
-        fullPath: pathname + search,
-      })
+      const propsRoute = buildPropsRoute(to)
 
       if (propsRoute) {
         const promise = fetch(propsRoute.fullPath, {
