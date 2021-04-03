@@ -1,29 +1,39 @@
-import React from 'react'
+import { createElement } from 'react'
 
-// Auto generates routes from files under ./pages
-// https://vitejs.dev/guide/features.html#glob-import
-const pages = import.meta.glob('./pages/*.jsx')
-
-// Follow `react-router-config` route structure
-export const routes = Object.keys(pages).map((path) => {
-  const name = path.match(/\.\/pages\/(.*)\.jsx$/)[1]
+export default [
+  {
+    path: '/',
+    name: 'home',
+    exact: true,
+    component: () => import('./pages/Home'),
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: () => import('./pages/About'),
+  },
+  {
+    path: '/post/:postId',
+    name: 'post',
+    component: () => import('./pages/post'),
+    meta: {
+      propsGetter: 'post',
+    },
+  },
+].map(({ component: fn, ...route }) => {
   let component = null
-
   return {
-    name: name.toLowerCase(),
-    path: name === 'Home' ? '/' : `/${name.toLowerCase()}`,
-    // Async pages
+    ...route,
     component: (props) => {
       if (!component) {
-        const loadingComponent = pages[path]().then((result) => {
-          component = result.default
+        const loadingComponent = fn().then(({ default: page }) => {
+          component = page
         })
-
         // Suspense will re-render when component is ready
         throw loadingComponent
       }
 
-      return React.createElement(component, props)
+      return createElement(component, props)
     },
   }
 })
