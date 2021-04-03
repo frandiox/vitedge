@@ -7,7 +7,7 @@
     "dev:ssr": "vitedge --ssr --force",
     "build": "rm -rf dist && vitedge build",
     "refresh": "rm -rf node_modules/vitedge && cp -r ../../src node_modules/vitedge && cp ../../src/bin/cli.js node_modules/.bin/vitedge",
-    "serve:worker": "cd ../worker-site && yarn serve",
+    "serve:worker": "export EXAMPLE_NAME=react && cd ../worker-site && yarn serve --env react",
     "serve:node": "cd ../node-server && yarn serve react"
   },
   "dependencies": {

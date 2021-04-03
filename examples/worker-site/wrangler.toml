@@ -6,6 +6,10 @@ route = ""
 zone_id = ""
 webpack_config = "webpack.config.js"
 
-[site]
+[env.vue.site]
 bucket = "../vue/dist/client"
+entry-point = "."
+
+[env.react.site]
+bucket = "../react/dist/client"
 entry-point = "."
