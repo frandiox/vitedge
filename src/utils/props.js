@@ -2,7 +2,7 @@ import { createUrl, getFullPath } from 'vite-ssr/utils/route'
 
 export const PROPS_PREFIX = '/props'
 
-function findRoutePropsGetter(route) {
+export function findRoutePropsGetter(route) {
   const { meta = {} } = route
   if (meta.propsGetter === false) {
     return false

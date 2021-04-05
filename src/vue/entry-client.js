@@ -1,5 +1,5 @@
 import viteSSR, { ClientOnly } from 'vite-ssr/vue/entry-client'
-import { buildPropsRoute } from '../utils/props'
+import { buildPropsRoute, findRoutePropsGetter } from '../utils/props'
 import { createHead } from '@vueuse/head'
 
 export default function (App, { routes, ...options }, hook) {
@@ -11,6 +11,31 @@ export default function (App, { routes, ...options }, hook) {
       app.use(head)
 
       app.component(ClientOnly.name, ClientOnly)
+
+      async function getPageProps(route) {
+        const propsRoute = buildPropsRoute(route)
+
+        if (propsRoute) {
+          const res = await fetch(propsRoute.fullPath, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+          })
+
+          route.meta.state = await res.json()
+        }
+      }
+
+      if (import.meta.hot) {
+        import.meta.hot.on('functions-reload', async (data) => {
+          const propsGetter = findRoutePropsGetter(router.currentRoute.value)
+          if (propsGetter === data.path) {
+            console.info('Reloading', data.path)
+
+            // TODO make this reactive?
+            await getPageProps(router.currentRoute.value)
+          }
+        })
+      }
 
       let isFirstRoute = true
       router.beforeEach(async (to, from, next) => {
@@ -29,20 +54,11 @@ export default function (App, { routes, ...options }, hook) {
           return next()
         }
 
-        const propsRoute = buildPropsRoute(to)
-
-        if (propsRoute) {
-          try {
-            const res = await fetch(propsRoute.fullPath, {
-              method: 'GET',
-              headers: { 'Content-Type': 'application/json' },
-            })
-
-            to.meta.state = await res.json()
-          } catch (error) {
-            console.error(error)
-            // redirect to error route
-          }
+        try {
+          await getPageProps(to)
+        } catch (error) {
+          console.error(error)
+          // redirect to error route
         }
 
         next()
