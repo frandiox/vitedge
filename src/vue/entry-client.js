@@ -16,17 +16,14 @@ export default function (App, { routes, ...options }, hook) {
       router.beforeEach(async (to, from, next) => {
         if (isFirstRoute) {
           isFirstRoute = false
-          if (
-            !!to.meta.state &&
-            (!import.meta.env.DEV || import.meta.env.SSR)
-          ) {
+          if (!!to.meta.state) {
             // Do not get props the first time for the entry
             // route since it is already rendered in the server.
             return next()
           }
         }
 
-        if (from && to.name === from.name) {
+        if (from && to.path === from.path) {
           // Keep state when changing hash/query in the same route
           to.meta.state = from.meta.state
           return next()
