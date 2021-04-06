@@ -1,16 +1,52 @@
 import React, { useState } from 'react'
 import viteSSR from 'vite-ssr/react/entry-client'
-import { buildPropsRoute } from '../utils/props'
+import { buildPropsRoute, findRoutePropsGetter } from '../utils/props'
 
 export { ClientOnly } from 'vite-ssr/react/components'
 
 export default function (App, { routes, ...options }, hook) {
-  return viteSSR(App, { routes, PropsProvider, ...options }, hook)
+  return viteSSR(App, { routes, PropsProvider, ...options }, async (ctx) => {
+    if (import.meta.hot) {
+      import.meta.hot.on('functions-reload', async (data) => {
+        const currentRoute = ctx.router.getCurrentRoute()
+        const propsGetter = findRoutePropsGetter(currentRoute)
+        if (propsGetter === data.path) {
+          console.info('Reloading', data.path)
+          fetchPageProps(currentRoute, currentRoute.meta.setState)
+        }
+      })
+    }
+
+    if (hook) {
+      await hook(ctx)
+    }
+  })
+}
+
+function fetchPageProps(to, setState) {
+  const propsRoute = buildPropsRoute(to)
+
+  if (propsRoute) {
+    fetch(propsRoute.fullPath, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then((res) => res.json())
+      .then((resolvedState) => {
+        to.meta.state = resolvedState
+        setState(resolvedState)
+      })
+      .catch((error) => {
+        console.error(error)
+        to.meta.state = { error }
+        setState(to.meta.state)
+      })
+  }
 }
 
 let lastRoutePath
 
-export function PropsProvider({
+function PropsProvider({
   from,
   to,
   pagePropsOptions,
@@ -23,6 +59,12 @@ export function PropsProvider({
   lastRoutePath = to.path
 
   const [state, setState] = useState(to.meta.state)
+
+  if (import.meta.env.DEV) {
+    // For props HMR
+    to.meta.setState = setState
+  }
+
   let isLoadingProps = false
   let isRevalidatingProps = false
 
@@ -34,29 +76,14 @@ export function PropsProvider({
     } else {
       to.meta.state = {}
 
-      const propsRoute = buildPropsRoute(to)
+      const isFetching = fetchPageProps(propsRoute, to, setState)
 
-      if (propsRoute) {
+      if (isFetching) {
         if (state) {
           isRevalidatingProps = true
         } else {
           isLoadingProps = true
         }
-
-        fetch(propsRoute.fullPath, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        })
-          .then((res) => res.json())
-          .then((resolvedState) => {
-            to.meta.state = resolvedState
-            setState(resolvedState)
-          })
-          .catch((error) => {
-            console.error(error)
-            to.meta.state = { error }
-            setState(to.meta.state)
-          })
       }
     }
   }
