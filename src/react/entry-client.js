@@ -1,20 +1,14 @@
 import React, { useState } from 'react'
 import viteSSR from 'vite-ssr/react/entry-client'
-import { buildPropsRoute, findRoutePropsGetter } from '../utils/props'
+import { buildPropsRoute } from '../utils/props'
+import { onFunctionReload } from '../dev/hmr'
 
 export { ClientOnly } from 'vite-ssr/react/components'
 
 export default function (App, { routes, ...options }, hook) {
   return viteSSR(App, { routes, PropsProvider, ...options }, async (ctx) => {
     if (import.meta.hot) {
-      import.meta.hot.on('functions-reload', async (data) => {
-        const currentRoute = ctx.router.getCurrentRoute()
-        const propsGetter = findRoutePropsGetter(currentRoute)
-        if (propsGetter === data.path) {
-          console.info('Reloading', data.path)
-          fetchPageProps(currentRoute, currentRoute.meta.setState)
-        }
-      })
+      onFunctionReload(ctx.router.getCurrentRoute, fetchPageProps)
     }
 
     if (hook) {
@@ -23,8 +17,8 @@ export default function (App, { routes, ...options }, hook) {
   })
 }
 
-function fetchPageProps(to, setState) {
-  const propsRoute = buildPropsRoute(to)
+function fetchPageProps(route, setState = route?.meta?.setState) {
+  const propsRoute = buildPropsRoute(route)
 
   if (propsRoute) {
     fetch(propsRoute.fullPath, {
@@ -33,19 +27,20 @@ function fetchPageProps(to, setState) {
     })
       .then((res) => res.json())
       .then((resolvedState) => {
-        to.meta.state = resolvedState
+        route.meta.state = resolvedState
         setState(resolvedState)
       })
       .catch((error) => {
         console.error(error)
-        to.meta.state = { error }
-        setState(to.meta.state)
+        route.meta.state = { error }
+        setState(route.meta.state)
       })
   }
+
+  return !!propsRoute
 }
 
 let lastRoutePath
-
 function PropsProvider({
   from,
   to,
@@ -76,7 +71,7 @@ function PropsProvider({
     } else {
       to.meta.state = {}
 
-      const isFetching = fetchPageProps(propsRoute, to, setState)
+      const isFetching = fetchPageProps(to, setState)
 
       if (isFetching) {
         if (state) {

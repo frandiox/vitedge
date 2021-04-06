@@ -138,7 +138,7 @@ function watchPropReload({ config, watcher, ws }) {
       filepath = filepath.slice(0, filepath.lastIndexOf('.'))
       ws.send({
         type: 'custom',
-        event: 'functions-reload',
+        event: 'function-reload',
         data: { path: filepath },
       })
     }

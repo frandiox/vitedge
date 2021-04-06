@@ -1,6 +1,7 @@
 import viteSSR, { ClientOnly } from 'vite-ssr/vue/entry-client'
-import { buildPropsRoute, findRoutePropsGetter } from '../utils/props'
+import { buildPropsRoute } from '../utils/props'
 import { createHead } from '@vueuse/head'
+import { onFunctionReload } from '../dev/hmr'
 
 export default function (App, { routes, ...options }, hook) {
   return viteSSR(
@@ -12,29 +13,9 @@ export default function (App, { routes, ...options }, hook) {
 
       app.component(ClientOnly.name, ClientOnly)
 
-      async function getPageProps(route) {
-        const propsRoute = buildPropsRoute(route)
-
-        if (propsRoute) {
-          const res = await fetch(propsRoute.fullPath, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-          })
-
-          route.meta.state = await res.json()
-        }
-      }
-
       if (import.meta.hot) {
-        import.meta.hot.on('functions-reload', async (data) => {
-          const propsGetter = findRoutePropsGetter(router.currentRoute.value)
-          if (propsGetter === data.path) {
-            console.info('Reloading', data.path)
-
-            // TODO make this reactive?
-            await getPageProps(router.currentRoute.value)
-          }
-        })
+        // TODO make this reactive?
+        onFunctionReload(() => router.currentRoute.value, fetchPageProps)
       }
 
       let isFirstRoute = true
@@ -55,7 +36,7 @@ export default function (App, { routes, ...options }, hook) {
         }
 
         try {
-          await getPageProps(to)
+          await fetchPageProps(to)
         } catch (error) {
           console.error(error)
           // redirect to error route
@@ -69,4 +50,17 @@ export default function (App, { routes, ...options }, hook) {
       }
     }
   )
+}
+
+async function fetchPageProps(route) {
+  const propsRoute = buildPropsRoute(route)
+
+  if (propsRoute) {
+    const res = await fetch(propsRoute.fullPath, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    route.meta.state = await res.json()
+  }
 }
