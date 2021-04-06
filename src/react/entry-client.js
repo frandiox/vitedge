@@ -23,6 +23,8 @@ export function PropsProvider({
   lastRoutePath = to.path
 
   const [state, setState] = useState(to.meta.state)
+  let isLoadingProps = false
+  let isRevalidatingProps = false
 
   if (!to.meta.state || isChangingRoute) {
     if (from && to.path === from.path) {
@@ -35,6 +37,12 @@ export function PropsProvider({
       const propsRoute = buildPropsRoute(to)
 
       if (propsRoute) {
+        if (state) {
+          isRevalidatingProps = true
+        } else {
+          isLoadingProps = true
+        }
+
         fetch(propsRoute.fullPath, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
@@ -46,6 +54,8 @@ export function PropsProvider({
           })
           .catch((error) => {
             console.error(error)
+            to.meta.state = { error }
+            setState(to.meta.state)
           })
       }
     }
@@ -53,6 +63,8 @@ export function PropsProvider({
 
   const { passToPage } = pagePropsOptions || {}
   return React.createElement(Page, {
+    isLoadingProps,
+    isRevalidatingProps,
     ...((passToPage && state) || {}),
     ...rest,
   })
