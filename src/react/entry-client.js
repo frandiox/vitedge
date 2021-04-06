@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import viteSSR from 'vite-ssr/react/entry-client'
 import { buildPropsRoute } from '../utils/props'
 
@@ -22,35 +22,50 @@ export function PropsProvider({
   const isChangingRoute = !!lastRoutePath && lastRoutePath !== to.path
   lastRoutePath = to.path
 
+  const [state, setState] = useState(to.meta.state)
+  let isLoadingProps = false
+  let isRevalidatingProps = false
+
   if (!to.meta.state || isChangingRoute) {
     if (from && to.path === from.path) {
       // Keep state when changing hash/query in the same route
-      to.meta.state = from.meta.state
+      to.meta.state = from.meta.state || {}
+      setState(from.meta.state)
     } else {
+      to.meta.state = {}
+
       const propsRoute = buildPropsRoute(to)
 
       if (propsRoute) {
-        const promise = fetch(propsRoute.fullPath, {
+        if (state) {
+          isRevalidatingProps = true
+        } else {
+          isLoadingProps = true
+        }
+
+        fetch(propsRoute.fullPath, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         })
           .then((res) => res.json())
-          .then((state) => {
-            to.meta.state = state
+          .then((resolvedState) => {
+            to.meta.state = resolvedState
+            setState(resolvedState)
           })
           .catch((error) => {
             console.error(error)
+            to.meta.state = { error }
+            setState(to.meta.state)
           })
-
-        // Suspense magic
-        throw promise
       }
     }
   }
 
   const { passToPage } = pagePropsOptions || {}
   return React.createElement(Page, {
-    ...(passToPage ? to.meta.state : {}),
+    isLoadingProps,
+    isRevalidatingProps,
+    ...((passToPage && state) || {}),
     ...rest,
   })
 }
