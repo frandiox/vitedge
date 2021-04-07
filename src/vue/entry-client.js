@@ -1,9 +1,18 @@
+import { ref } from 'vue'
 import viteSSR, { ClientOnly } from 'vite-ssr/vue/entry-client'
 import { buildPropsRoute } from '../utils/props'
 import { createHead } from '@vueuse/head'
 import { onFunctionReload } from '../dev/hmr'
 
 export default function (App, { routes, ...options }, hook) {
+  if (import.meta.env.DEV) {
+    // Will be used in HMR later
+    routes.forEach((route) => {
+      route.meta = route.meta || {}
+      route.meta.hmr = ref(false)
+    })
+  }
+
   return viteSSR(
     App,
     { routes, ...options },
@@ -14,8 +23,14 @@ export default function (App, { routes, ...options }, hook) {
       app.component(ClientOnly.name, ClientOnly)
 
       if (import.meta.hot) {
-        // TODO make this reactive?
-        onFunctionReload(() => router.currentRoute.value, fetchPageProps)
+        onFunctionReload(
+          () => router.currentRoute.value,
+          async (route) => {
+            await fetchPageProps(route)
+            // Trigger reactivity:
+            route.meta.hmr.value = !route.meta.hmr.value
+          }
+        )
       }
 
       let isFirstRoute = true
