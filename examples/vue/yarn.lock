@@ -107,10 +107,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@cloudflare/kv-asset-handler@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.1.0.tgz#0febbf4ac6dd04d2c069405cffdcc7cf64b95494"
-  integrity sha512-sXZRw/Z5JJfi/nGh66SECSm5L2zomyf6f9O3nc5QOI11/R3W/4N+BPOecp/Dc8eL/q/Rwgb7lwhhjnqy8O5CYA==
+"@cloudflare/kv-asset-handler@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.1.1.tgz#7ed87e0d20ce57115251a8ffc5b6b494715f6eda"
+  integrity sha512-loZzVTXfoSKsZ/VVeHGuRlQFcxUEmTPIyWx3Zti9/lShfhETZJ90nKpbvoWps7P60kILWpILE/5EfHDiumfYEQ==
   dependencies:
     "@cloudflare/workers-types" "^2.0.0"
     "@types/mime" "^2.0.2"
@@ -187,10 +187,10 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@rollup/plugin-commonjs@^17.0.0":
-  version "17.0.0"
-  resolved "https://registry.yarnpkg.com/@rollup/plugin-commonjs/-/plugin-commonjs-17.0.0.tgz#2ae2228354cf0fbba6cf9f06f30b2c66a974324c"
-  integrity sha512-/omBIJG1nHQc+bgkYDuLpb/V08QyutP9amOrJRUSlYJZP+b/68gM//D8sxJe3Yry2QnYIr3QjR3x4AlxJEN3GA==
+"@rollup/plugin-commonjs@^18.0.0":
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-commonjs/-/plugin-commonjs-18.0.0.tgz#50dc7518b5aa9e66a270e529ea85115d269825c4"
+  integrity sha512-fj92shhg8luw7XbA0HowAqz90oo7qtLGwqTKbyZ8pmOyH8ui5e+u0wPEgeHLH3djcVma6gUCUrjY6w5R2o1u6g==
   dependencies:
     "@rollup/pluginutils" "^3.1.0"
     commondir "^1.0.1"
@@ -207,10 +207,10 @@
   dependencies:
     "@rollup/pluginutils" "^3.0.8"
 
-"@rollup/plugin-node-resolve@^11.0.0":
-  version "11.0.1"
-  resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-11.0.1.tgz#d3765eec4bccf960801439a999382aed2dca959b"
-  integrity sha512-ltlsj/4Bhwwhb+Nb5xCz/6vieuEj2/BAkkqVIKmZwC7pIdl8srmgmglE4S0jFlZa32K4qvdQ6NHdmpRKD/LwoQ==
+"@rollup/plugin-node-resolve@^11.2.1":
+  version "11.2.1"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-11.2.1.tgz#82aa59397a29cd4e13248b106e6a4a1880362a60"
+  integrity sha512-yc2n43jcqVyGE2sqV5/YCmocy9ArjVAP/BeXyTtADTBBX6V0e5UMqwO8CdQ0kzjb6zu5P1qMzsScCMRvE9OlVg==
   dependencies:
     "@rollup/pluginutils" "^3.1.0"
     "@types/resolve" "1.17.1"
@@ -219,10 +219,18 @@
     is-module "^1.0.0"
     resolve "^1.19.0"
 
-"@rollup/plugin-replace@^2.3.3", "@rollup/plugin-replace@^2.3.4":
+"@rollup/plugin-replace@^2.3.3":
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-replace/-/plugin-replace-2.3.4.tgz#7dd84c17755d62b509577f2db37eb524d7ca88ca"
   integrity sha512-waBhMzyAtjCL1GwZes2jaE9MjuQ/DQF2BatH3fRivUF3z0JBFrU0U6iBNC/4WR+2rLKhaAhPWDNPYp4mI6RqdQ==
+  dependencies:
+    "@rollup/pluginutils" "^3.1.0"
+    magic-string "^0.25.7"
+
+"@rollup/plugin-replace@^2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-replace/-/plugin-replace-2.4.2.tgz#a2d539314fbc77c244858faa523012825068510a"
+  integrity sha512-IGcu+cydlUMZ5En85jxHH4qj2hta/11BHq95iHEyb2sbgiN0eCdzvUcHw5gt9pBL5lTi4JDYJ1acCoMGpTvEZg==
   dependencies:
     "@rollup/pluginutils" "^3.1.0"
     magic-string "^0.25.7"
@@ -847,7 +855,12 @@ encodeurl@~1.0.2:
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
   integrity sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=
 
-esbuild@^0.8.22, esbuild@^0.8.34:
+esbuild@^0.11.6:
+  version "0.11.6"
+  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.11.6.tgz#20961309c4cfed00b71027e18806150358d0cbb0"
+  integrity sha512-L+nKW9ftVS/N2CVJMR9YmXHbkm+vHzlNYuo09rzipQhF7dYNvRLfWoEPSDRTl10and4owFBV9rJ2CTFNtLIOiw==
+
+esbuild@^0.8.34:
   version "0.8.43"
   resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.8.43.tgz#19d79f8c6d1cc6dadd50942057a5aff906a1ecf2"
   integrity sha512-ZVE2CpootS4jtnfV0bbtJdgRsHEXcMP0P7ZXGfTmNzzhBr2e5ag7Vp3ry0jmw8zduJz4iHzxg4m5jtPxWERz1w==
@@ -881,6 +894,18 @@ fast-glob@^3.2.4:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.2.4.tgz#d20aefbf99579383e7f3cc66529158c9b98554d3"
   integrity sha512-kr/Oo6PX51265qeuCYsyGypiO5uJFgBS0jksyG7FUeCyQzNwYnzrNIMR1NXfkZXsMYXYLRAHgISHBz8gQcxKHQ==
+  dependencies:
+    "@nodelib/fs.stat" "^2.0.2"
+    "@nodelib/fs.walk" "^1.2.3"
+    glob-parent "^5.1.0"
+    merge2 "^1.3.0"
+    micromatch "^4.0.2"
+    picomatch "^2.2.1"
+
+fast-glob@^3.2.5:
+  version "3.2.5"
+  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.2.5.tgz#7939af2a656de79a4f1901903ee8adcaa7cb9661"
+  integrity sha512-2DtFcgT68wiTTiwZ2hNdJfcHNke9XOfnwmBRWXhmeKM8rF0TGwmC/Qto3S7RoZKp5cilZbxzO5iTNTQsJ+EeDg==
   dependencies:
     "@nodelib/fs.stat" "^2.0.2"
     "@nodelib/fs.walk" "^1.2.3"
@@ -1073,10 +1098,10 @@ is-reference@^1.2.1:
   dependencies:
     "@types/estree" "*"
 
-joycon@^2.2.5:
-  version "2.2.5"
-  resolved "https://registry.yarnpkg.com/joycon/-/joycon-2.2.5.tgz#8d4cf4cbb2544d7b7583c216fcdfec19f6be1615"
-  integrity sha512-YqvUxoOcVPnCp0VU1/56f+iKSdvIRJYPznH22BdXV3xMk75SFXhWeJkZ8C9XxUWt1b5x2X1SxuFygW1U0FmkEQ==
+joycon@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/joycon/-/joycon-3.0.1.tgz#9074c9b08ccf37a6726ff74a18485f85efcaddaf"
+  integrity sha512-SJcJNBg32dGgxhPtM0wQqxqV0ax9k/9TaUskGDSJkSFSQOEWWvQ3zzWdGQRIUry2j1zA5+ReH13t0Mf3StuVZA==
 
 js-tokens@^4.0.0:
   version "4.0.0"
@@ -1101,6 +1126,11 @@ json5@^2.1.3:
   integrity sha512-f+8cldu7X/y7RAJurMEJmdoKXGB/X550w2Nr3tTbezL6RwEE/iMcm+tZnXeoZtKuOq6ft8+CqzEkrIgx1fPoQA==
   dependencies:
     minimist "^1.2.5"
+
+jsonc-parser@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/jsonc-parser/-/jsonc-parser-3.0.0.tgz#abdd785701c7e7eaca8a9ec8cf070ca51a745a22"
+  integrity sha512-fQzRfAbIBnR0IQvftw9FJveWiHp72Fg20giDrHz6TdfB12UH/uue0D3hm57UB5KgAVuniLMCaS8P1IMj9NR7cA==
 
 loader-utils@^1.1.0:
   version "1.4.0"
@@ -1372,10 +1402,10 @@ quick-lru@^5.1.1:
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-5.1.1.tgz#366493e6b3e42a3a6885e2e99d18f80fb7a8c932"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
 
-react-ssr-prepass@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/react-ssr-prepass/-/react-ssr-prepass-1.3.0.tgz#6b6b1193b6d8b750c3674c20b58bc3ee7e75deac"
-  integrity sha512-BshcTNrfDrAiVFMm6PSj7d/LlE1LoLajMxvsbZtqqSY3xTOkt8dCs66xG+RljpZ6QyAJzKTbH4ObbhgUEe6G8A==
+react-ssr-prepass@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-ssr-prepass/-/react-ssr-prepass-1.4.0.tgz#33a3db19414f0f8f9f3f781c88f760ae366b4f51"
+  integrity sha512-0SzdmiQUtHvhxCabHg9BI/pkJfijGkQ0jQL6fC4YFy7idaDOuaiQLsajIkkNxffFXtJFHIWFITlve2WB88e0Jw==
 
 require-directory@^2.1.1:
   version "2.1.1"
@@ -1395,19 +1425,26 @@ reusify@^1.0.4:
   resolved "https://registry.yarnpkg.com/reusify/-/reusify-1.0.4.tgz#90da382b1e126efc02146e90845a88db12925d76"
   integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
 
-rollup-plugin-esbuild@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-esbuild/-/rollup-plugin-esbuild-2.6.1.tgz#5785532940d49adf1bff5b38e9bd9089262d4e7a"
-  integrity sha512-hskMEQQ4Vxlyoeg1OWlFTwWHIhpNaw6q+diOT7p9pdkk34m9Mbk3aymS/JbTqLXy/AbJi22iuXrucknKpeczfg==
+rollup-plugin-esbuild@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-esbuild/-/rollup-plugin-esbuild-3.0.2.tgz#85a1afd59510ef143813b46f515e92a49779a60b"
+  integrity sha512-uq+oBCeLXF1m6g9V0qpqbPbgyq24aXBKF474BvqgxfNmTP6FZ+oVk5/pCWQ/2rfSNJs4IimNU/k0q8xMaa0iCA==
   dependencies:
     "@rollup/pluginutils" "^4.1.0"
-    joycon "^2.2.5"
-    strip-json-comments "^3.1.1"
+    joycon "^3.0.0"
+    jsonc-parser "^3.0.0"
 
-rollup@^2.34.2, rollup@^2.38.5:
+rollup@^2.38.5:
   version "2.38.5"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.38.5.tgz#be41ad4fe0c103a8794377afceb5f22b8f603d6a"
   integrity sha512-VoWt8DysFGDVRGWuHTqZzT02J0ASgjVq/hPs9QcBOGMd7B+jfTr/iqMVEyOi901rE3xq+Deq66GzIT1yt7sGwQ==
+  optionalDependencies:
+    fsevents "~2.3.1"
+
+rollup@^2.44.0:
+  version "2.44.0"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.44.0.tgz#8da324d1c4fd12beef9ae6e12f4068265b6d95eb"
+  integrity sha512-rGSF4pLwvuaH/x4nAS+zP6UNn5YUDWf/TeEU5IoXSZKBbKRNTCI3qMnYXKZgrC0D2KzS2baiOZt1OlqhMu5rnQ==
   optionalDependencies:
     fsevents "~2.3.1"
 
@@ -1464,11 +1501,6 @@ strip-ansi@^6.0.0:
   integrity sha512-AuvKTrTfQNYNIctbR1K/YGTR1756GycPsg7b9bdV9Duqur4gv6aKqHXah67Z8ImS7WEz5QVcOtlfW2rZEugt6w==
   dependencies:
     ansi-regex "^5.0.0"
-
-strip-json-comments@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-3.1.1.tgz#31f1281b3832630434831c310c01cccda8cbe006"
-  integrity sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
 
 supports-color@^5.3.0:
   version "5.5.0"
@@ -1569,16 +1601,16 @@ uuid@^8.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
-vite-ssr@0.6.5:
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.6.5.tgz#b2d3dcaeee15ade16fe17c22a66e348f15be5ffa"
-  integrity sha512-HsOKdkWtNkoUo9YXuUggR1oI8rHTFj4fI3uE3ETuGlO+LnsVu5SueFTPI9vZIyIc+F6FNX9SsKLCN1qa8AgI3w==
+vite-ssr@0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.7.1.tgz#34e97eafd4ff008a8d072ddf64c6dc381fcca6bb"
+  integrity sha512-9stCJ8/79UOn18PjFhhoVNhICqRyriBFJPHc1BAxyLjGcN//xjdk0Pc0pxztr2gEPSh2dn1gDsDVBbdUJ6YubQ==
   dependencies:
     "@rollup/plugin-replace" "^2.3.3"
     "@vue/server-renderer" "^3.0.0"
     connect "^3.7.0"
     node-fetch "^2.6.1"
-    react-ssr-prepass "^1.3.0"
+    react-ssr-prepass "^1.4.0"
 
 vite@^2.0.0:
   version "2.0.1"
@@ -1593,21 +1625,21 @@ vite@^2.0.0:
     fsevents "~2.3.1"
 
 "vitedge@file:../../src":
-  version "0.10.0"
+  version "0.10.3"
   dependencies:
-    "@cloudflare/kv-asset-handler" "^0.1.0"
-    "@rollup/plugin-commonjs" "^17.0.0"
+    "@cloudflare/kv-asset-handler" "^0.1.1"
+    "@rollup/plugin-commonjs" "^18.0.0"
     "@rollup/plugin-json" "^4.1.0"
-    "@rollup/plugin-node-resolve" "^11.0.0"
-    "@rollup/plugin-replace" "^2.3.4"
+    "@rollup/plugin-node-resolve" "^11.2.1"
+    "@rollup/plugin-replace" "^2.4.2"
     "@rollup/plugin-virtual" "^2.0.3"
-    esbuild "^0.8.22"
-    fast-glob "^3.2.4"
+    esbuild "^0.11.6"
+    fast-glob "^3.2.5"
     multienv-loader "^1.2.0"
     node-fetch "^2.6.1"
-    rollup "^2.34.2"
-    rollup-plugin-esbuild "^2.6.1"
-    vite-ssr "0.6.5"
+    rollup "^2.44.0"
+    rollup-plugin-esbuild "^3.0.2"
+    vite-ssr "0.7.1"
 
 vscode-languageserver-textdocument@^1.0.1:
   version "1.0.1"
