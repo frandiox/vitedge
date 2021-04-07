@@ -44,6 +44,7 @@ See [docs](https://vitedge.netlify.app).
 - [ ] Svelte compatibility.
 - [x] Support Vite 2.
 - [x] HMR for API side.
+- [x] Page props HMR in browser on file save.
 - [x] Preload assets using Vite's manifest.
 - [x] Support self-requests to API endpoints during SSR.
 - [ ] Support parameters and wildcards in API file routes (`api/path/[param].js`).
