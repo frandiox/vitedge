@@ -1,8 +1,18 @@
+import { ref } from 'vue'
 import viteSSR, { ClientOnly } from 'vite-ssr/vue/entry-client'
 import { buildPropsRoute } from '../utils/props'
 import { createHead } from '@vueuse/head'
+import { onFunctionReload } from '../dev/hmr'
 
 export default function (App, { routes, ...options }, hook) {
+  if (import.meta.env.DEV) {
+    // Will be used in HMR later
+    routes.forEach((route) => {
+      route.meta = route.meta || {}
+      route.meta.hmr = ref(false)
+    })
+  }
+
   return viteSSR(
     App,
     { routes, ...options },
@@ -11,6 +21,17 @@ export default function (App, { routes, ...options }, hook) {
       app.use(head)
 
       app.component(ClientOnly.name, ClientOnly)
+
+      if (import.meta.hot) {
+        onFunctionReload(
+          () => router.currentRoute.value,
+          async (route) => {
+            await fetchPageProps(route)
+            // Trigger reactivity:
+            route.meta.hmr.value = !route.meta.hmr.value
+          }
+        )
+      }
 
       let isFirstRoute = true
       router.beforeEach(async (to, from, next) => {
@@ -29,20 +50,11 @@ export default function (App, { routes, ...options }, hook) {
           return next()
         }
 
-        const propsRoute = buildPropsRoute(to)
-
-        if (propsRoute) {
-          try {
-            const res = await fetch(propsRoute.fullPath, {
-              method: 'GET',
-              headers: { 'Content-Type': 'application/json' },
-            })
-
-            to.meta.state = await res.json()
-          } catch (error) {
-            console.error(error)
-            // redirect to error route
-          }
+        try {
+          await fetchPageProps(to)
+        } catch (error) {
+          console.error(error)
+          // redirect to error route
         }
 
         next()
@@ -53,4 +65,17 @@ export default function (App, { routes, ...options }, hook) {
       }
     }
   )
+}
+
+async function fetchPageProps(route) {
+  const propsRoute = buildPropsRoute(route)
+
+  if (propsRoute) {
+    const res = await fetch(propsRoute.fullPath, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    route.meta.state = await res.json()
+  }
 }
