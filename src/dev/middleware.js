@@ -131,10 +131,26 @@ async function watchDynamicFiles({ config, watcher }) {
   return fnsDirFiles
 }
 
-export async function configureServer({ middlewares, config, watcher }) {
+function watchPropReload({ config, watcher, ws }) {
+  watcher.on('change', (path) => {
+    let [, filepath] = path.split(`${config.root}/${fnsInDir}`)
+    if (filepath) {
+      filepath = filepath.slice(0, filepath.lastIndexOf('.'))
+      ws.send({
+        type: 'custom',
+        event: 'function-reload',
+        data: { path: filepath },
+      })
+    }
+  })
+}
+
+export async function configureServer({ middlewares, config, watcher, ws }) {
   await prepareEnvironment()
 
   const fnsDirFiles = await watchDynamicFiles({ config, watcher })
+
+  watchPropReload({ config, watcher, ws })
 
   middlewares.use(async function (req, res, next) {
     const url = getUrl(req)

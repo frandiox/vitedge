@@ -1,16 +1,47 @@
 import React, { useState } from 'react'
 import viteSSR from 'vite-ssr/react/entry-client'
 import { buildPropsRoute } from '../utils/props'
+import { onFunctionReload } from '../dev/hmr'
 
 export { ClientOnly } from 'vite-ssr/react/components'
 
 export default function (App, { routes, ...options }, hook) {
-  return viteSSR(App, { routes, PropsProvider, ...options }, hook)
+  return viteSSR(App, { routes, PropsProvider, ...options }, async (ctx) => {
+    if (import.meta.hot) {
+      onFunctionReload(ctx.router.getCurrentRoute, fetchPageProps)
+    }
+
+    if (hook) {
+      await hook(ctx)
+    }
+  })
+}
+
+function fetchPageProps(route, setState = route?.meta?.setState) {
+  const propsRoute = buildPropsRoute(route)
+
+  if (propsRoute) {
+    fetch(propsRoute.fullPath, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then((res) => res.json())
+      .then((resolvedState) => {
+        route.meta.state = resolvedState
+        setState(resolvedState)
+      })
+      .catch((error) => {
+        console.error(error)
+        route.meta.state = { error }
+        setState(route.meta.state)
+      })
+  }
+
+  return !!propsRoute
 }
 
 let lastRoutePath
-
-export function PropsProvider({
+function PropsProvider({
   from,
   to,
   pagePropsOptions,
@@ -23,6 +54,12 @@ export function PropsProvider({
   lastRoutePath = to.path
 
   const [state, setState] = useState(to.meta.state)
+
+  if (import.meta.env.DEV) {
+    // For props HMR
+    to.meta.setState = setState
+  }
+
   let isLoadingProps = false
   let isRevalidatingProps = false
 
@@ -34,29 +71,14 @@ export function PropsProvider({
     } else {
       to.meta.state = {}
 
-      const propsRoute = buildPropsRoute(to)
+      const isFetching = fetchPageProps(to, setState)
 
-      if (propsRoute) {
+      if (isFetching) {
         if (state) {
           isRevalidatingProps = true
         } else {
           isLoadingProps = true
         }
-
-        fetch(propsRoute.fullPath, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        })
-          .then((res) => res.json())
-          .then((resolvedState) => {
-            to.meta.state = resolvedState
-            setState(resolvedState)
-          })
-          .catch((error) => {
-            console.error(error)
-            to.meta.state = { error }
-            setState(to.meta.state)
-          })
       }
     }
   }
