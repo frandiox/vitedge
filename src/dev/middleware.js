@@ -133,7 +133,7 @@ async function watchDynamicFiles({ config, watcher }) {
 
 function watchPropReload({ config, watcher, ws }) {
   watcher.on('change', (path) => {
-    let filepath = path.split(`${config.root}/${fnsInDir}`).pop()
+    let [, filepath] = path.split(`${config.root}/${fnsInDir}`)
     if (filepath) {
       filepath = filepath.slice(0, filepath.lastIndexOf('.'))
       ws.send({
