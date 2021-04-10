@@ -9,12 +9,10 @@ if (!example) {
 }
 
 const { default: functions } = await import(`../${example}/dist/functions.js`)
-const { default: ssrBuild } = await import(`../${example}/dist/ssr/main.js`)
+const { default: router } = await import(`../${example}/dist/ssr/main.js`)
 const { default: manifest } = await import(
   `../${example}/dist/client/ssr-manifest.json`
 )
-
-const router = ssrBuild.default
 
 // This could be Polka, Fastify or any other server
 const server = express()

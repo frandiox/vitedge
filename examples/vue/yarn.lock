@@ -1625,7 +1625,7 @@ vite@^2.0.0:
     fsevents "~2.3.1"
 
 "vitedge@file:../../src":
-  version "0.10.3"
+  version "0.10.4"
   dependencies:
     "@cloudflare/kv-asset-handler" "^0.1.1"
     "@rollup/plugin-commonjs" "^18.0.0"

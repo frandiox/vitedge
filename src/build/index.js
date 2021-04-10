@@ -28,8 +28,15 @@ export default async function ({ mode } = {}) {
       mode,
       build: {
         outDir: path.resolve(rootDir, outDir, ssrOutDir),
+        target: 'es2019', // Support Node 12
+        rollupOptions: {
+          output: {
+            format: 'es',
+          },
+        },
       },
       packageJson: {
+        type: 'module',
         vitedge: {
           commitHash,
         },

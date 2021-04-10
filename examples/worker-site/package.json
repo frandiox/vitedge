@@ -1,7 +1,8 @@
 {
   "main": "index.js",
   "scripts": {
-    "serve": "wrangler dev"
+    "serve": "wrangler dev",
+    "deploy": "wrangler publish"
   },
   "dependencies": {
     "@cloudflare/kv-asset-handler": "^0.0.12",
