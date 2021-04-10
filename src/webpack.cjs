@@ -15,7 +15,7 @@ module.exports = ({ root } = {}) => {
     entry: './index',
     target: 'webworker',
     resolve: {
-      mainFields: ['main', 'module'],
+      mainFields: ['browser', 'main', 'module'],
       alias: {
         __vitedge_functions__: path.resolve(root, outDir, fnsOutFile),
         __vitedge_router__: path.resolve(root, outDir, ssrOutDir),
