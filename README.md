@@ -8,7 +8,7 @@ Vitedge is **just a Vite app ™** that prerrenders the first view in an edge wo
 
 It can replace static site generators in some situations since it builds on the fly and caches at the edge. Therefore, instead of getting a static `index.html` from the CDN, the CDN itself will create it on the fly or provide it from cache if it was already accessed (with configurable cache age + stale-while-revalidate).
 
-Even though running it at the edge is ideal, it is actually compatible with any Node environment.
+Even though running it at the edge is ideal, it is actually compatible with any Node environment such as Vercel or Netlify.
 
 See [live demo](https://vitessedge.zable.workers.dev/) and [Vue starter template](https://github.com/frandiox/vitessedge-template).
 
@@ -23,6 +23,10 @@ See [live demo](https://vitessedge.zable.workers.dev/) and [Vue starter template
 ## Docs
 
 See [docs](https://vitedge.netlify.app).
+
+## Starters
+
+- Vue, TS, i18n - [Code](https://github.com/frandiox/vitessedge-template) | [Demo](https://vitessedge.zable.workers.dev/)
 
 ## Roadmap
 
@@ -49,6 +53,8 @@ See [docs](https://vitedge.netlify.app).
 - [x] Support self-requests to API endpoints during SSR.
 - [ ] Support parameters and wildcards in API file routes (`api/path/[param].js`).
 - [ ] Stale-while-revalidate cache for pages.
+- [ ] CORS defaults.
+- [ ] Throw errors from API/Props endpoints.
 
 ## Contributing
 
