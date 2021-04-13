@@ -1,3 +1,4 @@
+import { loadEnv } from '../utils/env.js'
 import { promises as fs } from 'fs'
 import projectConfig from '../config.cjs'
 
@@ -49,12 +50,7 @@ async function polyfillWebAPIs() {
 async function prepareEnvironment() {
   await polyfillWebAPIs()
 
-  const { loadEnv } = await import('../utils/env.js')
-
-  loadEnv({
-    mode: process.env.NODE_ENV || 'development',
-    dry: false,
-  })
+  loadEnv({ dry: false })
 }
 
 async function handleFunctionRequest(
