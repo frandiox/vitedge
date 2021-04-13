@@ -30,20 +30,6 @@ export async function handleEvent(
     )
   }
 
-  // --- API ENDPOINTS
-  if (isApiRequest(event)) {
-    const { url, query } = parseQuerystring(event)
-
-    willRequestApi && (await willRequestApi({ event, url, query }))
-    const response = await handleApiRequest(event)
-
-    return (
-      (didRequestApi &&
-        (await didRequestApi({ event, url, query, response }))) ||
-      response
-    )
-  }
-
   // --- PROPS ENDPOINTS
   if (isPropsRequest(event)) {
     const { url, query } = parseQuerystring(event)
@@ -54,6 +40,20 @@ export async function handleEvent(
     return (
       (didRequestProps &&
         (await didRequestProps({ event, url, query, response }))) ||
+      response
+    )
+  }
+
+  // --- API ENDPOINTS
+  if (isApiRequest(event)) {
+    const { url, query } = parseQuerystring(event)
+
+    willRequestApi && (await willRequestApi({ event, url, query }))
+    const response = await handleApiRequest(event)
+
+    return (
+      (didRequestApi &&
+        (await didRequestApi({ event, url, query, response }))) ||
       response
     )
   }

@@ -5,12 +5,12 @@ export function normalizePathname(url) {
 export function getEventType({ url, functions }) {
   const path = normalizePathname(url)
 
-  if (path.startsWith('/api/') || !!functions[path]) {
-    return 'api'
-  }
-
   if (url.pathname.startsWith('/props/')) {
     return 'props'
+  }
+
+  if (path.startsWith('/api/') || !!functions[path]) {
+    return 'api'
   }
 
   return 'render'
