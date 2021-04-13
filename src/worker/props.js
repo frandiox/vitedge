@@ -1,4 +1,5 @@
 import router from '__vitedge_router__'
+import { safeHandler } from '../errors'
 import { getCachedResponse, setCachedResponse } from './cache'
 import {
   createNotFoundResponse,
@@ -71,18 +72,20 @@ export async function getPageProps(event) {
     }
   }
 
-  const { data, options: dynamicOptions } = await handler({
-    ...(route || {}),
-    event,
-    request: event.request,
-    headers: event.request.headers,
-  })
+  const { data, options: dynamicOptions } = await safeHandler(() =>
+    handler({
+      ...(route || {}),
+      event,
+      request: event.request,
+      headers: event.request.headers,
+    })
+  )
 
   const options = Object.assign({}, staticOptions || {}, dynamicOptions || {})
 
   const response = buildPropsResponse(data, options)
 
-  if (cacheOption) {
+  if ((options.status || 0) < 400 && cacheOption) {
     setCachedResponse(event, response, cacheKey, cacheOption)
   }
 

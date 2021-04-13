@@ -3,6 +3,7 @@ import viteSSR, { ClientOnly } from 'vite-ssr/vue/entry-client'
 import { buildPropsRoute } from '../utils/props'
 import { createHead } from '@vueuse/head'
 import { onFunctionReload } from '../dev/hmr'
+import { safeHandler } from '../errors'
 
 export default function (App, { routes, ...options }, hook) {
   if (import.meta.env.DEV) {
@@ -50,12 +51,7 @@ export default function (App, { routes, ...options }, hook) {
           return next()
         }
 
-        try {
-          await fetchPageProps(to)
-        } catch (error) {
-          console.error(error)
-          // redirect to error route
-        }
+        await fetchPageProps(to)
 
         next()
       })
@@ -71,11 +67,15 @@ async function fetchPageProps(route) {
   const propsRoute = buildPropsRoute(route)
 
   if (propsRoute) {
-    const res = await fetch(propsRoute.fullPath, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
+    const { data } = await safeHandler(async () => {
+      const res = await fetch(propsRoute.fullPath, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      })
+
+      return { data: await res.json() }
     })
 
-    route.meta.state = await res.json()
+    route.meta.state = data
   }
 }

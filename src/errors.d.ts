@@ -24,4 +24,7 @@ declare module 'vitedge/errors' {
   export const MethoNotAllowedError: ExtendedError
   export const UnknownError: ExtendedError
   export const ExternalServiceError: ExtendedError
+  // export const setErrorTransformer: (
+  //   fn: (error: Error | ExtendedError) => any
+  // ) => void
 }

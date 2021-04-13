@@ -1,3 +1,32 @@
+const isDev = process.env.NODE_ENV === 'development'
+
+let transformError = (error) => ({
+  error: {
+    status: error.status || 500,
+    message: error.message,
+    title: error.name,
+    details: error.details,
+    stack: isDev ? error.stack : undefined,
+  },
+})
+
+export function setErrorTransformer(fn) {
+  // TODO rethink this so it doesn't need
+  // to be repeated in front and back ends.
+  // E.g. Expose it from entry-server.
+  transformError = fn
+}
+
+export async function safeHandler(fn) {
+  try {
+    return await fn()
+  } catch (error) {
+    const data = transformError(error)
+    const options = { status: error.status || 500 }
+    return { data, options }
+  }
+}
+
 export class RestError extends Error {
   constructor(message, status, details) {
     super(message)

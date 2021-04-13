@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import viteSSR from 'vite-ssr/react/entry-client'
 import { buildPropsRoute } from '../utils/props'
 import { onFunctionReload } from '../dev/hmr'
+import { safeHandler } from '../errors'
 
 export { ClientOnly } from 'vite-ssr/react/components'
 
@@ -21,20 +22,15 @@ function fetchPageProps(route, setState = (route.meta || {}).setState) {
   const propsRoute = buildPropsRoute(route)
 
   if (propsRoute) {
-    fetch(propsRoute.fullPath, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
+    safeHandler(() =>
+      fetch(propsRoute.fullPath, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      }).then((res) => res.json().then((data) => ({ data })))
+    ).then(({ data }) => {
+      route.meta.state = data
+      setState(data)
     })
-      .then((res) => res.json())
-      .then((resolvedState) => {
-        route.meta.state = resolvedState
-        setState(resolvedState)
-      })
-      .catch((error) => {
-        console.error(error)
-        route.meta.state = { error }
-        setState(route.meta.state)
-      })
   }
 
   return !!propsRoute

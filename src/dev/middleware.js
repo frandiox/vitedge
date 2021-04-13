@@ -1,6 +1,7 @@
 import { loadEnv } from '../utils/env.js'
 import { promises as fs } from 'fs'
 import projectConfig from '../config.cjs'
+import { safeHandler } from '../errors.js'
 
 const { fnsInDir } = projectConfig
 
@@ -68,17 +69,19 @@ async function handleFunctionRequest(
       if (endpointMeta.handler) {
         const fetchRequest = await nodeToFetchRequest(req)
 
-        const { data, options = {} } = await endpointMeta.handler({
-          ...(extra || {}),
-          request: fetchRequest,
-          headers: fetchRequest.headers,
-          event: {
-            clientId: process.pid,
+        const { data, options = {} } = await safeHandler(() =>
+          endpointMeta.handler({
+            ...(extra || {}),
             request: fetchRequest,
-            respondWith: () => undefined,
-            waitUntil: () => undefined,
-          },
-        })
+            headers: fetchRequest.headers,
+            event: {
+              clientId: process.pid,
+              request: fetchRequest,
+              respondWith: () => undefined,
+              waitUntil: () => undefined,
+            },
+          })
+        )
 
         res.statusCode = options.status || 200
         res.statusMessage = options.statusText
