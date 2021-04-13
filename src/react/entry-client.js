@@ -17,7 +17,7 @@ export default function (App, { routes, ...options }, hook) {
   })
 }
 
-function fetchPageProps(route, setState = route?.meta?.setState) {
+function fetchPageProps(route, setState = (route.meta || {}).setState) {
   const propsRoute = buildPropsRoute(route)
 
   if (propsRoute) {

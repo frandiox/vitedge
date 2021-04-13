@@ -72,7 +72,7 @@ async function handleFunctionRequest(
       if (endpointMeta.handler) {
         const fetchRequest = await nodeToFetchRequest(req)
 
-        const { data } = await endpointMeta.handler({
+        const { data, options = {} } = await endpointMeta.handler({
           ...(extra || {}),
           request: fetchRequest,
           headers: fetchRequest.headers,
@@ -84,9 +84,24 @@ async function handleFunctionRequest(
           },
         })
 
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json; charset=utf-8')
-        return res.end(JSON.stringify(data))
+        res.statusCode = options.status || 200
+        res.statusMessage = options.statusText
+
+        const headers = {
+          'content-type': 'application/json; charset=utf-8',
+          ...endpointMeta.options?.headers,
+          ...options.headers,
+        }
+
+        for (const [key, value] of Object.entries(headers)) {
+          res.setHeader(key, value)
+        }
+
+        return res.end(
+          res.getHeader('content-type')?.startsWith('application/json')
+            ? JSON.stringify(data)
+            : data
+        )
       }
     }
   } catch (error) {

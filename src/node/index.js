@@ -25,11 +25,14 @@ export async function handleEvent(
     return { statusCode: 404 }
   }
 
-  const pageProps = await getPageProps({ functions, router, url }, event)
+  const { data: pageProps, options: propsOptions } = await getPageProps(
+    { functions, router, url },
+    event
+  )
 
   // This handles SPA page props requests from the browser
   if (type === 'props') {
-    return { body: JSON.stringify(pageProps || {}) }
+    return { ...propsOptions, body: JSON.stringify(pageProps || {}) }
   }
 
   globalThis.fetch = createLocalFetch({ url, functions })

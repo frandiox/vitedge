@@ -86,6 +86,8 @@ export async function handleViewRendering(event, { http2ServerPush }) {
     'content-type': 'text/html;charset=UTF-8',
   }
 
+  const dynamicOptions = (page && page.options) || {}
+
   if (http2ServerPush) {
     headers.link = buildLinkHeader(html, http2ServerPush)
   }
@@ -99,7 +101,7 @@ export async function handleViewRendering(event, { http2ServerPush }) {
     event,
     response,
     cacheKey,
-    ((page && page.options && page.options.cache) || {}).html
+    (dynamicOptions.cache || {}).html
   )
 
   return response

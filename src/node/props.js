@@ -3,13 +3,13 @@ export async function getPageProps({ functions, router, url }, event) {
   const fnMeta = functions[propsGetter]
 
   if (fnMeta) {
-    const { data } = await fnMeta.handler({
+    const { data, options } = await fnMeta.handler({
       ...event,
       ...extra,
       url,
     })
 
-    return data
+    return { data, options }
   } else {
     return {}
   }

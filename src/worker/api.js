@@ -46,6 +46,7 @@ function buildApiResponse(data, options) {
 
   return createResponse(data, {
     status: options.status || 200,
+    statusText: options.statusText,
     headers,
   })
 }

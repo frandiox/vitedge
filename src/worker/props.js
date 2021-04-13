@@ -36,6 +36,7 @@ function buildPropsResponse(props, options) {
 
   return createResponse(JSON.stringify(props), {
     status: options.status || 200,
+    statusText: options.statusText,
     headers,
   })
 }

@@ -5,18 +5,21 @@ export async function handleApiRequest({ url, functions }, event) {
   const fnMeta = functions[normalizePathname(url)]
 
   if (fnMeta) {
-    const { data } = await fnMeta.handler({
+    const { data, options = {} } = await fnMeta.handler({
       ...event,
       url,
     })
 
     const headers = {
-      'content-type': 'application/json',
+      'content-type': 'application/json; charset=utf-8',
       ...(fnMeta.options || {}).headers,
+      ...options.headers,
     }
 
     return {
-      statusCode: 200,
+      statusCode: options.status || 200,
+      statusMessage: options.statusText,
+      ...options,
       headers,
       body: (headers['content-type'] || '').startsWith('application/json')
         ? JSON.stringify(data)
