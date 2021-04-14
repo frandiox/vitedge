@@ -64,7 +64,7 @@ export class NotFoundError extends RestError {
   }
 }
 
-export class MethoNotAllowedError extends RestError {
+export class MethodNotAllowedError extends RestError {
   constructor(message, details) {
     super(message, 405, details)
   }
