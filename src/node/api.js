@@ -6,7 +6,7 @@ export async function handleApiRequest({ url, functions }, event) {
   const fnMeta = functions[normalizePathname(url)]
 
   if (fnMeta) {
-    const { data, options = {} } = await safeHandler(() =>
+    const { data, ...options } = await safeHandler(() =>
       fnMeta.handler({
         ...event,
         url,

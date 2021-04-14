@@ -72,7 +72,7 @@ export async function getPageProps(event) {
     }
   }
 
-  const { data, options: dynamicOptions } = await safeHandler(() =>
+  const { data, ...dynamicOptions } = await safeHandler(() =>
     handler({
       ...(route || {}),
       event,
@@ -81,7 +81,7 @@ export async function getPageProps(event) {
     })
   )
 
-  const options = Object.assign({}, staticOptions || {}, dynamicOptions || {})
+  const options = Object.assign({}, staticOptions || {}, dynamicOptions)
 
   const response = buildPropsResponse(data, options)
 

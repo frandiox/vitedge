@@ -5,7 +5,7 @@ export async function getPageProps({ functions, router, url }, event) {
   const fnMeta = functions[propsGetter]
 
   if (fnMeta) {
-    const { data, options } = await safeHandler(() =>
+    const { data, ...options } = await safeHandler(() =>
       fnMeta.handler({
         ...event,
         ...extra,

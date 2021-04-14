@@ -66,7 +66,7 @@ export async function handleApiRequest(event) {
     const { handler, options: staticOptions } = resolvedFn
 
     const { url, query } = parseQuerystring(event)
-    const { data, options: dynamicOptions } = await safeHandler(() =>
+    const { data, ...dynamicOptions } = await safeHandler(() =>
       handler({
         event,
         request: event.request,
@@ -76,7 +76,7 @@ export async function handleApiRequest(event) {
       })
     )
 
-    const options = Object.assign({}, staticOptions || {}, dynamicOptions || {})
+    const options = Object.assign({}, staticOptions || {}, dynamicOptions)
 
     const response = buildApiResponse(data, options)
 

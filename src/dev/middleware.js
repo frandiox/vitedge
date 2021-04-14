@@ -69,7 +69,7 @@ async function handleFunctionRequest(
       if (endpointMeta.handler) {
         const fetchRequest = await nodeToFetchRequest(req)
 
-        const { data, options = {} } = await safeHandler(() =>
+        const { data, ...options } = await safeHandler(() =>
           endpointMeta.handler({
             ...(extra || {}),
             request: fetchRequest,

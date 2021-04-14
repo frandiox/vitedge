@@ -22,8 +22,7 @@ export async function safeHandler(fn) {
     return await fn()
   } catch (error) {
     const data = transformError(error)
-    const options = { status: error.status || 500 }
-    return { data, options }
+    return { data, status: error.status || 500 }
   }
 }
 
