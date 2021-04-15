@@ -30,12 +30,15 @@ export async function handleEvent(
     event
   )
 
+  const status = propsOptions.status
+  const isRedirect = status >= 300 && status < 400
   // This handles SPA page props requests from the browser
-  if (type === 'props') {
+  if (type === 'props' || isRedirect) {
     return {
-      statusCode: propsOptions.status,
+      statusCode: status,
       statusMessage: propsOptions.statusText,
       ...propsOptions,
+      status,
       body: JSON.stringify(pageProps || {}),
     }
   }
@@ -46,6 +49,7 @@ export async function handleEvent(
   const { html, ...extra } = await router.render(url, {
     ...event,
     initialState: pageProps,
+    propsStatusCode: propsOptions.status,
     manifest,
     preload,
   })

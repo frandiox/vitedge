@@ -64,17 +64,24 @@ export async function handleViewRendering(event, { http2ServerPush }) {
     return cachedResponse
   }
 
-  const [page, manifest] = await Promise.all([
+  const [pageProps, manifest] = await Promise.all([
     getPageProps(event),
     getSsrManifest(event),
   ])
 
-  const initialState = page ? await page.response.json() : {}
+  if (pageProps.response.status >= 300 && pageProps.response.status < 400) {
+    // Redirect
+    return pageProps.response
+  }
+
+  const initialState = (await pageProps.response.json()) || {}
+  const options = pageProps.options || {}
 
   globalThis.fetch = createLocalFetch(event.request)
 
   const { html } = await router.render(event.request.url, {
     initialState,
+    propsStatusCode: pageProps.response.status,
     request: event.request,
     manifest,
     preload: true,
@@ -83,10 +90,9 @@ export async function handleViewRendering(event, { http2ServerPush }) {
   globalThis.fetch = originalFetch
 
   const headers = {
+    ...options.headers,
     'content-type': 'text/html;charset=UTF-8',
   }
-
-  const dynamicOptions = (page && page.options) || {}
 
   if (http2ServerPush) {
     headers.link = buildLinkHeader(html, http2ServerPush)
@@ -97,12 +103,7 @@ export async function handleViewRendering(event, { http2ServerPush }) {
     headers,
   })
 
-  setCachedResponse(
-    event,
-    response,
-    cacheKey,
-    (dynamicOptions.cache || {}).html
-  )
+  setCachedResponse(event, response, cacheKey, (options.cache || {}).html)
 
   return response
 }

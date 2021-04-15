@@ -232,11 +232,23 @@ export async function getRenderContext({
     try {
       const res = await fetch(url.toString(), {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
+        redirect: 'manual', // Relay redirects to make the browser change URL
+        headers: { 'content-type': 'application/json; charset=utf-8' },
       })
 
-      const initialState = await res.json()
-      return { initialState }
+      if (res.status >= 300 && res.status < 400) {
+        const headers = {}
+
+        for (const [key, value] of res.headers.entries()) {
+          headers[key] = value
+        }
+
+        // Returning a response like this will skip rendering
+        return { status: res.status, headers }
+      }
+
+      const data = await res.json()
+      return { initialState: data, propsStatusCode: res.status }
     } catch (error) {
       console.log(`Could not get page props for route "${propsRoute.name}"`)
       console.error(error)
