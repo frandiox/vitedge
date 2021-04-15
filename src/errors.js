@@ -19,7 +19,12 @@ export function setErrorTransformer(fn) {
 
 export async function safeHandler(fn) {
   try {
-    return await fn()
+    const result = await fn()
+    if (!result.status) {
+      result.status = 200
+    }
+
+    return result
   } catch (error) {
     const data = transformError(error)
     return { data, status: error.status || 500 }

@@ -54,13 +54,16 @@ function getCacheKey(event) {
 }
 
 export async function getPageProps(event) {
-  const propsRoute = resolvePropsRoute(event.request.url)
+  const { handler, options: staticOptions, route } =
+    resolvePropsRoute(event.request.url) || {}
 
-  if (!propsRoute) {
-    return null
+  if (!handler) {
+    return {
+      response: createNotFoundResponse(),
+      options: staticOptions,
+    }
   }
 
-  const { handler, options: staticOptions, route } = propsRoute
   const cacheOption =
     staticOptions && staticOptions.cache && staticOptions.cache.api
   const cacheKey = cacheOption && getCacheKey(event)
