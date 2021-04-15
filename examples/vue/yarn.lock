@@ -855,15 +855,15 @@ encodeurl@~1.0.2:
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
   integrity sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=
 
-esbuild@^0.11.6:
-  version "0.11.6"
-  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.11.6.tgz#20961309c4cfed00b71027e18806150358d0cbb0"
-  integrity sha512-L+nKW9ftVS/N2CVJMR9YmXHbkm+vHzlNYuo09rzipQhF7dYNvRLfWoEPSDRTl10and4owFBV9rJ2CTFNtLIOiw==
-
 esbuild@^0.8.34:
   version "0.8.43"
   resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.8.43.tgz#19d79f8c6d1cc6dadd50942057a5aff906a1ecf2"
   integrity sha512-ZVE2CpootS4jtnfV0bbtJdgRsHEXcMP0P7ZXGfTmNzzhBr2e5ag7Vp3ry0jmw8zduJz4iHzxg4m5jtPxWERz1w==
+
+esbuild@^0.9.3:
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.9.7.tgz#ea0d639cbe4b88ec25fbed4d6ff00c8d788ef70b"
+  integrity sha512-VtUf6aQ89VTmMLKrWHYG50uByMF4JQlVysb8dmg6cOgW8JnFCipmz7p+HNBl+RR3LLCuBxFGVauAe2wfnF9bLg==
 
 escalade@^3.1.1:
   version "3.1.1"
@@ -1601,10 +1601,10 @@ uuid@^8.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
-vite-ssr@0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.7.1.tgz#34e97eafd4ff008a8d072ddf64c6dc381fcca6bb"
-  integrity sha512-9stCJ8/79UOn18PjFhhoVNhICqRyriBFJPHc1BAxyLjGcN//xjdk0Pc0pxztr2gEPSh2dn1gDsDVBbdUJ6YubQ==
+vite-ssr@0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.8.0.tgz#1c45b5c1e3321c827eee38e22ce46ee9c715dcf1"
+  integrity sha512-ALJQLGWEAhqryALUCLQo5TXRgnWy1q/zPeRT5MFBcxeND84ReJ0Z+GEl4jHh0N02hPvdZghJh3Jtkuv8RxbWKQ==
   dependencies:
     "@rollup/plugin-replace" "^2.3.3"
     "@vue/server-renderer" "^3.0.0"
@@ -1625,7 +1625,7 @@ vite@^2.0.0:
     fsevents "~2.3.1"
 
 "vitedge@file:../../src":
-  version "0.10.4"
+  version "0.10.5"
   dependencies:
     "@cloudflare/kv-asset-handler" "^0.1.1"
     "@rollup/plugin-commonjs" "^18.0.0"
@@ -1633,13 +1633,13 @@ vite@^2.0.0:
     "@rollup/plugin-node-resolve" "^11.2.1"
     "@rollup/plugin-replace" "^2.4.2"
     "@rollup/plugin-virtual" "^2.0.3"
-    esbuild "^0.11.6"
+    esbuild "^0.9.3"
     fast-glob "^3.2.5"
     multienv-loader "^1.2.0"
     node-fetch "^2.6.1"
     rollup "^2.44.0"
     rollup-plugin-esbuild "^3.0.2"
-    vite-ssr "0.7.1"
+    vite-ssr "0.8.0"
 
 vscode-languageserver-textdocument@^1.0.1:
   version "1.0.1"
