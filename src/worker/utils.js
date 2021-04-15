@@ -17,5 +17,5 @@ export function createResponse(body, params = {}) {
 }
 
 export function createNotFoundResponse() {
-  return createResponse('Not found', { status: 404 })
+  return createResponse(null, { status: 404 })
 }

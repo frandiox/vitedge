@@ -57,7 +57,7 @@ async function prepareEnvironment() {
 async function handleFunctionRequest(
   req,
   res,
-  { config, functionPath, extra }
+  { config, functionPath, extra, mockRedirect }
 ) {
   try {
     let endpointMeta = await import(
@@ -83,7 +83,12 @@ async function handleFunctionRequest(
           })
         )
 
-        res.statusCode = options.status || 200
+        let status = options.status || 200
+        if ((status >= 300) & (status < 400) && mockRedirect) {
+          status = 299
+        }
+
+        res.statusCode = status
         res.statusMessage = options.statusText
 
         const headers = {
@@ -98,7 +103,7 @@ async function handleFunctionRequest(
 
         return res.end(
           res.getHeader('content-type')?.startsWith('application/json')
-            ? JSON.stringify(data)
+            ? JSON.stringify(data || {})
             : data
         )
       }
@@ -176,6 +181,7 @@ export async function configureServer({ middlewares, config, watcher, ws }) {
         extra: url.searchParams.has('data')
           ? JSON.parse(decodeURIComponent(url.searchParams.get('data')))
           : {},
+        mockRedirect: !url.searchParams.has('rendering'),
       })
     }
 
@@ -228,6 +234,9 @@ export async function getRenderContext({
     const [pathname, search] = propsRoute.fullPath.split('?')
     url.pathname = pathname
     url.search = search
+
+    // This will prevent mocking redirect status during rendering
+    url.searchParams.append('rendering', true)
 
     try {
       const res = await fetch(url.toString(), {

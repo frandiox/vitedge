@@ -30,10 +30,13 @@ export async function handleEvent(
     event
   )
 
-  const status = propsOptions.status
+  let status = propsOptions.status
   const isRedirect = status >= 300 && status < 400
   // This handles SPA page props requests from the browser
   if (type === 'props' || isRedirect) {
+    // Mock status when this is a props request to bypass Fetch opaque responses
+    status = type === 'props' && isRedirect ? 299 : status
+
     return {
       statusCode: status,
       statusMessage: propsOptions.statusText,
