@@ -54,7 +54,8 @@ See [docs](https://vitedge.netlify.app).
 - [ ] Support parameters and wildcards in API file routes (`api/path/[param].js`).
 - [ ] Stale-while-revalidate cache for pages.
 - [ ] CORS defaults.
-- [ ] Throw errors from API/Props endpoints.
+- [x] Throw errors from API/Props endpoints.
+- [x] Redirects with 3xx HTTP codes.
 
 ## Contributing
 
