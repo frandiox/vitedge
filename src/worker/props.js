@@ -1,4 +1,5 @@
 import router from '__vitedge_router__'
+import { safeHandler } from '../errors'
 import { getCachedResponse, setCachedResponse } from './cache'
 import {
   createNotFoundResponse,
@@ -53,13 +54,16 @@ function getCacheKey(event) {
 }
 
 export async function getPageProps(event) {
-  const propsRoute = resolvePropsRoute(event.request.url)
+  const { handler, options: staticOptions, route } =
+    resolvePropsRoute(event.request.url) || {}
 
-  if (!propsRoute) {
-    return null
+  if (!handler) {
+    return {
+      response: createNotFoundResponse(),
+      options: staticOptions,
+    }
   }
 
-  const { handler, options: staticOptions, route } = propsRoute
   const cacheOption =
     staticOptions && staticOptions.cache && staticOptions.cache.api
   const cacheKey = cacheOption && getCacheKey(event)
@@ -71,18 +75,20 @@ export async function getPageProps(event) {
     }
   }
 
-  const { data, options: dynamicOptions } = await handler({
-    ...(route || {}),
-    event,
-    request: event.request,
-    headers: event.request.headers,
-  })
+  const { data, ...dynamicOptions } = await safeHandler(() =>
+    handler({
+      ...(route || {}),
+      event,
+      request: event.request,
+      headers: event.request.headers,
+    })
+  )
 
-  const options = Object.assign({}, staticOptions || {}, dynamicOptions || {})
+  const options = Object.assign({}, staticOptions || {}, dynamicOptions)
 
   const response = buildPropsResponse(data, options)
 
-  if (cacheOption) {
+  if ((options.status || 0) < 400 && cacheOption) {
     setCachedResponse(event, response, cacheKey, cacheOption)
   }
 
@@ -92,9 +98,10 @@ export async function getPageProps(event) {
 export async function handlePropsRequest(event) {
   const page = await getPageProps(event)
 
-  if (page) {
-    return page.response
+  if (page.response.status >= 300 && page.response.status < 400) {
+    // Mock redirect status on props request to bypass Fetch opaque responses
+    return new Response(page.response.body, { ...page.response, status: 299 })
   }
 
-  return createNotFoundResponse()
+  return page.response
 }

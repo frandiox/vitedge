@@ -1,14 +1,17 @@
 import nodeFetch from 'node-fetch'
+import { safeHandler } from '../errors.js'
 import { getEventType, normalizePathname } from './utils.js'
 
 export async function handleApiRequest({ url, functions }, event) {
   const fnMeta = functions[normalizePathname(url)]
 
   if (fnMeta) {
-    const { data, options = {} } = await fnMeta.handler({
-      ...event,
-      url,
-    })
+    const { data, ...options } = await safeHandler(() =>
+      fnMeta.handler({
+        ...event,
+        url,
+      })
+    )
 
     const headers = {
       'content-type': 'application/json; charset=utf-8',

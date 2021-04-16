@@ -4,6 +4,7 @@ import {
   resolveFnsEndpoint,
 } from './utils'
 import { getCachedResponse, setCachedResponse } from './cache'
+import { safeHandler } from '../errors'
 
 const API_PREFIX = '/api'
 
@@ -65,24 +66,28 @@ export async function handleApiRequest(event) {
     const { handler, options: staticOptions } = resolvedFn
 
     const { url, query } = parseQuerystring(event)
-    const { data, options: dynamicOptions } = await handler({
-      event,
-      request: event.request,
-      headers: event.request.headers,
-      url,
-      query,
-    })
+    const { data, ...dynamicOptions } = await safeHandler(() =>
+      handler({
+        event,
+        request: event.request,
+        headers: event.request.headers,
+        url,
+        query,
+      })
+    )
 
-    const options = Object.assign({}, staticOptions || {}, dynamicOptions || {})
+    const options = Object.assign({}, staticOptions || {}, dynamicOptions)
 
     const response = buildApiResponse(data, options)
 
-    setCachedResponse(
-      event,
-      response,
-      cacheKey,
-      ((options && options.cache) || {}).api
-    )
+    if ((options.status || 0) < 400) {
+      setCachedResponse(
+        event,
+        response,
+        cacheKey,
+        ((options && options.cache) || {}).api
+      )
+    }
 
     return response
   }

@@ -1,5 +1,7 @@
+import { loadEnv } from '../utils/env.js'
 import { promises as fs } from 'fs'
 import projectConfig from '../config.cjs'
+import { safeHandler } from '../errors.js'
 
 const { fnsInDir } = projectConfig
 
@@ -49,18 +51,13 @@ async function polyfillWebAPIs() {
 async function prepareEnvironment() {
   await polyfillWebAPIs()
 
-  const { loadEnv } = await import('../utils/env.js')
-
-  loadEnv({
-    mode: process.env.NODE_ENV || 'development',
-    dry: false,
-  })
+  loadEnv({ dry: false })
 }
 
 async function handleFunctionRequest(
   req,
   res,
-  { config, functionPath, extra }
+  { config, functionPath, extra, mockRedirect }
 ) {
   try {
     let endpointMeta = await import(
@@ -72,19 +69,26 @@ async function handleFunctionRequest(
       if (endpointMeta.handler) {
         const fetchRequest = await nodeToFetchRequest(req)
 
-        const { data, options = {} } = await endpointMeta.handler({
-          ...(extra || {}),
-          request: fetchRequest,
-          headers: fetchRequest.headers,
-          event: {
-            clientId: process.pid,
+        const { data, ...options } = await safeHandler(() =>
+          endpointMeta.handler({
+            ...(extra || {}),
             request: fetchRequest,
-            respondWith: () => undefined,
-            waitUntil: () => undefined,
-          },
-        })
+            headers: fetchRequest.headers,
+            event: {
+              clientId: process.pid,
+              request: fetchRequest,
+              respondWith: () => undefined,
+              waitUntil: () => undefined,
+            },
+          })
+        )
 
-        res.statusCode = options.status || 200
+        let status = options.status || 200
+        if ((status >= 300) & (status < 400) && mockRedirect) {
+          status = 299
+        }
+
+        res.statusCode = status
         res.statusMessage = options.statusText
 
         const headers = {
@@ -99,7 +103,7 @@ async function handleFunctionRequest(
 
         return res.end(
           res.getHeader('content-type')?.startsWith('application/json')
-            ? JSON.stringify(data)
+            ? JSON.stringify(data || {})
             : data
         )
       }
@@ -177,6 +181,7 @@ export async function configureServer({ middlewares, config, watcher, ws }) {
         extra: url.searchParams.has('data')
           ? JSON.parse(decodeURIComponent(url.searchParams.get('data')))
           : {},
+        mockRedirect: !url.searchParams.has('rendering'),
       })
     }
 
@@ -230,14 +235,29 @@ export async function getRenderContext({
     url.pathname = pathname
     url.search = search
 
+    // This will prevent mocking redirect status during rendering
+    url.searchParams.append('rendering', true)
+
     try {
       const res = await fetch(url.toString(), {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
+        redirect: 'manual', // Relay redirects to make the browser change URL
+        headers: { 'content-type': 'application/json; charset=utf-8' },
       })
 
-      const initialState = await res.json()
-      return { initialState }
+      if (res.status >= 300 && res.status < 400) {
+        const headers = {}
+
+        for (const [key, value] of res.headers.entries()) {
+          headers[key] = value
+        }
+
+        // Returning a response like this will skip rendering
+        return { status: res.status, headers }
+      }
+
+      const data = await res.json()
+      return { initialState: data, propsStatusCode: res.status }
     } catch (error) {
       console.log(`Could not get page props for route "${propsRoute.name}"`)
       console.error(error)

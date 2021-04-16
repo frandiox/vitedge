@@ -25,14 +25,25 @@ export async function handleEvent(
     return { statusCode: 404 }
   }
 
-  const { data: pageProps, options: propsOptions } = await getPageProps(
+  const { data: pageProps, options: propsOptions = {} } = await getPageProps(
     { functions, router, url },
     event
   )
 
+  let status = propsOptions.status
+  const isRedirect = status >= 300 && status < 400
   // This handles SPA page props requests from the browser
-  if (type === 'props') {
-    return { ...propsOptions, body: JSON.stringify(pageProps || {}) }
+  if (type === 'props' || isRedirect) {
+    // Mock status when this is a props request to bypass Fetch opaque responses
+    status = type === 'props' && isRedirect ? 299 : status
+
+    return {
+      statusCode: status,
+      statusMessage: propsOptions.statusText,
+      ...propsOptions,
+      status,
+      body: JSON.stringify(pageProps || {}),
+    }
   }
 
   globalThis.fetch = createLocalFetch({ url, functions })
@@ -41,6 +52,7 @@ export async function handleEvent(
   const { html, ...extra } = await router.render(url, {
     ...event,
     initialState: pageProps,
+    propsStatusCode: propsOptions.status,
     manifest,
     preload,
   })

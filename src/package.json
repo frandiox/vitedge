@@ -79,6 +79,6 @@
     "node-fetch": "^2.6.1",
     "rollup": "^2.44.0",
     "rollup-plugin-esbuild": "^3.0.2",
-    "vite-ssr": "0.7.1"
+    "vite-ssr": "0.8.0"
   }
 }
