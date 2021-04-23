@@ -1,0 +1,17 @@
+name = "vitedge"
+type = "javascript"
+account_id = "<account_id>"
+workers_dev = true
+route = ""
+zone_id = ""
+
+[build]
+command = "yarn build"
+
+[build.upload]
+format = "modules"
+dir = "./dist/worker"
+main = "./index.mjs"
+
+[site]
+bucket = "./dist/client"
