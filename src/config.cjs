@@ -15,5 +15,6 @@ module.exports = {
   ssrOutDir: 'ssr',
   fnsInDir: 'functions',
   fnsOutFile: 'functions.js',
+  workerOutFile: 'worker/index.mjs',
   commitHash,
 }
