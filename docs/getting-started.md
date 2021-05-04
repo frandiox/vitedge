@@ -21,7 +21,7 @@ npm init @vitejs/app my-vue-app --template [vue|vue-ts|react|react-ts]
 yarn create @vitejs/app my-vue-app --template [vue|vue-ts|react|react-ts]
 ```
 
-### 2. Install Vitedge
+### 2. Install Vitedge and framework dependencies
 
 First, add the following to your `package.json`:
 
@@ -38,6 +38,11 @@ npm i vitedge
 # Using Yarn
 yarn add vitedge
 ```
+
+Apart from that, install your framework dependencies if the starting template didn't add them:
+
+- **Vue**: `vue@3` `@vue/server-renderer@3` `vue-router@4` `@vueuse/head`
+- **React**: `react@17` `react-dom@17` `react-router-dom@5` `react-router-config@5` `react-helmet-async@1`
 
 ### 3. Import Vitedge plugin
 
