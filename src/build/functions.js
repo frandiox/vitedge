@@ -7,6 +7,7 @@ import json from '@rollup/plugin-json'
 import commonjs from '@rollup/plugin-commonjs'
 import replace from '@rollup/plugin-replace'
 import { resolveEnvVariables } from './env.js'
+import regexparam from 'regexparam'
 
 function resolveFiles(globs, extensions) {
   return fg(
@@ -32,19 +33,43 @@ export default async function buildFunctions({
     ['js', 'ts']
   )
 
+  const regexpRoutes = []
+  const stringRoutes = []
+  for (let i = 0; i < fnsRoutes.length; i++) {
+    let route = fnsRoutes[i]
+      .replace(fnsInputPath, '')
+      .replace(/\.[tj]sx?$/i, '')
+
+    if (/\/_|\[/.test(route)) {
+      route = route
+        .replace(/\[\.\.\.[\w-]+\]/g, '*')
+        .replace(/\[\[([\w-]+)\]\]/g, ':$1?')
+        .replace(/\[([\w-]+)\]/g, ':$1')
+
+      regexpRoutes.push([route, i])
+    } else {
+      stringRoutes.push([route, i])
+    }
+  }
+
   const virtualEntry =
     fnsRoutes
       .map((route, index) => `import dep${index} from '${route}'`)
       .join('\n') +
     '\n' +
-    `export default { ${fnsRoutes
-      .map(
-        (route, index) =>
-          `"${route
-            .replace(fnsInputPath, '')
-            .replace(/\.[tj]sx?$/i, '')}": dep${index}`
-      )
-      .join(',\n')} }`
+    `export default {
+       strings: { ${stringRoutes
+         .map(([route, index]) => `"${route}": dep${index}`)
+         .join(',\n')} },
+       regexps: new Map([${regexpRoutes
+         .map(([route, index]) => {
+           const { keys, pattern } = regexparam(route)
+           return `[${pattern}, { keys: [${keys
+             .map((key) => `"${key}"`)
+             .join(',')}], value: dep${index} }]`
+         })
+         .join(',\n')}])
+     }`
 
   const bundle = await rollup({
     input: 'entry',

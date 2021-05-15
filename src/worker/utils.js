@@ -1,9 +1,8 @@
 import fns from '__vitedge_functions__'
 
 export function resolveFnsEndpoint(endpoint) {
-  // TODO improve matching to support URL parameters
-  if (Object.prototype.hasOwnProperty.call(fns, endpoint)) {
-    return fns[endpoint]
+  if (fns.strings[endpoint]) {
+    return { meta: fns[endpoint] }
   }
 
   return null
