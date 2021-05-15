@@ -10,11 +10,19 @@ Every file in `<root>/functions/api` will be accessible from th API.
 
 For example, `<root>/functions/api/my/function.js` (or `*.ts`) will be built as `/api/my/function` endpoint and can be requested from the frontend.
 
-Parameters in routes (e.g. `/api/my/function/:something`) are not supported right now and must be handled manually.
-
 #### Versioning
 
 The API can be organized in subfolders such as `<root>/functions/api/v1/*` to provide API versioning.
+
+#### Dynamic routes
+
+Dynamic routes (e.g. `/api/users/:id`) can be specified by using brackets in file or directory names:
+
+- Required parameter: `<root>/functions/api/users/[id].js`
+- Optional parameter: `<root>/functions/api/users/[[id]].js`
+- Catch all: `<root>/functions/api/path/[...all].js`
+
+The extracted route parameters will be provided to the handler in the `params` object.
 
 ### Handlers
 
@@ -22,7 +30,7 @@ Each handler file looks like this:
 
 ```js
 export default {
-  async handler({ event, request }) {
+  async handler({ event, request, params }) {
     if (request.method !== 'GET') {
       throw new Error('Method not supported!')
     }
@@ -49,7 +57,7 @@ The response must be an object with `data` property.
 
 **Note on headers**: Use always lower case for header keys.
 
-### Types
+#### Types
 
 In order to get type validation and autocompletion, do one of the following:
 

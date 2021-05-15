@@ -8,6 +8,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import replace from '@rollup/plugin-replace'
 import { resolveEnvVariables } from './env.js'
 import regexparam from 'regexparam'
+import rsort from 'route-sort'
 
 function resolveFiles(globs, extensions) {
   return fg(
@@ -33,22 +34,32 @@ export default async function buildFunctions({
     ['js', 'ts']
   )
 
-  const regexpRoutes = []
   const stringRoutes = []
+  const regexpRoutes = []
+
   for (let i = 0; i < fnsRoutes.length; i++) {
-    let route = fnsRoutes[i]
-      .replace(fnsInputPath, '')
-      .replace(/\.[tj]sx?$/i, '')
+    let route = new String(
+      fnsRoutes[i].replace(fnsInputPath, '').replace(/\.[tj]sx?$/i, '')
+    )
 
-    if (/\/_|\[/.test(route)) {
-      route = route
-        .replace(/\[\.\.\.[\w-]+\]/g, '*')
-        .replace(/\[\[([\w-]+)\]\]/g, ':$1?')
-        .replace(/\[([\w-]+)\]/g, ':$1')
+    if (/\[/.test(route)) {
+      let wild
+      route = new String(
+        route
+          .replace(/\[\.\.\.([\w-]+)\]/, (_, s1) => {
+            wild = s1
+            return '*'
+          })
+          .replace(/\[\[([\w-]+)\]\]/g, ':$1?')
+          .replace(/\[([\w-]+)\]/g, ':$1')
+      )
 
-      regexpRoutes.push([route, i])
+      route.wild = wild
+      route.index = i
+      regexpRoutes.push(route)
     } else {
-      stringRoutes.push([route, i])
+      route.index = i
+      stringRoutes.push(route)
     }
   }
 
@@ -59,14 +70,21 @@ export default async function buildFunctions({
     '\n' +
     `export default {
        strings: { ${stringRoutes
-         .map(([route, index]) => `"${route}": dep${index}`)
+         .map((route) => `"${route}": dep${route.index}`)
          .join(',\n')} },
-       regexps: new Map([${regexpRoutes
-         .map(([route, index]) => {
+       regexps: new Map([${rsort(regexpRoutes)
+         .map((route) => {
            const { keys, pattern } = regexparam(route)
+
+           // Rename wildcards to match file name
+           if (route.wild) {
+             const i = keys.indexOf('wild')
+             keys[i] = route.wild
+           }
+
            return `[${pattern}, { keys: [${keys
              .map((key) => `"${key}"`)
-             .join(',')}], value: dep${index} }]`
+             .join(',')}], value: dep${route.index} }]`
          })
          .join(',\n')}])
      }`

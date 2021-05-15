@@ -536,6 +536,11 @@ rollup@^2.44.0:
   optionalDependencies:
     fsevents "~2.3.1"
 
+route-sort@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/route-sort/-/route-sort-1.0.0.tgz#078149c8d2d2de8b8563adf139ec58476835c94b"
+  integrity sha512-SFgmvjoIhp5S4iBEDW3XnbT+7PRuZ55oRuNjY+CDB1SGZkyCG9bqQ3/dhaZTctTBYMAvDxd2Uy9dStuaUfgJqQ==
+
 run-parallel@^1.1.9:
   version "1.1.10"
   resolved "https://registry.yarnpkg.com/run-parallel/-/run-parallel-1.1.10.tgz#60a51b2ae836636c81377df16cb107351bcd13ef"
