@@ -68,5 +68,6 @@ export type ApiEndpoint = {
     headers: Headers
     url: URL
     query?: Record<string, string | string[]>
+    params?: Record<string, string>
   }) => ReturnedApiPayload | Promise<ReturnedApiPayload>
 }

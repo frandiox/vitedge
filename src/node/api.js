@@ -3,13 +3,30 @@ import { safeHandler } from '../errors.js'
 import { getEventType, normalizePathname } from './utils.js'
 
 export async function handleApiRequest({ url, functions }, event) {
+  const params = {}
   const pathname = normalizePathname(url)
-  const fnMeta = functions.strings[pathname]
+
+  let fnMeta = functions.strings[pathname]
+
+  if (!fnMeta) {
+    for (const [regexp, value] of functions.regexps) {
+      const match = regexp.exec(pathname)
+      if (match) {
+        fnMeta = value.value
+        for (let i = 0; i < value.keys.length; i++) {
+          params[value.keys[i]] = match[i + 1]
+        }
+
+        break
+      }
+    }
+  }
 
   if (fnMeta) {
     const { data, ...options } = await safeHandler(() =>
       fnMeta.handler({
         ...event,
+        params,
         url,
       })
     )
@@ -44,7 +61,11 @@ export function createLocalFetch({ url, functions }) {
       if (getEventType({ functions, url }) === 'api') {
         const request = new Request(url, options)
 
-        const { body, headers, statusCode: status } = await handleApiRequest(
+        const {
+          body,
+          headers,
+          statusCode: status,
+        } = await handleApiRequest(
           { url, functions },
           { url, request, event: { request } }
         )

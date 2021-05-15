@@ -51,7 +51,7 @@ See [docs](https://vitedge.netlify.app).
 - [x] Page props HMR in browser on file save.
 - [x] Preload assets using Vite's manifest.
 - [x] Support self-requests to API endpoints during SSR.
-- [ ] Support parameters and wildcards in API file routes (`api/path/[param].js`).
+- [x] Support parameters and wildcards in API file routes (`api/path/[param].js`).
 - [ ] Stale-while-revalidate cache for pages.
 - [ ] CORS defaults.
 - [x] Throw errors from API/Props endpoints.
