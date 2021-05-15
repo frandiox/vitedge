@@ -16,11 +16,11 @@ The API can be organized in subfolders such as `<root>/functions/api/v1/*` to pr
 
 #### Dynamic routes
 
-Dynamic routes (e.g. `/api/users/:id`) can be specified by using brackets in file or directory names:
+Dynamic routes (e.g. `/api/users/:id`) can be specified by using brackets in file or directory names as follows:
 
-- Required parameter: `<root>/functions/api/users/[id].js`
-- Optional parameter: `<root>/functions/api/users/[[id]].js`
-- Catch all: `<root>/functions/api/path/[...all].js`
+- Required parameter: Single brackets `<root>/functions/api/users/[id].js`.
+- Optional parameter: Double brackets `<root>/functions/api/users/[[id]].js`.
+- Catch all: Brackets with `...` prefix `<root>/functions/api/path/[...all].js`.
 
 The extracted route parameters will be provided to the handler in the `params` object.
 
