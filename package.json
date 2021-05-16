@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/frandiox/vitedge#readme",
   "devDependencies": {
-    "vitepress": "0.8.1"
+    "vitepress": "0.13.2"
   }
 }
