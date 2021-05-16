@@ -91,10 +91,8 @@ export default async function buildFunctions({
          .join(',\n')}])
      }`
 
-  const {
-    rollupOptions: { output, ...bundleOptions },
-    resolve = {},
-  } = options
+  const { rollupOptions: { output, ...bundleOptions } = {}, resolve = {} } =
+    options
 
   const bundle = await rollup({
     ...bundleOptions,
