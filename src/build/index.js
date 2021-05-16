@@ -1,6 +1,6 @@
 import path from 'path'
 import { resolveConfig } from 'vite'
-import buildSSR from 'vite-ssr/build.js'
+import buildSSR from 'vite-ssr/build/index.js'
 import buildFunctions from './functions.js'
 
 import config from '../config.cjs'
