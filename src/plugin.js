@@ -5,9 +5,10 @@ const viteSsrName = 'vite-ssr'
 const entryServer = '/entry-server'
 const entryClient = '/entry-client'
 
-export default () => {
+export default (options = {}) => {
   return {
     name,
+    fnsOptions: options.functions, // Store for later
     configureServer, // Provide API/Props during development
     configResolved: (config) => {
       let lib = '/vue' // default

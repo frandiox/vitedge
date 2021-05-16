@@ -1,4 +1,5 @@
 import path from 'path'
+import { resolveConfig } from 'vite'
 import buildSSR from 'vite-ssr/build.js'
 import buildFunctions from './functions.js'
 
@@ -16,7 +17,11 @@ const {
 
 const { rootDir } = getProjectInfo()
 
-export default async function ({ mode } = {}) {
+export default async function ({ mode = 'production' } = {}) {
+  const config = await resolveConfig(mode)
+  const { fnsOptions = {} } =
+    config.plugins.find((plugin) => plugin.name === 'vitedge') || {}
+
   await buildSSR({
     clientOptions: {
       mode,
@@ -48,6 +53,7 @@ export default async function ({ mode } = {}) {
     mode,
     fnsInputPath: path.resolve(rootDir, fnsInDir),
     fnsOutputPath: path.resolve(rootDir, outDir, fnsOutFile),
+    options: fnsOptions.build,
   })
 
   process.exit()

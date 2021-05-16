@@ -6,6 +6,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve'
 import json from '@rollup/plugin-json'
 import commonjs from '@rollup/plugin-commonjs'
 import replace from '@rollup/plugin-replace'
+import alias from '@rollup/plugin-alias'
 import { resolveEnvVariables } from './env.js'
 import regexparam from 'regexparam'
 import rsort from 'route-sort'
@@ -24,6 +25,7 @@ export default async function buildFunctions({
   mode,
   fnsInputPath,
   fnsOutputPath,
+  options = {},
 }) {
   const fnsRoutes = await resolveFiles(
     [
@@ -89,25 +91,42 @@ export default async function buildFunctions({
          .join(',\n')}])
      }`
 
+  const {
+    rollupOptions: { output, ...bundleOptions },
+    resolve = {},
+  } = options
+
   const bundle = await rollup({
+    ...bundleOptions,
     input: 'entry',
     plugins: [
       virtual({ entry: virtualEntry }),
+      alias({ entries: resolve.alias || [] }),
       replace({
         values: resolveEnvVariables({ mode }),
         preventAssignment: true,
       }),
-      esbuild(),
+      esbuild(options.esbuild),
       nodeResolve({
-        preferBuiltins: false,
-        extensions: ['.mjs', '.js', '.json', '.node', '.ts'],
+        dedupe: resolve.dedupe || [],
+        exportConditions: resolve.conditions || [],
+        mainFields: resolve.mainFields || ['module', 'main'],
+        extensions: resolve.extensions || [
+          '.mjs',
+          '.js',
+          '.json',
+          '.node',
+          '.ts',
+        ],
       }),
-      commonjs(),
-      json({ compact: true }),
+      commonjs(options.commonjsOptions),
+      json({ compact: true, ...options.json }),
+      ...(options.plugins || []),
     ],
   })
 
   await bundle.write({
+    ...output,
     file: fnsOutputPath,
     format: 'es',
   })
