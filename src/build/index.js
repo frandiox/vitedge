@@ -31,6 +31,7 @@ export default async function ({ mode = 'production' } = {}) {
     },
     serverOptions: {
       mode,
+      ssr: { target: 'webworker' },
       build: {
         outDir: path.resolve(rootDir, outDir, ssrOutDir),
         target: 'es2019', // Support Node 12
