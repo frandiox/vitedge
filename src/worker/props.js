@@ -20,7 +20,7 @@ function resolvePropsRoute(url = '') {
 
   if (resolvedFn) {
     return {
-      ...resolvedFn,
+      ...resolvedFn.meta,
       route,
     }
   }
@@ -54,8 +54,11 @@ function getCacheKey(event) {
 }
 
 export async function getPageProps(event) {
-  const { handler, options: staticOptions, route } =
-    resolvePropsRoute(event.request.url) || {}
+  const {
+    handler,
+    options: staticOptions,
+    route,
+  } = resolvePropsRoute(event.request.url) || {}
 
   if (!handler) {
     return {

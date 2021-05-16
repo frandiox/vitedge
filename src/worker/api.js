@@ -16,7 +16,10 @@ function normalizeRoute(pathname) {
 export function isApiRequest(event) {
   const pathname = normalizeRoute(new URL(event.request.url).pathname)
 
-  return pathname.startsWith(API_PREFIX + '/') || !!resolveFnsEndpoint(pathname)
+  return (
+    pathname.startsWith(API_PREFIX + '/') ||
+    !!resolveFnsEndpoint(pathname, true)
+  )
 }
 
 export function parseQuerystring(event) {
@@ -63,7 +66,10 @@ export async function handleApiRequest(event) {
   const resolvedFn = resolveFnsEndpoint(normalizeRoute(url.pathname))
 
   if (resolvedFn) {
-    const { handler, options: staticOptions } = resolvedFn
+    const {
+      params,
+      meta: { handler, options: staticOptions },
+    } = resolvedFn
 
     const { url, query } = parseQuerystring(event)
     const { data, ...dynamicOptions } = await safeHandler(() =>
@@ -73,6 +79,7 @@ export async function handleApiRequest(event) {
         headers: event.request.headers,
         url,
         query,
+        params,
       })
     )
 

@@ -2,7 +2,7 @@ import { safeHandler } from '../errors.js'
 
 export async function getPageProps({ functions, router, url }, event) {
   const { propsGetter, ...extra } = router.resolve(url.pathname) || {}
-  const fnMeta = functions[propsGetter]
+  const fnMeta = functions.strings[propsGetter]
 
   if (fnMeta) {
     const { data, ...options } = await safeHandler(() =>
