@@ -17,7 +17,7 @@ const {
 
 const { rootDir } = getProjectInfo()
 
-export default async function ({ mode = 'production' } = {}) {
+export default async function ({ mode = 'production', ssr } = {}) {
   const config = await resolveConfig(mode)
   const { fnsOptions = {} } =
     config.plugins.find((plugin) => plugin.name === 'vitedge') || {}
@@ -33,6 +33,7 @@ export default async function ({ mode = 'production' } = {}) {
       mode,
       ssr: { target: 'webworker' },
       build: {
+        ssr,
         outDir: path.resolve(rootDir, outDir, ssrOutDir),
         target: 'es2019', // Support Node 12
         rollupOptions: {

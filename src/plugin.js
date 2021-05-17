@@ -7,7 +7,10 @@ const entryClient = '/entry-client'
 
 export default (options = {}) => {
   return [
-    viteSSR({ getRenderContext }),
+    viteSSR({
+      plugin: name,
+      getRenderContext,
+    }),
     {
       name,
       fnsOptions: options.functions, // Store for later

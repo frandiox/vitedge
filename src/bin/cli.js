@@ -6,24 +6,30 @@ const [, , ...args] = process.argv
 
 const [command] = args
 
+const ssrIndex = args.indexOf('--ssr')
+const modeIndex = args.indexOf('--mode')
+
 ;(async () => {
   if (command === 'build') {
     const { default: build } = await import('vitedge/build/index.js')
 
-    const modeIndex = args.indexOf('--mode')
     const mode = modeIndex >= 0 ? args[modeIndex + 1] : undefined
+    const ssr = ssrIndex >= 0 ? args[ssrIndex + 1] : undefined
 
-    await build({ mode })
+    await build({ mode, ssr })
     process.exit()
   } else if (
     command === 'dev' ||
     command === undefined ||
     command.startsWith('-')
   ) {
-    const ssrIndex = args.indexOf('--ssr')
     if (ssrIndex >= 0) {
-      args.splice(ssrIndex, 1)
-      args.unshift('node_modules/.bin/vite-ssr', '--plugin', 'vitedge')
+      if ((args[ssrIndex + 1] || '-').startsWith('-')) {
+        // Remove --ssr if there is no path specified
+        args.splice(ssrIndex, 1)
+      }
+
+      args.unshift('node_modules/.bin/vite-ssr')
     } else {
       args.unshift('node_modules/.bin/vite')
     }
