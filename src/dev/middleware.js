@@ -1,5 +1,5 @@
+import fg from 'fast-glob'
 import { loadEnv } from '../utils/env.js'
-import { promises as fs } from 'fs'
 import projectConfig from '../config.cjs'
 import { safeHandler } from '../errors.js'
 
@@ -119,20 +119,27 @@ async function handleFunctionRequest(
   return res.end()
 }
 
-async function watchDynamicFiles({ config, watcher }) {
+async function watchFnsFiles(globs = [], { fnsInputPath, watcher }) {
   const getFileFromPath = (filepath) => {
     const file = filepath.includes('/')
       ? filepath.split(`/${fnsInDir}/`)[1]
       : filepath
 
-    if (file && !file.includes('/') && /\.[jt]sx?$/i.test(file)) {
-      return file.split('.')[0]
+    if (file && /\.[jt]sx?$/i.test(file)) {
+      return '/' + file.slice(0, file.lastIndexOf('.'))
     }
   }
 
-  // Dynamic files to serve (functions/sitemap.js, functions/graphql.js, etc.)
   const fnsDirFiles = new Set(
-    (await fs.readdir(`${config.root}/${fnsInDir}`))
+    (
+      await fg(
+        globs.map((glob) => `${fnsInputPath}/${glob}.{js,ts}`),
+        {
+          ignore: ['node_modules', '.git', '**/index.*'],
+          onlyFiles: true,
+        }
+      )
+    )
       .map(getFileFromPath)
       .filter(Boolean)
   )
@@ -150,9 +157,9 @@ async function watchDynamicFiles({ config, watcher }) {
   return fnsDirFiles
 }
 
-function watchPropReload({ config, watcher, ws }) {
+function watchPropReload({ fnsInputPath, watcher, ws }) {
   watcher.on('change', (path) => {
-    let [, filepath] = path.split(`${config.root}/${fnsInDir}`)
+    let [, filepath] = path.split(fnsInputPath)
     if (filepath) {
       filepath = filepath.slice(0, filepath.lastIndexOf('.'))
       ws.send({
@@ -165,11 +172,12 @@ function watchPropReload({ config, watcher, ws }) {
 }
 
 export async function configureServer({ middlewares, config, watcher, ws }) {
+  const fnsInputPath = `${config.root}/${fnsInDir}`
   await prepareEnvironment()
 
-  const fnsDirFiles = await watchDynamicFiles({ config, watcher })
+  const fnsDynamicFiles = await watchFnsFiles(['*'], { fnsInputPath, watcher })
 
-  watchPropReload({ config, watcher, ws })
+  watchPropReload({ fnsInputPath, watcher, ws })
 
   middlewares.use(async function (req, res, next) {
     const url = getUrl(req)
@@ -185,11 +193,14 @@ export async function configureServer({ middlewares, config, watcher, ws }) {
       })
     }
 
-    const normalizedPathname = url.pathname.split('.')[0]
+    const normalizedPathname = url.pathname.slice(
+      0,
+      url.pathname.lastIndexOf('.')
+    )
 
     if (
       url.pathname.startsWith('/api/') ||
-      fnsDirFiles.has(normalizedPathname.slice(1))
+      fnsDynamicFiles.has(normalizedPathname)
     ) {
       return await handleFunctionRequest(req, res, {
         config,
