@@ -32,12 +32,12 @@ export function pathsToRoutes(paths, { fnsInputPath }) {
   const dynamicRoutes = []
 
   for (let i = 0; i < paths.length; i++) {
-    let route = new String(
-      paths[i].replace(fnsInputPath, '').replace(/\.[tj]sx?$/i, '')
-    )
+    let route = paths[i].replace(fnsInputPath, '').replace(/\.[tj]sx?$/i, '')
 
     if (/\[/.test(route)) {
+      const original = route
       let wild
+
       route = new String(
         route
           .replace(/\[\.\.\.([\w-]+)\]/, (_, s1) => {
@@ -48,10 +48,12 @@ export function pathsToRoutes(paths, { fnsInputPath }) {
           .replace(/\[([\w-]+)\]/g, ':$1')
       )
 
-      route.wild = wild
       route.index = i
+      route.wild = wild
+      route.original = original
       dynamicRoutes.push(route)
     } else {
+      route = new String(route)
       route.index = i
       staticRoutes.push(route)
     }

@@ -2,6 +2,11 @@ import fg from 'fast-glob'
 import { loadEnv } from '../utils/env.js'
 import projectConfig from '../config.cjs'
 import { safeHandler } from '../errors.js'
+import {
+  findRouteValue,
+  pathsToRoutes,
+  routeToRegexp,
+} from '../utils/api-routes.js'
 
 const { fnsInDir } = projectConfig
 
@@ -57,12 +62,10 @@ async function prepareEnvironment() {
 async function handleFunctionRequest(
   req,
   res,
-  { config, functionPath, extra, mockRedirect }
+  { fnsInputPath, functionPath, extra, mockRedirect }
 ) {
   try {
-    let endpointMeta = await import(
-      `${config.root}/${fnsInDir}${functionPath}.js`
-    )
+    let endpointMeta = await import(`${fnsInputPath}${functionPath}.js`)
 
     if (endpointMeta) {
       endpointMeta = endpointMeta.default || endpointMeta
@@ -119,7 +122,10 @@ async function handleFunctionRequest(
   return res.end()
 }
 
-async function watchFnsFiles(globs = [], { fnsInputPath, watcher }) {
+async function watchFnsFiles(
+  globs = [],
+  { fnsInputPath, watcher, onChange = () => null }
+) {
   const getFileFromPath = (filepath) => {
     const file = filepath.includes('/')
       ? filepath.split(`/${fnsInDir}/`)[1]
@@ -146,13 +152,21 @@ async function watchFnsFiles(globs = [], { fnsInputPath, watcher }) {
 
   watcher.on('add', (path) => {
     const file = getFileFromPath(path)
-    file && fnsDirFiles.add(file)
+    if (file) {
+      file && fnsDirFiles.add(file)
+      onChange(fnsDirFiles)
+    }
   })
 
   watcher.on('unlink', (path) => {
     const file = getFileFromPath(path)
-    file && fnsDirFiles.delete(file)
+    if (file) {
+      file && fnsDirFiles.delete(file)
+      onChange(fnsDirFiles)
+    }
   })
+
+  onChange(fnsDirFiles)
 
   return fnsDirFiles
 }
@@ -171,11 +185,50 @@ function watchPropReload({ fnsInputPath, watcher, ws }) {
   })
 }
 
+async function getAllFunctionFiles({ fnsInputPath, watcher }) {
+  const dynamicFileRouteSet = await watchFnsFiles(['*'], {
+    fnsInputPath,
+    watcher,
+  })
+
+  const staticApiRouteSet = new Set()
+  const dynamicApiRouteMap = new Map()
+
+  await watchFnsFiles(['api/**/*'], {
+    fnsInputPath,
+    watcher,
+    onChange(fnsApiFiles) {
+      const { staticRoutes: staticApiRoutes, dynamicRoutes: dynamicApiRoutes } =
+        pathsToRoutes([...fnsApiFiles], {
+          fnsInputPath,
+        })
+
+      staticApiRouteSet.clear()
+      staticApiRoutes.forEach((route) =>
+        staticApiRouteSet.add(route.toString())
+      )
+
+      dynamicApiRouteMap.clear()
+      dynamicApiRoutes.forEach((route) => {
+        const { keys, pattern } = routeToRegexp(route)
+        dynamicApiRouteMap.set(pattern, { keys, value: route })
+      })
+    },
+  })
+
+  return {
+    dynamicFileRouteSet,
+    staticApiRouteSet,
+    dynamicApiRouteMap,
+  }
+}
+
 export async function configureServer({ middlewares, config, watcher, ws }) {
   const fnsInputPath = `${config.root}/${fnsInDir}`
   await prepareEnvironment()
 
-  const fnsDynamicFiles = await watchFnsFiles(['*'], { fnsInputPath, watcher })
+  const { dynamicFileRouteSet, staticApiRouteSet, dynamicApiRouteMap } =
+    await getAllFunctionFiles({ fnsInputPath, watcher })
 
   watchPropReload({ fnsInputPath, watcher, ws })
 
@@ -184,7 +237,7 @@ export async function configureServer({ middlewares, config, watcher, ws }) {
 
     if (url.pathname.startsWith('/props/')) {
       return await handleFunctionRequest(req, res, {
-        config,
+        fnsInputPath,
         functionPath: url.searchParams.get('propsGetter'),
         extra: url.searchParams.has('data')
           ? JSON.parse(decodeURIComponent(url.searchParams.get('data')))
@@ -193,20 +246,46 @@ export async function configureServer({ middlewares, config, watcher, ws }) {
       })
     }
 
-    const normalizedPathname = url.pathname.slice(
-      0,
-      url.pathname.lastIndexOf('.')
-    )
+    const normalizedPathname = url.pathname.includes('.')
+      ? url.pathname.slice(0, url.pathname.lastIndexOf('.'))
+      : url.pathname
 
     if (
       url.pathname.startsWith('/api/') ||
-      fnsDynamicFiles.has(normalizedPathname)
+      dynamicFileRouteSet.has(normalizedPathname)
     ) {
+      let params
+      let functionPath =
+        (dynamicFileRouteSet.has(normalizedPathname) ||
+          staticApiRouteSet.has(normalizedPathname)) &&
+        normalizedPathname
+
+      if (!functionPath) {
+        const match = findRouteValue(normalizedPathname, {
+          dynamicMap: dynamicApiRouteMap,
+        })
+
+        if (match) {
+          params = match.params
+          functionPath = match.value.original
+        } else {
+          console.error(
+            new Error(
+              `Could not find a file that matches API route ${normalizedPathname}`
+            )
+          )
+
+          res.statusCode = 500
+          return res.end()
+        }
+      }
+
       return await handleFunctionRequest(req, res, {
-        config,
-        functionPath: normalizedPathname,
+        fnsInputPath,
+        functionPath,
         extra: {
           query: url.searchParams,
+          params,
           url,
         },
       })
