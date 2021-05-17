@@ -1,12 +1,15 @@
 import { safeHandler } from '../errors.js'
+import { findRouteValue } from '../utils/api-routes.js'
 
 export async function getPageProps({ functions, router, url }, event) {
   const { propsGetter, ...extra } = router.resolve(url.pathname) || {}
-  const fnMeta = functions.strings[propsGetter]
+  const resolvedFn = findRouteValue(propsGetter, functions, {
+    onlyStatic: true,
+  })
 
-  if (fnMeta) {
+  if (resolvedFn) {
     const { data, ...options } = await safeHandler(() =>
-      fnMeta.handler({
+      resolvedFn.value.handler({
         ...event,
         ...extra,
         url,

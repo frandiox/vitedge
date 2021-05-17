@@ -1,39 +1,24 @@
 import nodeFetch from 'node-fetch'
 import { safeHandler } from '../errors.js'
+import { findRouteValue } from '../utils/api-routes.js'
 import { getEventType, normalizePathname } from './utils.js'
 
 export async function handleApiRequest({ url, functions }, event) {
-  const params = {}
   const pathname = normalizePathname(url)
+  const resolvedFn = findRouteValue(pathname, functions)
 
-  let fnMeta = functions.strings[pathname]
-
-  if (!fnMeta) {
-    for (const [regexp, value] of functions.regexps) {
-      const match = regexp.exec(pathname)
-      if (match) {
-        fnMeta = value.value
-        for (let i = 0; i < value.keys.length; i++) {
-          params[value.keys[i]] = match[i + 1]
-        }
-
-        break
-      }
-    }
-  }
-
-  if (fnMeta) {
+  if (resolvedFn) {
     const { data, ...options } = await safeHandler(() =>
-      fnMeta.handler({
+      resolvedFn.value.handler({
         ...event,
-        params,
+        params: resolvedFn.params,
         url,
       })
     )
 
     const headers = {
       'content-type': 'application/json; charset=utf-8',
-      ...(fnMeta.options || {}).headers,
+      ...(resolvedFn.value.options || {}).headers,
       ...options.headers,
     }
 

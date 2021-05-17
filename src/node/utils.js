@@ -9,7 +9,7 @@ export function getEventType({ url, functions }) {
     return 'props'
   }
 
-  if (path.startsWith('/api/') || !!functions.strings[path]) {
+  if (path.startsWith('/api/') || !!functions.staticMap.has(path)) {
     return 'api'
   }
 

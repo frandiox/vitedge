@@ -16,11 +16,11 @@ function resolvePropsRoute(url = '') {
   const { href, origin } = new URL(url)
   const route = router.resolve(href.replace(origin, ''))
 
-  const resolvedFn = route && resolveFnsEndpoint(route.propsGetter)
+  const resolvedFn = route && resolveFnsEndpoint(route.propsGetter, true)
 
   if (resolvedFn) {
     return {
-      ...resolvedFn.meta,
+      ...resolvedFn.value,
       route,
     }
   }

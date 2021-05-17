@@ -68,7 +68,7 @@ export async function handleApiRequest(event) {
   if (resolvedFn) {
     const {
       params,
-      meta: { handler, options: staticOptions },
+      value: { handler, options: staticOptions },
     } = resolvedFn
 
     const { url, query } = parseQuerystring(event)

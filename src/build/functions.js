@@ -8,8 +8,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import replace from '@rollup/plugin-replace'
 import alias from '@rollup/plugin-alias'
 import { resolveEnvVariables } from './env.js'
-import regexparam from 'regexparam'
-import rsort from 'route-sort'
+import { pathsToRoutes, routeToRegexp } from '../utils/api-routes.js'
 
 function resolveFiles(globs, extensions) {
   return fg(
@@ -27,7 +26,7 @@ export default async function buildFunctions({
   fnsOutputPath,
   options = {},
 }) {
-  const fnsRoutes = await resolveFiles(
+  const fnsPaths = await resolveFiles(
     [
       fnsInputPath + '/*',
       fnsInputPath + '/api/**/*',
@@ -36,53 +35,22 @@ export default async function buildFunctions({
     ['js', 'ts']
   )
 
-  const stringRoutes = []
-  const regexpRoutes = []
-
-  for (let i = 0; i < fnsRoutes.length; i++) {
-    let route = new String(
-      fnsRoutes[i].replace(fnsInputPath, '').replace(/\.[tj]sx?$/i, '')
-    )
-
-    if (/\[/.test(route)) {
-      let wild
-      route = new String(
-        route
-          .replace(/\[\.\.\.([\w-]+)\]/, (_, s1) => {
-            wild = s1
-            return '*'
-          })
-          .replace(/\[\[([\w-]+)\]\]/g, ':$1?')
-          .replace(/\[([\w-]+)\]/g, ':$1')
-      )
-
-      route.wild = wild
-      route.index = i
-      regexpRoutes.push(route)
-    } else {
-      route.index = i
-      stringRoutes.push(route)
-    }
-  }
+  const { staticRoutes, dynamicRoutes } = pathsToRoutes(fnsPaths, {
+    fnsInputPath,
+  })
 
   const virtualEntry =
-    fnsRoutes
+    fnsPaths
       .map((route, index) => `import dep${index} from '${route}'`)
       .join('\n') +
     '\n' +
     `export default {
-       strings: { ${stringRoutes
-         .map((route) => `"${route}": dep${route.index}`)
-         .join(',\n')} },
-       regexps: new Map([${rsort(regexpRoutes)
+       staticMap: new Map([${staticRoutes
+         .map((route) => `["${route}", dep${route.index}]`)
+         .join(',\n')}]),
+       dynamicMap: new Map([${dynamicRoutes
          .map((route) => {
-           const { keys, pattern } = regexparam(route)
-
-           // Rename wildcards to match file name
-           if (route.wild) {
-             const i = keys.indexOf('wild')
-             keys[i] = route.wild
-           }
+           const { keys, pattern } = routeToRegexp(route)
 
            return `[${pattern}, { keys: [${keys
              .map((key) => `"${key}"`)
