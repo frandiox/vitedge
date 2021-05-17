@@ -52,6 +52,10 @@ export default {
         server: true,
         msg: 'This is an EXAMPLE page ',
       },
+      headers: {
+        // dynamic headers
+      },
+      status: 200, // Optional status, default 200
     }
   },
   options: {
@@ -59,15 +63,83 @@ export default {
       api: 90, // Cache's max-age for the "get page props" request
       html: 90, // Cache's max-age for the actual rendered HTML
     },
+    headers: {
+      // static headers
+    },
   },
 }
 ```
 
 The actual handler gets the `event` and `request` objects provided by the running platform. Apart from that, the rest of the parameters match [Vue Router's counter parts](https://next.router.vuejs.org/api/#routelocationnormalized) for `params`, `query`, `hash`, `name` and `fullPath`.
 
-The response must be an object with `data` property and will be served as JSON.
+The response must be an object with `data` property and will be served as JSON. Apart from `data`, it can also accept `headers` object, `status` number and `statusText` string.
 
 **Note on headers**: Use always lower case for header keys.
+
+### Redirects
+
+A page can be redirected by returning a 3xx status code and the `location` header in its props handler:
+
+```js
+handler() {
+  return {
+    status: 302, // Any 3xx is accepted for a redirect
+    headers: {
+      location: '/another-page',
+    },
+  }
+}
+```
+
+The browser will detect this status code and redirect to the specified header route.
+
+### Errors
+
+Any error thrown in the handler will translate to a JSON payload containing the information of this error and will be passed to the corresponding page component:
+
+```js
+{
+  error: {
+    status: 500,
+    message: 'yikes',
+    details: { /* ... */ },
+    stack: 'Available only during development' }
+}
+```
+
+Therefore, the page component will receive a `error` prop containing the payload. You can then redirect to another page or show it in the UI.
+
+#### Built-in errors
+
+Vitedge provides a handy group of built-in errors that represent different status codes. Check the import types for more.
+
+```js
+import {
+  BadRequestError,
+  ForbiddenError,
+  UnknownError,
+} from 'vitedge/errors.js'
+
+// ...
+
+throw new UnknownError('Our cloud monkeys are working to fix this', {
+  fatal: true,
+})
+```
+
+You can also extend the errors to create your own:
+
+```js
+import { RestError } from 'vitedge/errors.js'
+
+export class ImATeapotError extends RestError {
+  constructor(message, details) {
+    super(message, 418, details)
+  }
+}
+
+throw new ImATeapotError('Yolo')
+```
 
 ### Types
 
@@ -128,7 +200,7 @@ export default vitedge(
 
 ## Alternatives to page props
 
-It is also possible to get data in your page components by directly calling your API instead. In order to do this, you can rely on Suspense to await for the data:
+It is also possible to get data in your page components by directly calling your API instead. In order to do this in Vue, you can rely on Suspense to await for the data:
 
 ```html
 <template>
@@ -154,3 +226,5 @@ export default {
   },
 }
 ```
+
+In React, the `Suspense` component is already provided by Vitedge so you can just throw promises from any component.
