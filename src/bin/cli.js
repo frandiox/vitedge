@@ -36,17 +36,14 @@ const modeIndex = args.indexOf('--mode')
 
     const { default: config } = await import('vitedge/config.cjs')
     const { isTS } = config.getProjectInfo()
-    if (isTS) {
-      args.unshift(
-        '--loader',
-        'vitedge/dev/ts-loader.js',
-        '--experimental-specifier-resolution=node'
-      )
-    } else {
-      args.unshift('--loader', 'vitedge/dev/js-loader.js')
-    }
+
+    args.unshift(
+      '--loader',
+      isTS ? 'vitedge/dev/ts-loader.js' : 'vitedge/dev/js-loader.js'
+    )
 
     args.unshift('--experimental-json-modules')
+    args.unshift('--experimental-specifier-resolution=node')
 
     cp.spawn('node', args, {
       stdio: [process.stdin, process.stdout, process.stderr],
