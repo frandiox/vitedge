@@ -22,7 +22,7 @@ server.use(
   express.static(path.join(process.cwd(), `../${example}/dist/client`))
 )
 
-server.use(express.json(), async (request, response) => {
+server.use(async (request, response) => {
   // Generate a full URL
   const url = new URL(
     request.protocol + '://' + request.get('host') + request.originalUrl

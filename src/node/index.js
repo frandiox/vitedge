@@ -1,7 +1,7 @@
 import nodeFetch from 'node-fetch'
 import { createLocalFetch, handleApiRequest } from './api.js'
 import { getPageProps } from './props.js'
-import { getEventType } from './utils.js'
+import { getEventType, nodeToFetchRequest } from './utils.js'
 
 export { getEventType }
 
@@ -14,6 +14,12 @@ export async function handleEvent(
   event = {}
 ) {
   const type = getEventType({ url, functions })
+
+  if (event.request && !event.request.clone) {
+    // Convert to Fetch Request for consistency
+    event.rawRequest = event.rawRequest || event.request
+    event.request = await nodeToFetchRequest(event.request)
+  }
 
   if (type === 'api') {
     return handleApiRequest({ url, functions }, event)

@@ -7,32 +7,9 @@ import {
   pathsToRoutes,
   routeToRegexp,
 } from '../utils/api-routes.js'
+import { getUrlFromNodeRequest, nodeToFetchRequest } from '../node/utils.js'
 
 const { fnsInDir } = projectConfig
-
-function getUrl(req) {
-  const secure =
-    req.connection.encrypted || req.headers['x-forwarded-proto'] === 'https'
-
-  return new URL(`${secure ? 'https' : 'http'}://${req.headers.host + req.url}`)
-}
-
-function nodeToFetchRequest(nodeRequest) {
-  return new Promise((resolve, reject) => {
-    let data = []
-    nodeRequest.on('data', (chunk) => data.push(chunk))
-    nodeRequest.on('error', (error) => reject(error))
-    nodeRequest.on('end', () => {
-      // Simulate a FetchEvent.request https://developer.mozilla.org/en-US/docs/Web/API/Request
-      resolve(
-        new Request(getUrl(nodeRequest), {
-          ...nodeRequest,
-          body: data.length === 0 ? undefined : Buffer.concat(data),
-        })
-      )
-    })
-  })
-}
 
 let originalFetch
 
@@ -75,6 +52,7 @@ async function handleFunctionRequest(
         const { data, ...options } = await safeHandler(() =>
           endpointMeta.handler({
             ...(extra || {}),
+            rawRequest: req, // For Node environments
             request: fetchRequest,
             headers: fetchRequest.headers,
             event: {
@@ -233,7 +211,7 @@ export async function configureServer({ middlewares, config, watcher, ws }) {
   watchPropReload({ fnsInputPath, watcher, ws })
 
   middlewares.use(async function (req, res, next) {
-    const url = getUrl(req)
+    const url = getUrlFromNodeRequest(req)
 
     if (url.pathname.startsWith('/props/')) {
       return await handleFunctionRequest(req, res, {
