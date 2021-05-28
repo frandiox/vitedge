@@ -1,30 +1,26 @@
 import { ApiEndpoint } from 'vitedge'
+import { MethodNotAllowedError } from 'vitedge/errors'
 
 export default <ApiEndpoint>{
   async handler({ query, request, headers }) {
     if (request.method !== 'POST') {
-      throw new Error('Method not supported!')
+      throw new MethodNotAllowedError('Method not supported!')
     }
 
-    let body
-    try {
-      if (request.json) {
-        body = await request.json()
-      } else {
-        // When running on Express.js, body should already be provided
-        body = request.body
-      }
-    } catch (error) {
-      console.error(error)
-      body = {}
-    }
+    const body = await request.json()
 
-    return {
-      // Actual data returned to frontend
-      data: {
-        msg: 'Hello moto!',
-        ...body,
-      },
-    }
+    // Test returning FetchResponse
+    return new Response(JSON.stringify({ ...body, msg: 'Hello moto!' }), {
+      headers: { 'content-type': 'application/json' },
+    })
+
+    // -- This is the equivalent:
+    // return {
+    //   // Actual data returned to frontend
+    //   data: {
+    //     ...body,
+    //     msg: 'Hello moto!',
+    //   },
+    // }
   },
 }

@@ -55,7 +55,20 @@ export function nodeToFetchRequest(nodeRequest) {
   })
 }
 
+export function fetchToNodeResponse(fetchResponse) {
+  return {
+    data: fetchResponse.body,
+    status: fetchResponse.status,
+    statusText: fetchResponse.statusText,
+    headers: Object.fromEntries(fetchResponse.headers.entries()),
+  }
+}
+
 export function parseHandlerResponse(handlerResponse, staticOptions) {
+  if (handlerResponse.clone) {
+    handlerResponse = fetchToNodeResponse(handlerResponse)
+  }
+
   const { data, ...options } = handlerResponse
 
   const headers = {

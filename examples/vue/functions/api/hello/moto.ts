@@ -9,12 +9,18 @@ export default <ApiEndpoint>{
 
     const body = await request.json()
 
-    return {
-      // Actual data returned to frontend
-      data: {
-        msg: 'Hello moto!',
-        ...body,
-      },
-    }
+    // Test returning FetchResponse
+    return new Response(JSON.stringify({ ...body, msg: 'Hello moto!' }), {
+      headers: { 'content-type': 'application/json' },
+    })
+
+    // -- This is the equivalent:
+    // return {
+    //   // Actual data returned to frontend
+    //   data: {
+    //     ...body,
+    //     msg: 'Hello moto!',
+    //   },
+    // }
   },
 }

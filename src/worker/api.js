@@ -66,13 +66,14 @@ export async function handleApiRequest(event) {
   const resolvedFn = resolveFnsEndpoint(normalizeRoute(url.pathname))
 
   if (resolvedFn) {
-    const {
+    let {
       params,
-      value: { handler, options: staticOptions },
+      value: { handler, options = {} },
     } = resolvedFn
 
     const { url, query } = parseQuerystring(event)
-    const { data, ...dynamicOptions } = await safeHandler(() =>
+
+    let response = await safeHandler(() =>
       handler({
         event,
         request: event.request,
@@ -83,17 +84,15 @@ export async function handleApiRequest(event) {
       })
     )
 
-    const options = Object.assign({}, staticOptions || {}, dynamicOptions)
-
-    const response = buildApiResponse(data, options)
+    if (!response.clone) {
+      // Returned value is not a FetchResponse => build one
+      const { data, ...dynamicOptions } = response
+      options = { ...options, ...dynamicOptions }
+      response = buildApiResponse(data, options)
+    }
 
     if ((options.status || 0) < 400) {
-      setCachedResponse(
-        event,
-        response,
-        cacheKey,
-        ((options && options.cache) || {}).api
-      )
+      setCachedResponse(event, response, cacheKey, (options.cache || {}).api)
     }
 
     return response

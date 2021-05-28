@@ -31,16 +31,23 @@ export async function setCachedResponse(
 ) {
   if (!response.headers.has(X_HEADER_CACHE)) {
     const cacheMaxAge = cacheOption === true ? 2628000 : cacheOption || 0
+    const hasCacheControl = response.headers.has('cache-control')
 
     if (
       CACHE_METHODS.includes(event.request.method) &&
-      cacheMaxAge > MIN_CACHE_AGE
+      (hasCacheControl || cacheMaxAge > MIN_CACHE_AGE)
     ) {
       if ((meta.vitedge || {}).commitHash) {
         response.headers.append(X_HEADER_BUILD, meta.vitedge.commitHash)
       }
 
-      response.headers.append('cache-control', `public, max-age=${cacheMaxAge}`)
+      if (!hasCacheControl) {
+        response.headers.append(
+          'cache-control',
+          `public, max-age=${cacheMaxAge}`
+        )
+      }
+
       // TODO Support stale-while-revalidate
       event.waitUntil(caches.default.put(cacheKey, response.clone()))
     }

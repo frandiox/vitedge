@@ -58,7 +58,7 @@ export type ApiOptions = {
   }
 }
 
-type ReturnedApiPayload = { data: any; options?: ApiOptions }
+type ReturnedApiPayload = { data: any; options?: ApiOptions } | Response
 
 export type ApiEndpoint = {
   options?: ApiOptions
