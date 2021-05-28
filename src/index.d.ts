@@ -1,6 +1,6 @@
 declare module 'vitedge' {
-  import { App, Component } from 'vue'
-  import { Router, RouteLocationRaw, RouteLocationNormalized } from 'vue-router'
+  import type { App, Component } from 'vue'
+  import type { Router, RouteLocationRaw, RouteLocationNormalized } from 'vue-router'
 
   const handler: (
     App: Component,
@@ -52,13 +52,14 @@ export type EdgeProps = {
 
 export type ApiOptions = {
   status?: number
+  statusText?: string
   headers?: Record<string, string>
   cache?: {
     api?: number | boolean
   }
 }
 
-type ReturnedApiPayload = { data: any; options?: ApiOptions } | Response
+type ReturnedApiPayload = (ApiOptions & { data: any }) | Omit<Response, keyof Response>
 
 export type ApiEndpoint = {
   options?: ApiOptions
