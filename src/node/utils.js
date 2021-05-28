@@ -54,3 +54,25 @@ export function nodeToFetchRequest(nodeRequest) {
     })
   })
 }
+
+export function parseHandlerResponse(handlerResponse, staticOptions) {
+  const { data, ...options } = handlerResponse
+
+  const headers = {
+    'content-type': 'application/json; charset=utf-8',
+    ...(staticOptions || {}).headers,
+    ...options.headers,
+  }
+
+  return {
+    statusCode: options.status || 200,
+    statusMessage: options.statusText,
+    ...options,
+    headers,
+    body:
+      !Buffer.isBuffer(data) &&
+      (headers['content-type'] || '').startsWith('application/json')
+        ? JSON.stringify(data)
+        : data,
+  }
+}

@@ -7,7 +7,11 @@ import {
   pathsToRoutes,
   routeToRegexp,
 } from '../utils/api-routes.js'
-import { getUrlFromNodeRequest, nodeToFetchRequest } from '../node/utils.js'
+import {
+  getUrlFromNodeRequest,
+  nodeToFetchRequest,
+  parseHandlerResponse,
+} from '../node/utils.js'
 
 const { fnsInDir } = projectConfig
 
@@ -49,7 +53,7 @@ async function handleFunctionRequest(
       if (endpointMeta.handler) {
         const fetchRequest = await nodeToFetchRequest(req)
 
-        const { data, ...options } = await safeHandler(() =>
+        const handlerResponse = await safeHandler(() =>
           endpointMeta.handler({
             ...(extra || {}),
             rawRequest: req, // For Node environments
@@ -64,29 +68,22 @@ async function handleFunctionRequest(
           })
         )
 
-        let status = options.status || 200
-        if ((status >= 300) & (status < 400) && mockRedirect) {
-          status = 299
-        }
+        const { statusCode, statusText, headers, body } = parseHandlerResponse(
+          handlerResponse,
+          endpointMeta.options
+        )
 
-        res.statusCode = status
-        res.statusMessage = options.statusText
-
-        const headers = {
-          'content-type': 'application/json; charset=utf-8',
-          ...endpointMeta.options?.headers,
-          ...options.headers,
-        }
+        res.statusMessage = statusText
+        res.statusCode =
+          (statusCode >= 300) & (statusCode < 400) && mockRedirect
+            ? 299
+            : statusCode
 
         for (const [key, value] of Object.entries(headers)) {
           res.setHeader(key, value)
         }
 
-        return res.end(
-          res.getHeader('content-type')?.startsWith('application/json')
-            ? JSON.stringify(data || {})
-            : data
-        )
+        return res.end(body)
       }
     }
   } catch (error) {

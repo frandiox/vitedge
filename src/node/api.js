@@ -1,14 +1,18 @@
 import nodeFetch from 'node-fetch'
 import { safeHandler } from '../errors.js'
 import { findRouteValue } from '../utils/api-routes.js'
-import { getEventType, normalizePathname } from './utils.js'
+import {
+  getEventType,
+  normalizePathname,
+  parseHandlerResponse,
+} from './utils.js'
 
 export async function handleApiRequest({ url, functions }, event) {
   const pathname = normalizePathname(url)
   const resolvedFn = findRouteValue(pathname, functions)
 
   if (resolvedFn) {
-    const { data, ...options } = await safeHandler(() =>
+    const handlerResponse = await safeHandler(() =>
       resolvedFn.value.handler({
         ...event,
         params: resolvedFn.params,
@@ -16,21 +20,7 @@ export async function handleApiRequest({ url, functions }, event) {
       })
     )
 
-    const headers = {
-      'content-type': 'application/json; charset=utf-8',
-      ...(resolvedFn.value.options || {}).headers,
-      ...options.headers,
-    }
-
-    return {
-      statusCode: options.status || 200,
-      statusMessage: options.statusText,
-      ...options,
-      headers,
-      body: (headers['content-type'] || '').startsWith('application/json')
-        ? JSON.stringify(data)
-        : data,
-    }
+    return parseHandlerResponse(handlerResponse, resolvedFn.value.options)
   } else {
     return { statusCode: 404 }
   }
