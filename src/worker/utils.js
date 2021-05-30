@@ -28,6 +28,21 @@ function handleCors(options, response) {
 }
 
 export function addCorsHeaders(maybeResponse, options) {
+  if (
+    !options &&
+    maybeResponse &&
+    !maybeResponse.then &&
+    !maybeResponse.clone
+  ) {
+    // Used as `addCorsHeaders()` or `addCorsHeaders({ ... })` for preflight
+    options = maybeResponse
+    maybeResponse = null
+  }
+
+  if (!maybeResponse) {
+    maybeResponse = createResponse(null, { status: 204 })
+  }
+
   return maybeResponse.then
     ? maybeResponse.then(handleCors.bind(null, options))
     : handleCors(options, maybeResponse)

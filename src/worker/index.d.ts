@@ -57,6 +57,7 @@ declare module 'vitedge/worker' {
     }
   ): Promise<Response>
 
+  export function cors(options?: CorsOptions): Response
   export function cors(response: Response, options?: CorsOptions): Response
   export function cors(
     response: Promise<Response>,
