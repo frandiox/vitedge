@@ -22,7 +22,7 @@ See [live demo](https://vitessedge.zable.workers.dev/) and [Vue starter template
 
 ## Docs
 
-See [docs](https://vitedge.netlify.app).
+See [docs](https://vitedge.js.org).
 
 ## Starters
 
