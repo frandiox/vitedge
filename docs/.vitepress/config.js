@@ -2,6 +2,12 @@ module.exports = {
   title: 'Vitedge',
   description: 'Edge-side rendering and fullstack Vite framework',
   themeConfig: {
+    repo: 'frandiox/vitedge',
+    docsDir: 'docs',
+    editLinks: true,
+    editLinkText: 'Edit this page on GitHub',
+    lastUpdated: 'Last Updated',
+
     sidebar: [
       {
         text: 'Getting Started',
