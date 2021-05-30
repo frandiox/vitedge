@@ -49,9 +49,7 @@ export default {
         server: true,
         msg: 'This is an EXAMPLE page ',
       },
-      headers: {
-        // dynamic headers
-      },
+      headers: {}, // Optional dynamic headers
       status: 200, // Optional status, default 200
     }
   },
@@ -67,7 +65,7 @@ export default {
 }
 ```
 
-The actual handler gets the `event` and `request` objects provided by the running platform. Apart from that, the rest of the parameters match [Vue Router's counter parts](https://next.router.vuejs.org/api/#routelocationnormalized) for `params`, `query`, `hash`, `name` and `fullPath`.
+The actual handler gets the `event` ([FetchEvent](https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent)) and `request` ([fetch Request](https://developer.mozilla.org/en-US/docs/Web/API/Request)) objects provided by the running platform. Apart from that, the rest of the parameters match [Vue Router's counter parts](https://next.router.vuejs.org/api/#routelocationnormalized) for `params`, `query`, `hash`, `name` and `fullPath`.
 
 The response must be an object with `data` property and will be served as JSON. Apart from `data`, it can also accept `headers` object, `status` number and `statusText` string.
 

@@ -35,16 +35,22 @@ export default {
       throw new Error('Method not supported!')
     }
 
+    // Optional:
+    // return new Response('...', { headers: { ... } })
+
     return {
-      data: {
-        msg: 'Hello world!',
-      },
+      // This will be treated as JSON
+      data: { msg: 'Hello world!' },
+      headers: {} // Optional dynamic headers
+      status: 200 // Optional status (200 is default)
+      cache: {} // Optional dynamic cache
     }
   },
   options: {
     cache: {
       api: 85, // Cache's max-age in seconds
     },
+    // Static optional headers
     headers: {
       'content-type': 'application/json', // This is default
     },
@@ -52,8 +58,9 @@ export default {
 }
 ```
 
-The actual handler gets the `event` and `request` objects provided by the running platform.
-The response must be an object with `data` property.
+The actual handler gets the `event` ([FetchEvent](https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent)) and `request` ([fetch Request](https://developer.mozilla.org/en-US/docs/Web/API/Request)) objects provided by the running platform. Note that some properties of these objects might be missing during development (such as CF's location information).
+
+The response must be either a new [fetch Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) or an object with `data` property that contains a stringifiable object or plan text.
 
 **Note on headers**: Use always lower case for header keys.
 
@@ -67,7 +74,8 @@ Any error thrown in the handler will translate to a JSON payload containing the 
     status: 500,
     message: 'yikes',
     details: { /* ... */ },
-    stack: 'Available only during development' }
+    stack: 'Available only during development'
+  }
 }
 ```
 
