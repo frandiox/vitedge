@@ -2,8 +2,8 @@ type WillResponse = void | Promise<void>
 type DidResponse = void | Response | Promise<void | Response>
 
 declare module 'vitedge/worker' {
-  export const handleEvent: (
-    event: Event,
+  export function handleEvent(
+    event: FetchEvent,
     options?: {
       // Options
       http2ServerPush?: {
@@ -11,33 +11,40 @@ declare module 'vitedge/worker' {
       }
 
       // Hooks
-      willRequestAsset?: ({ event: Event }) => WillResponse
-      willRequestApi?: ({ event: Event, url: URL, query: any }) => WillResponse
-      willRequestProps?: ({
-        event: Event,
-        url: URL,
-        query: any,
+      willRequestAsset?: (params: { event: FetchEvent }) => WillResponse
+      willRequestApi?: (params: {
+        event: FetchEvent
+        url: URL
+        query: any
       }) => WillResponse
-      willRequestRender?: ({ event: Event }) => WillResponse
+      willRequestProps?: (params: {
+        event: FetchEvent
+        url: URL
+        query: any
+      }) => WillResponse
+      willRequestRender?: (params: { event: FetchEvent }) => WillResponse
 
-      didRequestAsset?: ({ event: Event, response: Response }) => DidResponse
-      didRequestApi?: ({
-        event: Event,
-        response: Response,
-        url: URL,
-        query: any,
+      didRequestAsset?: (params: {
+        event: FetchEvent
+        response: Response
       }) => DidResponse
-      didRequestProps?: ({
-        event: Event,
-        response: Response,
-        url: URL,
-        query: any,
+      didRequestApi?: (params: {
+        event: FetchEvent
+        response: Response
+        url: URL
+        query: any
       }) => DidResponse
-      didRequestRender?: ({
-        event: Event,
-        response: Response,
-        html: string,
+      didRequestProps?: (params: {
+        event: FetchEvent
+        response: Response
+        url: URL
+        query: any
+      }) => DidResponse
+      didRequestRender?: (params: {
+        event: FetchEvent
+        response: Response
+        html: string
       }) => DidResponse
     }
-  ) => Promise<Event>
+  ): Promise<Response>
 }
