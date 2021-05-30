@@ -28,6 +28,10 @@ module.exports = {
         link: '/environment',
       },
       {
+        text: 'CORS',
+        link: '/cors',
+      },
+      {
         text: 'Troubleshooting',
         link: '/troubleshooting',
       },
