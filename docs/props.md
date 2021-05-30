@@ -19,7 +19,8 @@ export default const routes [
 ]
 ```
 
-The previous route will make a request to a props handler called `home` that must be provided in `<root>/functions/props/home.js` (or `*.ts`). This can be modified by providing `meta.propsGetter` property in the route:
+The previous route will make a request to a props handler called `home` that should be provided in `<root>/functions/props/home.js` (or `*.ts`). If this file is not found, the request will be automatically skipped.
+The name for the handler can also be modified by providing `meta.propsGetter` property in the route:
 
 ```js
 export default const routes [
@@ -34,11 +35,7 @@ export default const routes [
 ]
 ```
 
-This will ignore the route's name and use `<root>/functions/props/something-else.js` as a handler instead.
-
-### Disabling page props request for a route
-
-If a specific page does not need any props at all, it can be disabled with `meta.propsGetter: false`.
+This will ignore the route's name and use `<root>/functions/props/something-else.js` as a handler instead (if it exists).
 
 ## Handlers
 
