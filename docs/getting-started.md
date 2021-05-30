@@ -97,6 +97,6 @@ TypeScript is fully supported but needs some extra setup:
 
 ### Web Polyfills (optional)
 
-Vitedge automatically polyfills some Web-only functionaly during development in Node.js, such as `fetch`, `btoa`, etc. If you need WebCrypto, simply install it as a dev-dependency and Vitedge will use it automatically.
+Vitedge automatically polyfills some Web-only functionaly during development in Node.js, such as `fetch`, `btoa`, etc. If you need WebCrypto for anything related to JWT verification or Crypto in general, simply install [`node-webcrypto-ossl`](https://www.npmjs.com/package/node-webcrypto-ossl) as `devDependencies` and Vitedge will use it automatically during development.
 
 For other polyfills, please open feature requests in the repo.
