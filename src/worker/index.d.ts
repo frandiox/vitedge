@@ -1,6 +1,15 @@
 type WillResponse = void | Promise<void>
 type DidResponse = void | Response | Promise<void | Response>
 
+type CorsOptions = {
+  origin?: '*' | string
+  methods?: string
+  headers?: string
+  expose?: string
+  maxage?: string
+  credentials?: boolean
+}
+
 declare module 'vitedge/worker' {
   export function handleEvent(
     event: FetchEvent,
@@ -46,5 +55,11 @@ declare module 'vitedge/worker' {
         html: string
       }) => DidResponse
     }
+  ): Promise<Response>
+
+  export function cors(response: Response, options?: CorsOptions): Response
+  export function cors(
+    response: Promise<Response>,
+    options?: CorsOptions
   ): Promise<Response>
 }

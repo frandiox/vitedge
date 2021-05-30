@@ -1,5 +1,6 @@
 import fns from '__vitedge_functions__'
-import { findRouteValue } from '../utils/api-routes'
+import { findRouteValue } from '../utils/api-routes.js'
+import { cors } from '../utils/cors.js'
 
 export function resolveFnsEndpoint(endpoint, onlyStatic = false) {
   return findRouteValue(endpoint, fns, { onlyStatic })
@@ -16,21 +17,18 @@ export function createNotFoundResponse() {
   return createResponse(null, { status: 404 })
 }
 
-export function createCorsResponse(options, response) {
-  const actualHeaders = cors(options)
+function handleCors(options, response) {
+  const headers = cors(options, response.status === 204)
 
-  if (response) {
-    for (const [key, value] of Object.entries(actualHeaders)) {
-      response.headers.set(key, value)
-    }
-  } else {
-    response = createResponse(null, {
-      headers: {
-        ...actualHeaders,
-        Allow: actualHeaders['Access-Control-Allow-Methods'],
-      },
-    })
+  for (const [key, value] of Object.entries(headers)) {
+    response.headers.set(key, value)
   }
 
   return response
+}
+
+export function addCorsHeaders(maybeResponse, options) {
+  return maybeResponse.then
+    ? maybeResponse.then(handleCors.bind(null, options))
+    : handleCors(options, maybeResponse)
 }

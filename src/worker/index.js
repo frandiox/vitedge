@@ -1,7 +1,9 @@
-import { handleStaticAsset, isStaticAsset } from './assets'
-import { handleApiRequest, isApiRequest, parseQuerystring } from './api'
-import { handlePropsRequest, isPropsRequest } from './props'
-import { handleViewRendering } from './render'
+import { handleStaticAsset, isStaticAsset } from './assets.js'
+import { handleApiRequest, isApiRequest, parseQuerystring } from './api.js'
+import { handlePropsRequest, isPropsRequest } from './props.js'
+import { handleViewRendering } from './render.js'
+
+export { addCorsHeaders as cors } from './utils.js'
 
 export async function handleEvent(
   event,
@@ -19,6 +21,11 @@ export async function handleEvent(
     didRequestRender,
   }
 ) {
+  // --- PREFLIGHT REQUESTS
+  if (event.request.method === 'OPTIONS') {
+    return createResponse(null, { status: 204 })
+  }
+
   // --- STATIC FILES
   if (isStaticAsset(event)) {
     willRequestAsset && (await willRequestAsset({ event }))

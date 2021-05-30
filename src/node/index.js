@@ -4,6 +4,7 @@ import { getPageProps } from './props.js'
 import { getEventType, nodeToFetchRequest } from './utils.js'
 
 export { getEventType }
+export { cors } from '../utils/cors.js'
 
 globalThis.fetch = nodeFetch
 globalThis.Request = nodeFetch.Request
