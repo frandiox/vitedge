@@ -4,7 +4,7 @@ Use the `--mode` parameter of the CLI to change the environment file loaded.
 
 ## Frontend
 
-Follow Vite's indications.
+Follow Vite's [indications](https://vitejs.dev/guide/env-and-mode.html).
 
 ## Backend
 
