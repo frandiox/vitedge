@@ -198,6 +198,41 @@ async function getAllFunctionFiles({ fnsInputPath, watcher }) {
   }
 }
 
+let cachedPropsFiles
+async function watchAvailablePropsEndpoints({ fnsInputPath, watcher, ws }) {
+  const onChange = (fnsPropsFiles) => {
+    cachedPropsFiles = fnsPropsFiles
+
+    const sep = '|'
+    const names =
+      sep +
+      Array.from(fnsPropsFiles)
+        .join('|')
+        .replace(/\/props\//gm, '') +
+      sep
+
+    // This will make it available during SSR
+    globalThis.__AVAILABLE_PROPS_ENDPOINTS__ = names
+
+    // Send to frontend
+    ws.send({
+      type: 'custom',
+      event: 'props-endpoints-change',
+      data: { names },
+    })
+  }
+
+  if (cachedPropsFiles) {
+    onChange(cachedPropsFiles)
+  } else {
+    await watchFnsFiles(['props/**/*'], {
+      fnsInputPath,
+      watcher,
+      onChange,
+    })
+  }
+}
+
 export async function configureServer({ middlewares, config, watcher, ws }) {
   const fnsInputPath = `${config.root}/${fnsInDir}`
   await prepareEnvironment()
@@ -205,6 +240,7 @@ export async function configureServer({ middlewares, config, watcher, ws }) {
   const { dynamicFileRouteSet, staticApiRouteSet, dynamicApiRouteMap } =
     await getAllFunctionFiles({ fnsInputPath, watcher })
 
+  await watchAvailablePropsEndpoints({ fnsInputPath, watcher, ws })
   watchPropReload({ fnsInputPath, watcher, ws })
 
   middlewares.use(async function (req, res, next) {
@@ -264,6 +300,12 @@ export async function configureServer({ middlewares, config, watcher, ws }) {
           url,
         },
       })
+    }
+
+    // Request from frontend to resend the props-endpoints event
+    if (url.pathname.startsWith('/__dev-setup-props-watcher')) {
+      watchAvailablePropsEndpoints({ ws })
+      return res.end()
     }
 
     next()

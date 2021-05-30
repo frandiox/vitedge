@@ -96,4 +96,12 @@ export default async function buildFunctions({
     file: fnsOutputPath,
     format: 'es',
   })
+
+  return {
+    propsHandlerNames: fnsPaths
+      .filter((filepath) => filepath.includes('/props/'))
+      .map((filepath) =>
+        filepath.split('/props/')[1].replace(/\.[jt]sx?$/, '')
+      ),
+  }
 }

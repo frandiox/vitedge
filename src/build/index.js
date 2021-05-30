@@ -22,9 +22,24 @@ export default async function ({ mode = 'production', ssr } = {}) {
   const { fnsOptions = {} } =
     config.plugins.find((plugin) => plugin.name === 'vitedge') || {}
 
+  const { propsHandlerNames } = await buildFunctions({
+    mode,
+    fnsInputPath: path.resolve(rootDir, fnsInDir),
+    fnsOutputPath: path.resolve(rootDir, outDir, fnsOutFile),
+    options: fnsOptions.build,
+  })
+
+  const sep = '|'
+  const propsFnReplacer = {
+    'globalThis.__AVAILABLE_PROPS_ENDPOINTS__': JSON.stringify(
+      sep + propsHandlerNames.join(sep) + sep
+    ),
+  }
+
   await buildSSR({
     clientOptions: {
       mode,
+      define: propsFnReplacer,
       build: {
         outDir: path.resolve(rootDir, outDir, clientOutDir),
       },
@@ -32,6 +47,7 @@ export default async function ({ mode = 'production', ssr } = {}) {
     serverOptions: {
       mode,
       ssr: { target: 'webworker' },
+      define: propsFnReplacer,
       build: {
         ssr,
         outDir: path.resolve(rootDir, outDir, ssrOutDir),
@@ -49,13 +65,6 @@ export default async function ({ mode = 'production', ssr } = {}) {
         },
       },
     },
-  })
-
-  await buildFunctions({
-    mode,
-    fnsInputPath: path.resolve(rootDir, fnsInDir),
-    fnsOutputPath: path.resolve(rootDir, outDir, fnsOutFile),
-    options: fnsOptions.build,
   })
 
   process.exit()

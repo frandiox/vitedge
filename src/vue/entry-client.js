@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import viteSSR, { ClientOnly } from 'vite-ssr/vue/entry-client'
 import { buildPropsRoute } from '../utils/props'
 import { createHead } from '@vueuse/head'
-import { onFunctionReload } from '../dev/hmr'
+import { onFunctionReload, setupPropsEndpointsWatcher } from '../dev/hmr'
 import { safeHandler } from '../errors'
 
 export default function (App, { routes, ...options }, hook) {
@@ -24,6 +24,7 @@ export default function (App, { routes, ...options }, hook) {
       app.component(ClientOnly.name, ClientOnly)
 
       if (import.meta.hot) {
+        setupPropsEndpointsWatcher()
         onFunctionReload(
           () => router.currentRoute.value,
           async (route) => {

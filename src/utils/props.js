@@ -25,7 +25,13 @@ export function findRoutePropsGetter(route) {
 export function buildPropsRoute(route) {
   const propsGetter = findRoutePropsGetter(route)
 
-  if (!propsGetter) {
+  if (
+    !propsGetter ||
+    // This global value will be replaced at build time
+    !(globalThis.__AVAILABLE_PROPS_ENDPOINTS__ || '').includes(
+      `|${propsGetter.slice(PROPS_PREFIX.length + 1)}|`
+    )
+  ) {
     return null
   }
 

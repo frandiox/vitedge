@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import viteSSR from 'vite-ssr/react/entry-client'
 import { buildPropsRoute } from '../utils/props'
-import { onFunctionReload } from '../dev/hmr'
+import { onFunctionReload, setupPropsEndpointsWatcher } from '../dev/hmr'
 import { safeHandler } from '../errors'
 
 export { ClientOnly } from 'vite-ssr/react/components'
@@ -10,6 +10,7 @@ export { ClientOnly } from 'vite-ssr/react/components'
 export default function (App, { routes, ...options }, hook) {
   return viteSSR(App, { routes, PropsProvider, ...options }, async (ctx) => {
     if (import.meta.hot) {
+      setupPropsEndpointsWatcher()
       onFunctionReload(ctx.router.getCurrentRoute, fetchPageProps)
     }
 
