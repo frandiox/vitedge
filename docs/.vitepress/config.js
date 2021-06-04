@@ -8,6 +8,11 @@ module.exports = {
     editLinkText: 'Edit this page on GitHub',
     lastUpdated: 'Last Updated',
 
+    algolia: {
+      apiKey: 'f98b65240d8346a09d4bdf113beb233c',
+      indexName: 'vitedge',
+    },
+
     sidebar: [
       {
         text: 'Getting Started',
