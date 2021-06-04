@@ -13,6 +13,13 @@ module.exports = {
       indexName: 'vitedge',
     },
 
+    nav: [
+      {
+        text: 'Release Notes',
+        link: 'https://github.com/frandiox/vitedge/releases',
+      },
+    ],
+
     sidebar: [
       {
         text: 'Getting Started',
