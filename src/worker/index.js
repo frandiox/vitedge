@@ -19,7 +19,7 @@ export async function handleEvent(
     didRequestProps,
     willRequestRender,
     didRequestRender,
-  }
+  } = {}
 ) {
   // --- PREFLIGHT REQUESTS
   if (event.request.method === 'OPTIONS') {
