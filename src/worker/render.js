@@ -74,8 +74,9 @@ export async function handleViewRendering(event, { http2ServerPush }) {
     return pageProps.response
   }
 
-  const initialState = (await pageProps.response.json()) || {}
   const options = pageProps.options || {}
+  const initialState =
+    (pageProps.response.body && (await pageProps.response.json())) || {}
 
   globalThis.fetch = createLocalFetch(event.request)
 
