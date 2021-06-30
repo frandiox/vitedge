@@ -1,25 +1,24 @@
 declare module 'vitedge' {
-  import type { App, Component } from 'vue'
-  import type { Router, RouteLocationRaw, RouteLocationNormalized } from 'vue-router'
-
   const handler: (
-    App: Component,
+    App: any,
     options: {
-      routes: RouteLocationRaw[]
+      routes: Array<Record<string, any>>
       base?: (params: { url: URL }) => string
       pageProps?: { passToPage: boolean }
       debug?: { mount?: boolean }
     },
     hook: (params: {
-      app: App
-      router: Router
+      app: any
+      router: any
       isClient: boolean
       initialState: unknown
-      initialRoute: RouteLocationNormalized
+      initialRoute: any
     }) => void | Promise<void>
   ) => void
 
   export default handler
+
+  export const ClientOnly: any
 }
 
 export type PropsOptions = {
@@ -59,7 +58,9 @@ export type ApiOptions = {
   }
 }
 
-type ReturnedApiPayload = (ApiOptions & { data: any }) | Omit<Response, keyof Response>
+type ReturnedApiPayload =
+  | (ApiOptions & { data: any })
+  | Omit<Response, keyof Response>
 
 export type ApiEndpoint = {
   options?: ApiOptions
