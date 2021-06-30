@@ -31,6 +31,7 @@ export default (options = {}) => {
           find: /^vitedge$/,
           replacement:
             name + lib + (config.build.ssr ? entryServer : entryClient),
+          _viteSSR: true,
         })
 
         config.optimizeDeps = config.optimizeDeps || {}
