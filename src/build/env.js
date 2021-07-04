@@ -1,9 +1,9 @@
 import { loadEnv } from '../utils/env.js'
 
-export function resolveEnvVariables({ mode }) {
+export async function resolveEnvVariables({ mode }) {
   const actualMode = mode || process.env.NODE_ENV || 'production'
 
-  const envVariables = loadEnv({
+  const envVariables = await loadEnv({
     mode: actualMode,
     dry: true,
   })

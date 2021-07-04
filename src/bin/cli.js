@@ -34,8 +34,8 @@ const modeIndex = args.indexOf('--mode')
       args.unshift('node_modules/.bin/vite')
     }
 
-    const { default: config } = await import('vitedge/config.cjs')
-    const { isTS } = config.getProjectInfo()
+    const { getProjectInfo } = await import('vitedge/config.js')
+    const { isTS } = await getProjectInfo()
 
     args.unshift(
       '--loader',

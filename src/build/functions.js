@@ -69,7 +69,7 @@ export default async function buildFunctions({
       virtual({ entry: virtualEntry }),
       alias({ entries: resolve.alias || [] }),
       replace({
-        values: resolveEnvVariables({ mode }),
+        values: await resolveEnvVariables({ mode }),
         preventAssignment: true,
       }),
       esbuild(options.esbuild),

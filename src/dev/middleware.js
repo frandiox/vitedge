@@ -1,6 +1,6 @@
 import fg from 'fast-glob'
 import { loadEnv } from '../utils/env.js'
-import projectConfig from '../config.cjs'
+import { meta } from '../config.js'
 import { safeHandler } from '../errors.js'
 import {
   findRouteValue,
@@ -13,7 +13,7 @@ import {
   parseHandlerResponse,
 } from '../node/utils.js'
 
-const { fnsInDir } = projectConfig
+const { fnsInDir } = meta
 
 let originalFetch
 
@@ -36,8 +36,7 @@ async function polyfillWebAPIs() {
 
 async function prepareEnvironment() {
   await polyfillWebAPIs()
-
-  loadEnv({ dry: false })
+  await loadEnv({ dry: false })
 }
 
 async function handleFunctionRequest(

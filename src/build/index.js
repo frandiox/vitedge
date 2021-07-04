@@ -1,24 +1,14 @@
 import path from 'path'
-import { resolveConfig } from 'vite'
 import buildSSR from 'vite-ssr/build/index.js'
 import buildFunctions from './functions.js'
 
-import config from '../config.cjs'
+import { meta, getProjectInfo } from '../config.js'
 
-const {
-  getProjectInfo,
-  outDir,
-  clientOutDir,
-  ssrOutDir,
-  fnsInDir,
-  fnsOutFile,
-  commitHash,
-} = config
-
-const { rootDir } = getProjectInfo()
+const { outDir, clientOutDir, ssrOutDir, fnsInDir, fnsOutFile, commitHash } =
+  meta
 
 export default async function ({ mode = 'production', ssr } = {}) {
-  const config = await resolveConfig(mode)
+  const { config, rootDir } = await getProjectInfo(mode)
   const { fnsOptions = {} } =
     config.plugins.find((plugin) => plugin.name === 'vitedge') || {}
 
