@@ -20,9 +20,11 @@ See [live demo](https://vitessedge.zable.workers.dev/) and [Vue starter template
 - 🔽 HTTP/2 server push for your assets to speed up the loading time without waterfall requests.
 - 🧱 Automatically creates endpoints for your API based on filesystem routes.
 
-## Docs
+## Docs & Community
 
 See [docs](https://vitedge.js.org).
+
+To talk about Vitedge, join [ViteLand Discord](https://discord.gg/taRZdpzHhR) and check `#vitedge` channel or use [GitHub's Discussions](https://github.com/frandiox/vitedge/discussions).
 
 ## Starters
 
