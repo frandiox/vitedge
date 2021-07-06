@@ -1,4 +1,3 @@
-import nodeFetch from 'node-fetch'
 import { safeHandler } from '../errors.js'
 import { findRouteValue } from '../utils/api-routes.js'
 import {
@@ -26,6 +25,8 @@ export async function handleApiRequest({ url, functions }, event) {
   }
 }
 
+const originalFetch = globalThis.fetch
+
 export function createLocalFetch({ url, functions }) {
   // Redirect API requests during SSR to bundled functions
   return async function localFetch(resource, options = {}) {
@@ -49,6 +50,6 @@ export function createLocalFetch({ url, functions }) {
       }
     }
 
-    return nodeFetch(resource, options)
+    return originalFetch(resource, options)
   }
 }

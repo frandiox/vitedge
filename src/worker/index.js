@@ -1,7 +1,12 @@
 import { handleStaticAsset, isStaticAsset } from './assets.js'
-import { handleApiRequest, isApiRequest, parseQuerystring } from './api.js'
 import { handlePropsRequest, isPropsRequest } from './props.js'
 import { handleViewRendering } from './render.js'
+import {
+  handleApiRequest,
+  isApiRequest,
+  parseQuerystring,
+  createLocalFetch,
+} from './api.js'
 
 export { addCorsHeaders as cors } from './utils.js'
 
@@ -36,6 +41,8 @@ export async function handleEvent(
       response
     )
   }
+
+  globalThis.fetch = createLocalFetch(event.request)
 
   // --- PROPS ENDPOINTS
   if (isPropsRequest(event)) {

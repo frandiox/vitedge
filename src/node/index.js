@@ -1,14 +1,10 @@
-import nodeFetch from 'node-fetch'
+import './polyfill.js'
 import { createLocalFetch, handleApiRequest } from './api.js'
 import { getPageProps } from './props.js'
 import { getEventType, nodeToFetchRequest } from './utils.js'
 
 export { getEventType }
 export { cors } from '../utils/cors.js'
-
-globalThis.fetch = nodeFetch
-globalThis.Request = nodeFetch.Request
-globalThis.Response = nodeFetch.Response
 
 export async function handleEvent(
   { functions, router, url, manifest, preload = true },
@@ -21,6 +17,8 @@ export async function handleEvent(
     event.rawRequest = event.rawRequest || event.request
     event.request = await nodeToFetchRequest(event.request)
   }
+
+  globalThis.fetch = createLocalFetch({ url, functions })
 
   if (type === 'api') {
     return handleApiRequest({ url, functions }, event)
@@ -53,8 +51,6 @@ export async function handleEvent(
     }
   }
 
-  globalThis.fetch = createLocalFetch({ url, functions })
-
   // If it didn't match anything else up to here, fallback to HTML rendering
   const { html, ...extra } = await router.render(url, {
     ...event,
@@ -63,8 +59,6 @@ export async function handleEvent(
     manifest,
     preload,
   })
-
-  globalThis.fetch = nodeFetch
 
   return { statusCode: 200, body: html, extra }
 }

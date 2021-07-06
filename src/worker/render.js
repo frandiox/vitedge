@@ -2,10 +2,7 @@ import router from '__vitedge_router__'
 import { getSsrManifest } from './assets'
 import { getCachedResponse, setCachedResponse } from './cache'
 import { getPageProps } from './props'
-import { createLocalFetch } from './api'
 import { createResponse } from './utils'
-
-const originalFetch = globalThis.fetch
 
 function hasAttribute(string, attr) {
   return new RegExp(`\\s${attr}[\\s>]`).test(string)
@@ -78,8 +75,6 @@ export async function handleViewRendering(event, { http2ServerPush }) {
   const initialState =
     (pageProps.response.body && (await pageProps.response.json())) || {}
 
-  globalThis.fetch = createLocalFetch(event.request)
-
   const { html } = await router.render(event.request.url, {
     initialState,
     propsStatusCode: pageProps.response.status,
@@ -87,8 +82,6 @@ export async function handleViewRendering(event, { http2ServerPush }) {
     manifest,
     preload: true,
   })
-
-  globalThis.fetch = originalFetch
 
   const headers = {
     ...options.headers,
