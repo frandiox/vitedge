@@ -22,40 +22,49 @@ module.exports = {
 
     sidebar: [
       {
-        text: 'Getting Started',
-        link: '/getting-started',
-      },
-      {
-        text: 'Usage',
-        link: '/usage',
-      },
-      {
-        text: 'Page Props',
-        link: '/props',
-      },
-      {
-        text: 'API',
-        link: '/api',
-      },
-      {
-        text: 'Cache',
-        link: '/cache',
-      },
-      {
-        text: 'Environment Variables',
-        link: '/environment',
-      },
-      {
-        text: 'Conditional Rendering',
-        link: '/conditional-rendering',
-      },
-      {
-        text: 'CORS',
-        link: '/cors',
-      },
-      {
-        text: 'Troubleshooting',
-        link: '/troubleshooting',
+        text: 'Guide',
+        children: [
+          {
+            text: 'Getting Started',
+            link: '/getting-started',
+          },
+          {
+            text: 'Usage',
+            link: '/usage',
+          },
+          {
+            text: 'Page Props',
+            link: '/props',
+          },
+          {
+            text: 'API',
+            link: '/api',
+          },
+          {
+            text: 'Cache',
+            link: '/cache',
+          },
+          {
+            text: 'Environment Variables',
+            link: '/environment',
+          },
+          {
+            text: 'Conditional Rendering',
+            link: '/conditional-rendering',
+          },
+          {
+            text: 'CORS',
+            link: '/cors',
+          },
+          {
+            text: 'Troubleshooting',
+            link: '/troubleshooting',
+          },
+          {
+            text: 'Useful Plugins',
+            link: '/useful-plugins',
+          },
+        ],
       },
     ],
   },
