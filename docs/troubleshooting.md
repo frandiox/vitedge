@@ -37,3 +37,5 @@ return (
   </ClientOnly>
 )
 ```
+
+This component is already registered globally in Vue so it can be used directly without importing it.

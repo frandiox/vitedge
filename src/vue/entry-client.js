@@ -5,6 +5,8 @@ import { createHead } from '@vueuse/head'
 import { onFunctionReload, setupPropsEndpointsWatcher } from '../dev/hmr'
 import { safeHandler } from '../errors'
 
+export { ClientOnly }
+
 export default function (App, { routes, ...options }, hook) {
   if (import.meta.env.DEV) {
     // Will be used in HMR later

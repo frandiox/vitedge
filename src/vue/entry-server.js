@@ -2,6 +2,8 @@ import viteSSR, { ClientOnly } from 'vite-ssr/vue/entry-server'
 import { resolvePropsRoute } from './utils'
 import { createHead } from '@vueuse/head'
 
+export { ClientOnly }
+
 export default function (App, { routes, base, ...options }, hook) {
   return {
     resolve: (url) => resolvePropsRoute(routes, url, base),
