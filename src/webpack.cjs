@@ -40,11 +40,21 @@ module.exports = ({ root } = {}) => {
     root = findRootDirSync()
   }
 
+  let isReact = false
+  try {
+    require.resolve('@vitejs/plugin-react-refresh')
+    isReact = true
+  } catch (error) {}
+
   return {
     entry: './index',
     target: 'webworker',
     resolve: {
-      mainFields: ['browser', 'main', 'module'],
+      mainFields: isReact
+        ? // Webpack defaults for webworker https://webpack.js.org/configuration/resolve/#resolvemainfields
+          ['browser', 'module', 'main']
+        : // Vue crashes when importing 'module' before 'main'
+          ['browser', 'main', 'module'],
       alias: {
         __vitedge_functions__: path.resolve(root, outDir, fnsOutFile),
         __vitedge_router__: path.resolve(root, outDir, ssrOutDir),
