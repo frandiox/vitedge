@@ -20,22 +20,8 @@ module.exports = {
 
 ## Code generation from strings disallowed for this context
 
-This happen if you (or your dependencies) run `eval` or related in a worker environment. Unsafe evaluations are not supported. For example, [`vue-i18n` is affected](https://github.com/intlify/vue-i18n-next/issues/198) by this issue.
+This happen if you (or your dependencies) run `eval` or related in a worker environment. Unsafe evaluations are not supported. For example, [`vue-i18n` was affected](https://github.com/intlify/vue-i18n-next/issues/198) by this issue.
 
 ## Some library/component crashes during SSR
 
-You can try doing client-only rendering for that specific portion of the app. Vitedge exports a `ClientOnly` component for that:
-
-```js
-import { ClientOnly } from 'vitedge'
-
-//...
-
-return (
-  <ClientOnly>
-    <MyTroublesomeComponent />
-  </ClientOnly>
-)
-```
-
-This component is already registered globally in Vue so it can be used directly without importing it.
+Have a look at [Conditional Rendering section](./conditional-rendering)

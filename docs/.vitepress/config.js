@@ -46,6 +46,10 @@ module.exports = {
         link: '/environment',
       },
       {
+        text: 'Conditional Rendering',
+        link: '/conditional-rendering',
+      },
+      {
         text: 'CORS',
         link: '/cors',
       },
