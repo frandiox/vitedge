@@ -1,18 +1,18 @@
 import viteSSR from 'vite-ssr/plugin.js'
 import { configureServer, getRenderContext } from './dev/middleware.js'
 
-const name = 'vitedge'
+const pluginName = 'vitedge'
 const entryServer = '/entry-server'
 const entryClient = '/entry-client'
 
 export default (options = {}) => {
   return [
     viteSSR({
-      plugin: name,
+      plugin: pluginName,
       getRenderContext,
     }),
     {
-      name,
+      name: pluginName,
       fnsOptions: options.functions, // Store for later
       configureServer, // Provide API/Props during development
       configResolved: (config) => {
@@ -28,17 +28,17 @@ export default (options = {}) => {
 
         // config.alias is pre-beta.69
         ;(config.resolve.alias || config.alias).push({
-          find: /^vitedge$/,
+          find: /^vite-ssr(\/vue|\/react)?$/,
           replacement:
-            name + lib + (config.build.ssr ? entryServer : entryClient),
+            pluginName + lib + (config.build.ssr ? entryServer : entryClient),
           _viteSSR: true,
         })
 
         config.optimizeDeps = config.optimizeDeps || {}
         config.optimizeDeps.include = config.optimizeDeps.include || []
         config.optimizeDeps.include.push(
-          name + lib + entryClient,
-          name + lib + entryServer
+          pluginName + lib + entryClient,
+          pluginName + lib + entryServer
         )
       },
     },
