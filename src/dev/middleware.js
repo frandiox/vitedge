@@ -34,9 +34,9 @@ async function polyfillWebAPIs() {
   } catch {}
 }
 
-async function prepareEnvironment() {
+async function prepareEnvironment(config) {
   await polyfillWebAPIs()
-  await loadEnv({ dry: false })
+  await loadEnv({ dry: false, mode: config.mode })
 }
 
 async function handleFunctionRequest(
@@ -234,7 +234,7 @@ async function watchAvailablePropsEndpoints({ fnsInputPath, watcher, ws }) {
 
 export async function configureServer({ middlewares, config, watcher, ws }) {
   const fnsInputPath = `${config.root}/${fnsInDir}`
-  await prepareEnvironment()
+  await prepareEnvironment(config)
 
   const { dynamicFileRouteSet, staticApiRouteSet, dynamicApiRouteMap } =
     await getAllFunctionFiles({ fnsInputPath, watcher })

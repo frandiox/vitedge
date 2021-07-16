@@ -2,8 +2,6 @@ import path from 'path'
 import multienv from 'multienv-loader'
 import { getProjectInfo, meta } from '../config.js'
 
-process.env.NODE_ENV = process.env.NODE_ENV || 'development'
-
 export async function loadEnv({ mode = 'development', dry = true } = {}) {
   const { rootDir } = await getProjectInfo()
   return multienv.load({
