@@ -58,6 +58,11 @@ To talk about Vitedge, join [ViteLand Discord](https://discord.gg/taRZdpzHhR) an
 - [x] CORS defaults.
 - [x] Throw errors from API/Props endpoints.
 - [x] Redirects with 3xx HTTP codes.
+- [ ] Mockup KV in development.
+- [ ] Mockup DO in development.
+- [ ] Rewrite in TypeScript.
+- [ ] Guide to bring your own view framework.
+- [ ] Preview mode to simulate Worker environment in development.
 
 ## Contributing
 
