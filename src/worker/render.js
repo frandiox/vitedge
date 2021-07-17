@@ -80,7 +80,7 @@ export async function handleViewRendering(event, { http2ServerPush }) {
     html,
     status = 200,
     statusText,
-    headers,
+    headers: renderingHeaders,
   } = await router.render(event.request.url, {
     initialState,
     propsStatusCode: pageProps.response.status,
@@ -89,7 +89,7 @@ export async function handleViewRendering(event, { http2ServerPush }) {
     preload: true,
   })
 
-  headers = { ...options.headers, ...headers }
+  const headers = { ...options.headers, ...renderingHeaders }
 
   if (html) {
     headers['content-type'] = 'text/html;charset=UTF-8'

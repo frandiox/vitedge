@@ -8,7 +8,7 @@ export async function getPageProps({ functions, router, url }, event) {
   })
 
   if (resolvedFn) {
-    const { data, ...options } = await safeHandler(() =>
+    const { data, ...dynamicOptions } = await safeHandler(() =>
       resolvedFn.value.handler({
         ...event,
         ...extra,
@@ -16,7 +16,7 @@ export async function getPageProps({ functions, router, url }, event) {
       })
     )
 
-    return { data, options }
+    return { data, options: { ...resolvedFn.value.options, ...dynamicOptions } }
   } else {
     return {}
   }

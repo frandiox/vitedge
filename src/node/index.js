@@ -2,6 +2,7 @@ import './polyfill.js'
 import { createLocalFetch, handleApiRequest } from './api.js'
 import { getPageProps } from './props.js'
 import { getEventType, nodeToFetchRequest } from './utils.js'
+import { isRedirect } from '../utils/response.js'
 
 export { getEventType }
 export { cors } from '../utils/cors.js'
@@ -35,12 +36,11 @@ export async function handleEvent(
     event
   )
 
-  let status = propsOptions.status
-  const isRedirect = status >= 300 && status < 400
+  const isRedirecting = isRedirect(propsOptions)
   // This handles SPA page props requests from the browser
-  if (type === 'props' || isRedirect) {
+  if (type === 'props' || isRedirecting) {
     // Mock status when this is a props request to bypass Fetch opaque responses
-    status = type === 'props' && isRedirect ? 299 : status
+    const status = type === 'props' && isRedirecting ? 299 : propsOptions.status
 
     return {
       statusCode: status,
@@ -56,7 +56,7 @@ export async function handleEvent(
     html: body,
     status: statusCode = 200,
     statusText: statusMessage,
-    headers,
+    headers: renderingHeaders,
     ...extra
   } = await router.render(url, {
     ...event,
@@ -65,6 +65,8 @@ export async function handleEvent(
     manifest,
     preload,
   })
+
+  const headers = { ...propsOptions.headers, ...renderingHeaders }
 
   return { body, statusCode, statusMessage, headers, extra }
 }
