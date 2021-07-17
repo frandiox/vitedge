@@ -80,7 +80,25 @@ export default vitedge(
 )
 ```
 
-Note that you don't need to create a router yourself. Vitedge will do this automatically after you provide the raw routes array.
+The third argument is Vitedge's main hook, which runs only once at the start. It receives the [SSR Context](./ssr-context) and can be used to initialize the app or setup anything like state management or other plugins.
+
+In React, the same SSR Context is passed to the main App function/component as props. You must rely on the routes provided in `router.routes` instead of the raw `routes` array when using React Router:
+
+```jsx
+import { Switch, Route } from 'react-router-dom'
+
+export default function App({ router }) {
+  return (
+    <Switch>
+      {router.routes.map((route) => (
+        <Route exact={route.exact} path={route.path} key={route.path}>
+          <route.component />
+        </Route>
+      ))}
+    </Switch>
+  )
+}
+```
 
 ### 5. Add backend functions
 

@@ -88,6 +88,8 @@ handler() {
 
 The browser will detect this status code and redirect to the specified header route.
 
+It is also possible to redirect from within components using the `redirect` method provided in the [SSR Context](./ssr-context). However, this requires that the components are loaded and initialized before the redirect code runs, making it slower than relying on page props redirection.
+
 ### Errors
 
 Any error thrown in the handler will translate to a JSON payload containing the information of this error and will be passed to the corresponding page component:

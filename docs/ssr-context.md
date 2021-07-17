@@ -1,15 +1,17 @@
-# SSR Initial State
+# SSR Context & Initial State
 
-The SSR initial state is the application data that is serialized as part of the server-rendered HTML for later hydration in the browser. This data is normally gathered using fetch or DB requests from your API code.
+When initializing Vitedge, the third argument is a custom function that runs only once at the start. It receives the SSR Context as its only argument and can be used to initialize the app if needed. For example, in Vue you can install plugins for i18n or anything else. In React, this context is also passed to the main App function/component as props since it's more common to initialize things there.
 
 ::: tip
-Chances are that you don't need to manipulate the state object directly if you stick to [Page Props](./props) for data fetching. Regardless, it's useful to know how things work under the hood.
+Chances are that you don't need to manipulate the initial state object directly or even access the SSR Context if you stick to [Page Props](./props) for data fetching. Regardless, it's useful to know how things work under the hood.
 :::
 
-Vitedge's initial state consists of a plain JS object that is passed to your application and can be modified at will during SSR. This object will be serialized and later hydrated automatically in the browser, and passed to your app again so you can use it as a data source.
+The SSR Context contains the initial state, which consists of a plain JS object that can be mutated at will during SSR. This object will be serialized as part of the server-rendered HTML and later hydrated automatically in the browser, and passed to your app again so you can use it as a data source.
 
 ```js
-export default vitedge(App, { routes }, ({ initialState }) => {
+export default vitedge(App, { routes }, (context) => {
+  const { initialState } = context
+
   if (import.meta.env.SSR) {
     // Write in server
     initialState.myData = 'DB/API data'
@@ -20,6 +22,28 @@ export default vitedge(App, { routes }, ({ initialState }) => {
 
   // Provide the initial state to your stores, components, etc. as you prefer.
 })
+```
+
+The SSR Context object also contains the following:
+
+- `initialState`: Serializable app state, explained above.
+- `url`: Initial [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL).
+- `isClient`: Boolean similar to `import.meta.env.SSR`. Unlike the latter, `isClient` does not trigger tree shaking.
+- `redirect`: Isomorphic function to redirect to a different URL. This should be used sparingly, only when redirecting from [Page Props](./props#redirects) is not enough (e.g. need to redirect from within a component). Example: `redirect('/about', 307)`.
+- `writeResponse`: Function to modify the status or headers of the `response` (only in backend). Example: `writeResponse({ status: 404, headers: {} })`.
+- `router`: Router instance in Vue, and a custom router in React to access the routes and page components.
+- `app`: App instance, only in Vue.
+- `initialRoute`: Initial Route object, only in Vue.
+
+Apart from the main hook, the SSR Context is also accessible by using `useContext` utility from any component:
+
+```js
+import { useContext } from 'vitedge'
+
+function MyComponent() {
+  const { initialState } = useContext()
+  // ...
+}
 ```
 
 ## State serialization
@@ -58,7 +82,7 @@ However, in certain circumstances you might want to fetch data directly from wit
 
 - Calling your API directly from Vue components using Suspense, and storing the result in the SSR initial state.
 
-```js
+```jsx
 // Use Suspense in your app root
 <template>
   <RouterView v-slot="{ Component }">
@@ -111,7 +135,7 @@ export default {
 
 - Call your API and throw a promise in order to leverage React's Suspense (in both browser and server) anywhere in your components. Vitedge is already adding Suspense to the root so you don't need to provide it.
 
-```js
+```jsx
 function MyComponent({ initialState }) {
   if (!initialState.myData) {
     const promise = fetch('/api/my-endpoint')

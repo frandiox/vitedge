@@ -36,7 +36,7 @@ module.exports = {
 }
 ```
 
-It will figure out the project root if this is under a Vite project directory. If it's not, then pass { root: '/path/to/project' }` as the options.
+It will figure out the project root if this is under a Vite project directory. If it's not, then pass `{ root: '/path/to/project' }` as the options.
 
 Then, simply import `handleEvent` in your worker entry point:
 

@@ -33,8 +33,8 @@ module.exports = {
             link: '/usage',
           },
           {
-            text: 'Initial State',
-            link: '/initial-state',
+            text: 'SSR Context & Initial State',
+            link: '/ssr-context',
           },
           {
             text: 'Page Props',
