@@ -2,7 +2,7 @@
 
 Vitedge features a single entry point to make SSR simpler. However, some times it's necessary to run code only in frontend or only in the backend. Here are different situations and how to solve them.
 
-::: tip Note
+::: tip
 The code in your `<root>/functions` directory runs only in the backend. Therefore, the following strategies only apply to the isomorphic code in `<root>/src`.
 :::
 

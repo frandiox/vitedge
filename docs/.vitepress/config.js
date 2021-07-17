@@ -33,6 +33,10 @@ module.exports = {
             link: '/usage',
           },
           {
+            text: 'Initial State',
+            link: '/initial-state',
+          },
+          {
             text: 'Page Props',
             link: '/props',
           },
@@ -59,6 +63,15 @@ module.exports = {
           {
             text: 'Troubleshooting',
             link: '/troubleshooting',
+          },
+        ],
+      },
+      {
+        text: 'Extras',
+        children: [
+          {
+            text: 'Common Integrations',
+            link: '/integrations',
           },
           {
             text: 'Useful Plugins',

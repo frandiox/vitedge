@@ -84,7 +84,7 @@ Note that you don't need to create a router yourself. Vitedge will do this autom
 
 ### 5. Add backend functions
 
-Create a `<root>/functions/` directory and populate [`<root>/functions/api/`](./api) and [`<root>/functions/props/`](./props) with your backend logic.
+Create a `<root>/functions/` directory and populate `<root>/functions/api/` with [API endpoints](./api) and `<root>/functions/props/` with [Page Props](./props).
 
 You can also add [environment files](./environment) in this directory.
 

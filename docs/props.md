@@ -195,31 +195,4 @@ export default vitedge(
 
 ## Alternatives to page props
 
-It is also possible to get data in your page components by directly calling your API instead. In order to do this in Vue, you can rely on Suspense to await for the data:
-
-```html
-<template>
-  <RouterView v-slot="{ Component }">
-    <Suspense>
-      <component :is="Component" />
-    </Suspense>
-  </RouterView>
-</template>
-```
-
-```js
-export default {
-  name: 'MyPage',
-  // This will be awaited by Suspense in both browser and SSR
-  async setup() {
-    // In Browser rendering, this behaves as a normal fetch.
-    // In SSR, it directly calls the corresponding API handler.
-    const response = await fetch('/api/hello/world')
-    const data = await response.json()
-
-    return { data }
-  },
-}
-```
-
-In React, the `Suspense` component is already provided by Vitedge so you can just throw promises from any component.
+Even though page props is the recommended way to fetch data, it is also possible to get data in your page components by directly calling your API instead (or in combination to page props). See [Data Fetching](./initial-state#data-fetching) for examples.
