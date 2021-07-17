@@ -28,7 +28,7 @@ export default (options = {}) => {
 
         // config.alias is pre-beta.69
         ;(config.resolve.alias || config.alias).push({
-          find: /^vite-ssr(\/vue|\/react)?$/,
+          find: /^vitedge(\/vue|\/react)?$/,
           replacement:
             pluginName + lib + (config.build.ssr ? entryServer : entryClient),
           _viteSSR: true,
