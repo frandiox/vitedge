@@ -1,3 +1,5 @@
+import type { SharedContext } from 'vite-ssr/utils/types'
+
 declare module 'vitedge' {
   const handler: (
     App: any,
@@ -19,6 +21,7 @@ declare module 'vitedge' {
   export default handler
 
   export const ClientOnly: any
+  export const useContext: Omit<SharedContext, 'request' | 'response'>
 }
 
 export type PropsOptions = {
@@ -30,7 +33,7 @@ export type PropsOptions = {
   }
 }
 
-type ReturnedPropsPayload = { data: any; options?: PropsOptions }
+type ReturnedPropsPayload = PropsOptions & { data?: any }
 
 export type EdgeProps = {
   options?: PropsOptions
@@ -59,7 +62,7 @@ export type ApiOptions = {
 }
 
 type ReturnedApiPayload =
-  | (ApiOptions & { data: any })
+  | (ApiOptions & { data?: any })
   | Omit<Response, keyof Response>
 
 export type ApiEndpoint = {
