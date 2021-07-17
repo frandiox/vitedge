@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vitedge --force",
-    "dev:ssr": "vitedge --ssr --force",
+    "dev": "vitedge --ssr --force",
+    "dev:spa": "vitedge --force",
     "build": "rm -rf dist && vitedge build",
     "refresh": "rm -rf node_modules/vitedge && cp -r ../../src node_modules/vitedge && cp ../../src/bin/cli.js node_modules/.bin/vitedge",
     "serve:worker": "export EXAMPLE_NAME=react && cd ../worker-site && yarn serve --env react",
