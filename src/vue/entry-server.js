@@ -3,6 +3,7 @@ import { resolvePropsRoute } from './utils'
 import { createHead } from '@vueuse/head'
 
 export { ClientOnly }
+export { useContext } from 'vite-ssr/vue/entry-server'
 
 export default function (App, { routes, base, ...options }, hook) {
   return {

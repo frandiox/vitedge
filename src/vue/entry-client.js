@@ -6,6 +6,7 @@ import { onFunctionReload, setupPropsEndpointsWatcher } from '../dev/hmr'
 import { safeHandler } from '../errors'
 
 export { ClientOnly }
+export { useContext } from 'vite-ssr/vue/entry-client'
 
 export default function (App, { routes, ...options }, hook) {
   if (import.meta.env.DEV) {

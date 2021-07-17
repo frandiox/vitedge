@@ -5,7 +5,7 @@ import { buildPropsRoute } from '../utils/props'
 import { onFunctionReload, setupPropsEndpointsWatcher } from '../dev/hmr'
 import { safeHandler } from '../errors'
 
-export { ClientOnly } from 'vite-ssr/react/components'
+export { ClientOnly, useContext } from 'vite-ssr/react/entry-client'
 
 export default function (App, { routes, ...options }, hook) {
   return viteSSR(App, { routes, PropsProvider, ...options }, async (ctx) => {

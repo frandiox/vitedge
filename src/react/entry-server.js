@@ -1,7 +1,7 @@
 import viteSSR from 'vite-ssr/react/entry-server'
 import { resolvePropsRoute } from './utils'
 
-export { ClientOnly } from 'vite-ssr/react/components'
+export { ClientOnly, useContext } from 'vite-ssr/react/entry-server'
 
 export default function (App, { routes, base, ...options }, hook) {
   return {
