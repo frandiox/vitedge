@@ -13,7 +13,7 @@ For a complete **starter template** with Vue, i18n, file routing and layout syst
 
 Since Vitedge is just a [Vite app](https://vitejs.dev/guide/#scaffolding-your-first-vite-project), first of all you must create one:
 
-```sh
+```bash
 # Using NPM
 npm init @vitejs/app my-vue-app --template [vue|vue-ts|react|react-ts]
 
@@ -31,7 +31,7 @@ First, add the following to your `package.json`:
 
 Then, add Vitedge package:
 
-```sh
+```bash
 # Using NPM
 npm i vitedge
 

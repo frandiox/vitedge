@@ -197,4 +197,4 @@ export default vitedge(
 
 ## Alternatives to page props
 
-Even though page props is the recommended way to fetch data, it is also possible to get data in your page components by directly calling your API instead (or in combination to page props). See [Data Fetching](./initial-state#data-fetching) for examples.
+Even though page props is the recommended way to fetch data, it is also possible to get data in your page components by directly calling your API instead (or in combination to page props). See [Data Fetching](./ssr-context#data-fetching) for examples.
