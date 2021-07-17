@@ -10,6 +10,7 @@ declare module 'vitedge/node' {
     event: Record<string, any>
   ) => Promise<{
     statusCode: number
+    statusMessage?: string
     headers?: Record<string, string>
     body: any
     extra?: {

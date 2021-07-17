@@ -52,7 +52,13 @@ export async function handleEvent(
   }
 
   // If it didn't match anything else up to here, fallback to HTML rendering
-  const { html, ...extra } = await router.render(url, {
+  const {
+    html: body,
+    status: statusCode = 200,
+    statusText: statusMessage,
+    headers,
+    ...extra
+  } = await router.render(url, {
     ...event,
     initialState: pageProps,
     propsStatusCode: propsOptions.status,
@@ -60,5 +66,5 @@ export async function handleEvent(
     preload,
   })
 
-  return { statusCode: 200, body: html, extra }
+  return { body, statusCode, statusMessage, headers, extra }
 }
