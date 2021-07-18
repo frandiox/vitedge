@@ -1,12 +1,8 @@
+import path from 'path'
 import fg from 'fast-glob'
-import { rollup } from 'rollup'
-import esbuild from 'rollup-plugin-esbuild'
-import virtual from '@rollup/plugin-virtual'
+import { build } from 'vite'
+import { promises as fs } from 'fs'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
-import json from '@rollup/plugin-json'
-import commonjs from '@rollup/plugin-commonjs'
-import replace from '@rollup/plugin-replace'
-import alias from '@rollup/plugin-alias'
 import { resolveEnvVariables } from './env.js'
 import { pathsToRoutes, routeToRegexp } from '../utils/api-routes.js'
 
@@ -24,6 +20,7 @@ export default async function buildFunctions({
   mode,
   fnsInputPath,
   fnsOutputPath,
+  fileName,
   options = {},
 }) {
   const fnsPaths = await resolveFiles(
@@ -39,7 +36,7 @@ export default async function buildFunctions({
     fnsInputPath,
   })
 
-  const virtualEntry =
+  const virtualEntryCode =
     fnsPaths
       .map((route, index) => `import dep${index} from '${route}'`)
       .join('\n') +
@@ -59,43 +56,73 @@ export default async function buildFunctions({
          .join(',\n')}])
      }`
 
-  const { rollupOptions: { output, ...bundleOptions } = {}, resolve = {} } =
-    options
+  const virtualEntryName = 'virtual:vitedge-functions'
+  const format = options.build?.rollupOptions?.output?.format || 'es'
+  const outDir = options.build?.outDir || fnsOutputPath
+  const mainFields = options.resolve?.mainFields || ['module', 'main']
+  const extensions = options.resolve?.mainFields || [
+    '.mjs',
+    '.js',
+    '.json',
+    '.node',
+    '.ts',
+  ]
 
-  const bundle = await rollup({
-    ...bundleOptions,
-    input: 'entry',
+  await build({
+    ...options,
+    root: fnsInputPath,
+    configFile: false,
+    envFile: false,
+    resolve: {
+      ...options.resolve,
+      mainFields,
+      extensions,
+    },
     plugins: [
-      virtual({ entry: virtualEntry }),
-      alias({ entries: resolve.alias || [] }),
-      replace({
-        values: await resolveEnvVariables({ mode }),
-        preventAssignment: true,
-      }),
-      esbuild(options.esbuild),
+      {
+        name: virtualEntryName,
+        resolveId: (id) =>
+          id === virtualEntryName ? virtualEntryName : undefined,
+        load: (id) => (id === virtualEntryName ? virtualEntryCode : undefined),
+        async config() {
+          return {
+            define: await resolveEnvVariables({ mode }),
+          }
+        },
+      },
+      // This shouldn't be required but Vite
+      // cannot import TS files with .js extension
+      // without adding this extra plugin.
       nodeResolve({
-        dedupe: resolve.dedupe || [],
-        exportConditions: resolve.conditions || [],
-        mainFields: resolve.mainFields || ['module', 'main'],
-        extensions: resolve.extensions || [
-          '.mjs',
-          '.js',
-          '.json',
-          '.node',
-          '.ts',
-        ],
+        mainFields,
+        extensions,
+        dedupe: options.resolve?.dedupe || [],
+        exportConditions: options.resolve?.conditions || [],
       }),
-      commonjs(options.commonjsOptions),
-      json({ compact: true, ...options.json }),
       ...(options.plugins || []),
     ],
+    build: {
+      outDir,
+      minify: false,
+      target: 'es2019',
+      ...options.build,
+      rollupOptions: {
+        ...options.build?.rollupOptions,
+        input: virtualEntryName,
+      },
+      lib: {
+        entry: virtualEntryName,
+        formats: [format],
+        fileName: fileName.replace('.js', ''),
+      },
+    },
   })
 
-  await bundle.write({
-    ...output,
-    file: fnsOutputPath,
-    format: 'es',
-  })
+  // Vite lib adds the format to the extension. Remove it here.
+  await fs.rename(
+    path.resolve(outDir, fileName.replace('.js', `.${format}.js`)),
+    path.resolve(outDir, fileName)
+  )
 
   return {
     propsHandlerNames: fnsPaths
