@@ -7,13 +7,14 @@ import { meta, getProjectInfo } from '../config.js'
 const { outDir, clientOutDir, ssrOutDir, fnsInDir, fnsOutFile, commitHash } =
   meta
 
-export default async function ({ mode = 'production', ssr } = {}) {
+export default async function ({ mode = 'production', ssr, watch } = {}) {
   const { config, rootDir } = await getProjectInfo(mode)
   const { fnsOptions = {} } =
     config.plugins.find((plugin) => plugin.name === 'vitedge') || {}
 
   const { getPropsHandlerNames } = await buildFunctions({
     mode,
+    watch,
     fnsInputPath: path.resolve(rootDir, fnsInDir),
     fnsOutputPath: path.resolve(rootDir, outDir),
     fileName: fnsOutFile,
@@ -39,6 +40,7 @@ export default async function ({ mode = 'production', ssr } = {}) {
       mode,
       plugins,
       build: {
+        watch,
         outDir: path.resolve(rootDir, outDir, clientOutDir),
       },
     },
@@ -64,6 +66,4 @@ export default async function ({ mode = 'production', ssr } = {}) {
       },
     },
   })
-
-  process.exit()
 }

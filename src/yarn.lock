@@ -315,11 +315,6 @@ ms@2.0.0:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
   integrity sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=
 
-multienv-loader@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/multienv-loader/-/multienv-loader-1.2.0.tgz#58db5e6f0365e8d62bbc6c0cf39ac039970834aa"
-  integrity sha512-LcgQpI83YUuaTm/kCPMy5DVxV2xrDp4/yKxHwljzy5qK/nW42tu3nvbh/dvgLlS3rr03DjjYYW2vKU0OJDVjKQ==
-
 node-fetch@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
@@ -417,10 +412,10 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
-vite-ssr@0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.11.0.tgz#f2b05fd359315a7a1fea2e7b5d23087a8c1e5309"
-  integrity sha512-PQQv+O+kiTDMGqcmSHYOuIq8Ox/CVPk84oCb3H2NmUUk3WitPLTor8xnTR00XgPp85txZP1AU68yfMg6W2+GEQ==
+vite-ssr@0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.11.1.tgz#83761b0d5c7c96e93ae5fc66276806fc63675d55"
+  integrity sha512-rdVn4CMdY5W3L8grohBOBcz3trffZE47aEcFtki9ZiSQpd21hnw40zjFq66UTtxRS0a1dnSPSp/O1eY8S5pqzQ==
   dependencies:
     "@rollup/plugin-replace" "^3.0.0"
     "@vue/server-renderer" "^3.0.0"

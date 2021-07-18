@@ -18,22 +18,21 @@ function resolveFiles(globs, extensions) {
 
 export default async function buildFunctions({
   mode,
+  watch,
   fnsInputPath,
   fnsOutputPath,
   fileName,
   options = {},
 }) {
   let fnsPaths = []
+  const pathsToResolve = [
+    fnsInputPath + '/*',
+    fnsInputPath + '/api/**/*',
+    fnsInputPath + '/props/**/*',
+  ]
 
   const generateVirtualEntryCode = async () => {
-    fnsPaths = await resolveFiles(
-      [
-        fnsInputPath + '/*',
-        fnsInputPath + '/api/**/*',
-        fnsInputPath + '/props/**/*',
-      ],
-      ['js', 'ts']
-    )
+    fnsPaths = await resolveFiles(pathsToResolve, ['js', 'ts'])
 
     const { staticRoutes, dynamicRoutes } = pathsToRoutes(fnsPaths, {
       fnsInputPath,
@@ -73,7 +72,7 @@ export default async function buildFunctions({
     '.ts',
   ]
 
-  await build({
+  const fnsResult = await build({
     ...options,
     root: fnsInputPath,
     configFile: false,
@@ -121,14 +120,28 @@ export default async function buildFunctions({
         formats: [format],
         fileName: fileName.replace('.js', ''),
       },
+      watch: watch
+        ? { include: pathsToResolve, exclude: 'node_modules/**' }
+        : undefined,
     },
   })
 
-  // Vite lib adds the format to the extension. Remove it here.
-  await fs.rename(
-    path.resolve(outDir, fileName.replace('.js', `.${format}.js`)),
-    path.resolve(outDir, fileName)
+  const isWatching = Object.prototype.hasOwnProperty.call(
+    fnsResult,
+    '_maxListeners'
   )
+
+  if (isWatching) {
+    fnsResult.on('event', async ({ result }) => {
+      if (result) {
+        result.close()
+        await renameBundle({ outDir, fileName, format })
+      }
+    })
+  } else {
+    // Vite lib adds the format to the extension. Remove it here.
+    await renameBundle({ outDir, fileName, format })
+  }
 
   return {
     getPropsHandlerNames: () =>
@@ -138,4 +151,11 @@ export default async function buildFunctions({
           filepath.split('/props/')[1].replace(/\.[jt]sx?$/, '')
         ),
   }
+}
+
+function renameBundle({ outDir, fileName, format }) {
+  return fs.rename(
+    path.resolve(outDir, fileName.replace('.js', `.${format}.js`)),
+    path.resolve(outDir, fileName)
+  )
 }

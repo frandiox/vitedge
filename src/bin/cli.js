@@ -20,11 +20,15 @@ const [command] = args
   if (command === 'build') {
     const { default: build } = await import('vitedge/build/index.js')
 
-    const ssr = typeof options.ssr === 'string' ? options.ssr : undefined
-    const mode = typeof options.mode === 'string' ? options.mode : undefined
+    await build({
+      mode: typeof options.mode === 'string' ? options.mode : undefined,
+      ssr: typeof options.ssr === 'string' ? options.ssr : undefined,
+      watch: !!options.watch,
+    })
 
-    await build({ mode, ssr })
-    process.exit()
+    if (!options.watch) {
+      process.exit()
+    }
   } else if (
     command === 'dev' ||
     command === undefined ||
