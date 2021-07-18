@@ -27,7 +27,7 @@
   "homepage": "https://github.com/frandiox/vitedge#readme",
   "bin": "./bin/cli.js",
   "engines": {
-    "node": "node >= 14"
+    "node": "node >= 14.17"
   },
   "peerDependencies": {
     "@vueuse/head": "^0.5.0",
