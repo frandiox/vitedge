@@ -12,7 +12,7 @@ export default async function ({ mode = 'production', ssr } = {}) {
   const { fnsOptions = {} } =
     config.plugins.find((plugin) => plugin.name === 'vitedge') || {}
 
-  const { propsHandlerNames } = await buildFunctions({
+  const { getPropsHandlerNames } = await buildFunctions({
     mode,
     fnsInputPath: path.resolve(rootDir, fnsInDir),
     fnsOutputPath: path.resolve(rootDir, outDir),
@@ -21,16 +21,23 @@ export default async function ({ mode = 'production', ssr } = {}) {
   })
 
   const sep = '|'
-  const propsFnReplacer = {
-    'globalThis.__AVAILABLE_PROPS_ENDPOINTS__': JSON.stringify(
-      sep + propsHandlerNames.join(sep) + sep
-    ),
-  }
+  const plugins = [
+    {
+      name: 'vitedge-props-replacer',
+      config: () => ({
+        define: {
+          'globalThis.__AVAILABLE_PROPS_ENDPOINTS__': JSON.stringify(
+            sep + getPropsHandlerNames().join(sep) + sep
+          ),
+        },
+      }),
+    },
+  ]
 
   await buildSSR({
     clientOptions: {
       mode,
-      define: propsFnReplacer,
+      plugins,
       build: {
         outDir: path.resolve(rootDir, outDir, clientOutDir),
       },
@@ -38,7 +45,7 @@ export default async function ({ mode = 'production', ssr } = {}) {
     serverOptions: {
       mode,
       ssr: { target: 'webworker' },
-      define: propsFnReplacer,
+      plugins,
       build: {
         ssr,
         outDir: path.resolve(rootDir, outDir, ssrOutDir),

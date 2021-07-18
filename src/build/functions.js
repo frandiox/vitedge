@@ -23,25 +23,28 @@ export default async function buildFunctions({
   fileName,
   options = {},
 }) {
-  const fnsPaths = await resolveFiles(
-    [
-      fnsInputPath + '/*',
-      fnsInputPath + '/api/**/*',
-      fnsInputPath + '/props/**/*',
-    ],
-    ['js', 'ts']
-  )
+  let fnsPaths = []
 
-  const { staticRoutes, dynamicRoutes } = pathsToRoutes(fnsPaths, {
-    fnsInputPath,
-  })
+  const generateVirtualEntryCode = async () => {
+    fnsPaths = await resolveFiles(
+      [
+        fnsInputPath + '/*',
+        fnsInputPath + '/api/**/*',
+        fnsInputPath + '/props/**/*',
+      ],
+      ['js', 'ts']
+    )
 
-  const virtualEntryCode =
-    fnsPaths
-      .map((route, index) => `import dep${index} from '${route}'`)
-      .join('\n') +
-    '\n' +
-    `export default {
+    const { staticRoutes, dynamicRoutes } = pathsToRoutes(fnsPaths, {
+      fnsInputPath,
+    })
+
+    return (
+      fnsPaths
+        .map((route, index) => `import dep${index} from '${route}'`)
+        .join('\n') +
+      '\n' +
+      `export default {
        staticMap: new Map([${staticRoutes
          .map((route) => `["${route}", dep${route.index}]`)
          .join(',\n')}]),
@@ -55,6 +58,8 @@ export default async function buildFunctions({
          })
          .join(',\n')}])
      }`
+    )
+  }
 
   const virtualEntryName = 'virtual:vitedge-functions'
   const format = options.build?.rollupOptions?.output?.format || 'es'
@@ -83,7 +88,8 @@ export default async function buildFunctions({
         name: virtualEntryName,
         resolveId: (id) =>
           id === virtualEntryName ? virtualEntryName : undefined,
-        load: (id) => (id === virtualEntryName ? virtualEntryCode : undefined),
+        load: (id) =>
+          id === virtualEntryName ? generateVirtualEntryCode() : undefined,
         async config() {
           return {
             define: await resolveEnvVariables({ mode }),
@@ -125,10 +131,11 @@ export default async function buildFunctions({
   )
 
   return {
-    propsHandlerNames: fnsPaths
-      .filter((filepath) => filepath.includes('/props/'))
-      .map((filepath) =>
-        filepath.split('/props/')[1].replace(/\.[jt]sx?$/, '')
-      ),
+    getPropsHandlerNames: () =>
+      fnsPaths
+        .filter((filepath) => filepath.includes('/props/'))
+        .map((filepath) =>
+          filepath.split('/props/')[1].replace(/\.[jt]sx?$/, '')
+        ),
   }
 }
