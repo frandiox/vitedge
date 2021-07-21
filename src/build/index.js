@@ -7,37 +7,47 @@ import { meta, getProjectInfo } from '../config.js'
 const { outDir, clientOutDir, ssrOutDir, fnsInDir, fnsOutFile, commitHash } =
   meta
 
-export default async function ({ mode = 'production', ssr } = {}) {
+export default async function ({ mode = 'production', ssr, watch } = {}) {
   const { config, rootDir } = await getProjectInfo(mode)
   const { fnsOptions = {} } =
     config.plugins.find((plugin) => plugin.name === 'vitedge') || {}
 
-  const { propsHandlerNames } = await buildFunctions({
+  const { getPropsHandlerNames } = await buildFunctions({
     mode,
+    watch,
     fnsInputPath: path.resolve(rootDir, fnsInDir),
-    fnsOutputPath: path.resolve(rootDir, outDir, fnsOutFile),
+    fnsOutputPath: path.resolve(rootDir, outDir),
+    fileName: fnsOutFile,
     options: fnsOptions.build,
   })
 
   const sep = '|'
-  const propsFnReplacer = {
-    'globalThis.__AVAILABLE_PROPS_ENDPOINTS__': JSON.stringify(
-      sep + propsHandlerNames.join(sep) + sep
-    ),
-  }
+  const plugins = [
+    {
+      name: 'vitedge-props-replacer',
+      config: () => ({
+        define: {
+          'globalThis.__AVAILABLE_PROPS_ENDPOINTS__': JSON.stringify(
+            sep + getPropsHandlerNames().join(sep) + sep
+          ),
+        },
+      }),
+    },
+  ]
 
   await buildSSR({
     clientOptions: {
       mode,
-      define: propsFnReplacer,
+      plugins,
       build: {
+        watch,
         outDir: path.resolve(rootDir, outDir, clientOutDir),
       },
     },
     serverOptions: {
       mode,
       ssr: { target: 'webworker' },
-      define: propsFnReplacer,
+      plugins,
       build: {
         ssr,
         outDir: path.resolve(rootDir, outDir, ssrOutDir),
@@ -56,6 +66,4 @@ export default async function ({ mode = 'production', ssr } = {}) {
       },
     },
   })
-
-  process.exit()
 }

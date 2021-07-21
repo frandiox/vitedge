@@ -4,29 +4,40 @@ import cp from 'child_process'
 
 const [, , ...args] = process.argv
 
-const [command] = args
+const options = {}
+for (let i = 0; i < args.length; i++) {
+  const arg = args[i]
+  const nextArg = args[i + 1]
+  if (arg.startsWith('--')) {
+    options[arg.replace('--', '')] =
+      !nextArg || nextArg.startsWith('--') ? true : nextArg
+  }
+}
 
-const ssrIndex = args.indexOf('--ssr')
-const modeIndex = args.indexOf('--mode')
+const [command] = args
 
 ;(async () => {
   if (command === 'build') {
     const { default: build } = await import('vitedge/build/index.js')
 
-    const mode = modeIndex >= 0 ? args[modeIndex + 1] : undefined
-    const ssr = ssrIndex >= 0 ? args[ssrIndex + 1] : undefined
+    await build({
+      mode: typeof options.mode === 'string' ? options.mode : undefined,
+      ssr: typeof options.ssr === 'string' ? options.ssr : undefined,
+      watch: !!options.watch,
+    })
 
-    await build({ mode, ssr })
-    process.exit()
+    if (!options.watch) {
+      process.exit()
+    }
   } else if (
     command === 'dev' ||
     command === undefined ||
     command.startsWith('-')
   ) {
-    if (ssrIndex >= 0) {
-      if ((args[ssrIndex + 1] || '-').startsWith('-')) {
+    if (options.ssr) {
+      if (typeof options.ssr !== 'string') {
         // Remove --ssr if there is no path specified
-        args.splice(ssrIndex, 1)
+        args.splice(args.indexOf('--ssr'), 1)
       }
 
       args.unshift('node_modules/.bin/vite-ssr')

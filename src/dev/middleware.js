@@ -1,3 +1,4 @@
+import path from 'path'
 import fg from 'fast-glob'
 import { loadEnv } from '../utils/env.js'
 import { meta } from '../config.js'
@@ -36,7 +37,11 @@ async function polyfillWebAPIs() {
 
 async function prepareEnvironment(config) {
   await polyfillWebAPIs()
-  await loadEnv({ dry: false, mode: config.mode })
+  await loadEnv({
+    dry: false,
+    mode: config.mode,
+    root: path.resolve(config.root, fnsInDir),
+  })
 }
 
 async function handleFunctionRequest(
