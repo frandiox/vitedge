@@ -26,21 +26,23 @@ export async function loadEnv({ mode = 'development', dry = true, root } = {}) {
 export async function defineEnvVariables({ mode, root }) {
   const actualMode = mode || process.env.NODE_ENV || 'production'
 
-  const envVariables = await loadEnv({
+  const env = await loadEnv({
     mode: actualMode,
     dry: true,
     root,
   })
 
+  // This will be handled by Vite's Define plugin:
+  // https://github.com/vitejs/vite/blob/main/packages/vite/src/node/plugins/define.ts#L41
   return {
-    ...Object.entries(envVariables).reduce(
+    ...Object.entries(env).reduce(
       (acc, [key, value]) => ({
         ...acc,
         [`process.env.${key}`]: JSON.stringify(value),
+        [`import.meta.env.${key}`]: JSON.stringify(value),
       }),
       {}
     ),
-    'process.env.': `({}).`,
-    'process.env': JSON.stringify(envVariables),
+    'process.env': JSON.stringify(env),
   }
 }
