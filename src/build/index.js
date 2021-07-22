@@ -25,13 +25,17 @@ export default async function ({ mode = 'production', ssr, watch } = {}) {
   const plugins = [
     {
       name: 'vitedge-props-replacer',
-      config: () => ({
-        define: {
-          'globalThis.__AVAILABLE_PROPS_ENDPOINTS__': JSON.stringify(
-            sep + getPropsHandlerNames().join(sep) + sep
-          ),
-        },
-      }),
+      transform(code, id) {
+        // Use `transform` hook for replacing variables because `config`
+        // hook is not retriggered on watcher events.
+        if (id.endsWith('/vitedge/utils/props.js')) {
+          watch && this.addWatchFile(path.resolve(rootDir, outDir, fnsOutFile))
+          return code.replace(
+            'globalThis.__AVAILABLE_PROPS_ENDPOINTS__',
+            JSON.stringify(sep + getPropsHandlerNames().join(sep) + sep)
+          )
+        }
+      },
     },
   ]
 
