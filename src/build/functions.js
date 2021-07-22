@@ -94,6 +94,14 @@ export default async function buildFunctions({
             define: await defineEnvVariables({ mode }),
           }
         },
+        buildStart() {
+          if (watch) {
+            // Add new files to the watcher
+            fg.sync(pathsToResolve, { dot: true }).forEach((filename) => {
+              this.addWatchFile(filename)
+            })
+          }
+        },
       },
       // This shouldn't be required but Vite
       // cannot import TS files with .js extension
