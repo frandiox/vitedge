@@ -3,7 +3,7 @@ import fg from 'fast-glob'
 import { build } from 'vite'
 import { promises as fs } from 'fs'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
-import { resolveEnvVariables } from './env.js'
+import { defineEnvVariables } from '../utils/env.js'
 import { pathsToRoutes, routeToRegexp } from '../utils/api-routes.js'
 
 function resolveFiles(globs, extensions) {
@@ -91,7 +91,7 @@ export default async function buildFunctions({
           id === virtualEntryName ? generateVirtualEntryCode() : undefined,
         async config() {
           return {
-            define: await resolveEnvVariables({ mode }),
+            define: await defineEnvVariables({ mode }),
           }
         },
       },

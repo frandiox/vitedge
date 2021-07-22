@@ -22,3 +22,25 @@ export async function loadEnv({ mode = 'development', dry = true, root } = {}) {
 
   return env
 }
+
+export async function defineEnvVariables({ mode, root }) {
+  const actualMode = mode || process.env.NODE_ENV || 'production'
+
+  const envVariables = await loadEnv({
+    mode: actualMode,
+    dry: true,
+    root,
+  })
+
+  return {
+    ...Object.entries(envVariables).reduce(
+      (acc, [key, value]) => ({
+        ...acc,
+        [`process.env.${key}`]: JSON.stringify(value),
+      }),
+      {}
+    ),
+    'process.env.': `({}).`,
+    'process.env': JSON.stringify(envVariables),
+  }
+}
