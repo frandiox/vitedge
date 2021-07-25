@@ -4,13 +4,22 @@ import cp from 'child_process'
 
 const [, , ...args] = process.argv
 
+const onlyStringArgs = ['ssr', 'mode', 'entry']
+
 const options = {}
 for (let i = 0; i < args.length; i++) {
   const arg = args[i]
   const nextArg = args[i + 1]
   if (arg.startsWith('--')) {
-    options[arg.replace('--', '')] =
-      !nextArg || nextArg.startsWith('--') ? true : nextArg
+    const isBoolean = !nextArg || nextArg.startsWith('--')
+    const argName = arg.replace('--', '')
+    if (isBoolean && onlyStringArgs.includes(argName)) {
+      throw new Error(
+        `Value of argument "${argName}" must be a string. E.g. ${arg} <string>`
+      )
+    }
+
+    options[argName] = isBoolean ? true : nextArg
   }
 }
 
@@ -21,10 +30,10 @@ const [command] = args
     const { default: build } = await import('vitedge/build/index.js')
 
     await build({
-      mode: typeof options.mode === 'string' ? options.mode : undefined,
-      ssr: typeof options.ssr === 'string' ? options.ssr : undefined,
-      watch: !!options.watch,
+      mode: options.mode,
+      ssr: options.ssr,
       entry: options.entry,
+      watch: !!options.watch,
     })
 
     if (!options.watch) {
