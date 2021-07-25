@@ -38,6 +38,13 @@ const [command] = args
     if (!options.watch) {
       process.exit()
     }
+  } else if (command === 'preview') {
+    const { default: preview } = await import('vitedge/build/preview.js')
+    const options = parseOptions({
+      onlyStringArgs: ['ssr', 'mode', 'entry', 'wrangler', 'port'],
+    })
+
+    await preview(options)
   } else if (
     command === 'dev' ||
     command === undefined ||
