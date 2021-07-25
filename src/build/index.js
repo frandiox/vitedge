@@ -15,6 +15,7 @@ export default async function ({ mode = 'production', ssr, watch } = {}) {
   const { getPropsHandlerNames } = await buildFunctions({
     mode,
     watch,
+    root: rootDir,
     fnsInputPath: path.resolve(rootDir, fnsInDir),
     fnsOutputPath: path.resolve(rootDir, outDir),
     fileName: fnsOutFile,

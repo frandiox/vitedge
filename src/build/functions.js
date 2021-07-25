@@ -17,6 +17,7 @@ function resolveFiles(globs, extensions) {
 export default async function buildFunctions({
   mode,
   watch,
+  root,
   fnsInputPath,
   fnsOutputPath,
   fileName,
@@ -72,9 +73,10 @@ export default async function buildFunctions({
 
   const fnsResult = await build({
     ...options,
-    root: fnsInputPath,
+    root,
     configFile: false,
     envFile: false,
+    publicDir: false,
     resolve: {
       ...options.resolve,
       mainFields,
@@ -125,6 +127,7 @@ export default async function buildFunctions({
       outDir,
       minify: false,
       target: 'es2019',
+      emptyOutDir: false,
       ...options.build,
       rollupOptions: {
         ...options.build?.rollupOptions,
