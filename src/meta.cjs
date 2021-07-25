@@ -13,7 +13,7 @@ const meta = {
   fnsInDir: 'functions',
   fnsOutFile: 'functions.js',
   workerInFile: 'index.js',
-  workerOutFile: 'worker.js',
+  workerOutFile: 'bundle.js',
 }
 
 module.exports = {

@@ -24,6 +24,7 @@ const [command] = args
       mode: typeof options.mode === 'string' ? options.mode : undefined,
       ssr: typeof options.ssr === 'string' ? options.ssr : undefined,
       watch: !!options.watch,
+      entry: options.entry,
     })
 
     if (!options.watch) {

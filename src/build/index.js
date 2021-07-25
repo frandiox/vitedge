@@ -1,13 +1,27 @@
 import path from 'path'
+import { promises as fs } from 'fs'
 import buildSSR from 'vite-ssr/build/index.js'
 import buildFunctions from './functions.js'
-
+import buildWorker from './worker.js'
 import { meta, getProjectInfo } from '../config.js'
 
-const { outDir, clientOutDir, ssrOutDir, fnsInDir, fnsOutFile, commitHash } =
-  meta
+const {
+  outDir,
+  clientOutDir,
+  ssrOutDir,
+  fnsInDir,
+  fnsOutFile,
+  commitHash,
+  workerInFile,
+  workerOutFile,
+} = meta
 
-export default async function ({ mode = 'production', ssr, watch } = {}) {
+export default async function ({
+  mode = 'production',
+  ssr,
+  watch,
+  entry,
+} = {}) {
   const { config, rootDir } = await getProjectInfo(mode)
   const { fnsOptions = {} } =
     config.plugins.find((plugin) => plugin.name === 'vitedge') || {}
@@ -71,4 +85,24 @@ export default async function ({ mode = 'production', ssr, watch } = {}) {
       },
     },
   })
+
+  if (entry === undefined || entry === true) {
+    try {
+      const defaultEntry = path.resolve(rootDir, fnsInDir, workerInFile)
+      await fs.access(defaultEntry)
+      entry = defaultEntry
+    } catch (error) {
+      entry = false
+    }
+  }
+
+  if (entry) {
+    await buildWorker({
+      root: rootDir,
+      watch,
+      fileName: workerOutFile,
+      workerOutputPath: outDir,
+      workerInputPath: entry,
+    })
+  }
 }
