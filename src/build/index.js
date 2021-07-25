@@ -4,6 +4,7 @@ import buildSSR from 'vite-ssr/build/index.js'
 import buildFunctions from './functions.js'
 import buildWorker from './worker.js'
 import { meta, getProjectInfo } from '../config.js'
+import { lookupFile } from '../utils/files.js'
 
 const {
   outDir,
@@ -87,13 +88,14 @@ export default async function ({
   })
 
   if (entry === undefined || entry === true) {
-    try {
-      const defaultEntry = path.resolve(rootDir, fnsInDir, workerInFile)
-      await fs.access(defaultEntry)
-      entry = defaultEntry
-    } catch (error) {
-      entry = false
-    }
+    const defaultEntry = lookupFile({
+      dir: path.resolve(rootDir, fnsInDir),
+      formats: [workerInFile, workerInFile.replace('.js', '.ts')],
+      pathOnly: true,
+      bubble: false,
+    })
+
+    entry = defaultEntry || false
   }
 
   if (entry) {
