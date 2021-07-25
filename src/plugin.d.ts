@@ -1,12 +1,17 @@
-import type { UserConfig, BuildOptions, ESBuildOptions } from 'vite'
+import type { UserConfig, BuildOptions } from 'vite'
+
+type RollupOptions = Exclude<BuildOptions['rollupOptions'], undefined>
 
 interface VitedgeOptions {
-  functions?: {
-    build?: {
-      rollupOptions?: BuildOptions['rollupOptions']
-      commonjsOptions?: BuildOptions['commonjsOptions']
-      esbuild?: ESBuildOptions
-      resolve?: UserConfig['resolve']
+  functions?: Pick<
+    UserConfig,
+    'resolve' | 'plugins' | 'define' | 'json' | 'esbuild'
+  > & {
+    build?: Pick<
+      BuildOptions,
+      'commonjsOptions' | 'minify' | 'target' | 'terserOptions'
+    > & {
+      rollupOptions?: Omit<RollupOptions, 'input' | 'watch'>
     }
   }
 }

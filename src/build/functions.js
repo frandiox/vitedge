@@ -1,13 +1,7 @@
 import fg from 'fast-glob'
-import { rollup } from 'rollup'
-import esbuild from 'rollup-plugin-esbuild'
-import virtual from '@rollup/plugin-virtual'
+import { build } from 'vite'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
-import json from '@rollup/plugin-json'
-import commonjs from '@rollup/plugin-commonjs'
-import replace from '@rollup/plugin-replace'
-import alias from '@rollup/plugin-alias'
-import { resolveEnvVariables } from './env.js'
+import { defineEnvVariables } from '../utils/env.js'
 import { pathsToRoutes, routeToRegexp } from '../utils/api-routes.js'
 
 function resolveFiles(globs, extensions) {
@@ -22,29 +16,32 @@ function resolveFiles(globs, extensions) {
 
 export default async function buildFunctions({
   mode,
+  watch,
   fnsInputPath,
   fnsOutputPath,
+  fileName,
   options = {},
 }) {
-  const fnsPaths = await resolveFiles(
-    [
-      fnsInputPath + '/*',
-      fnsInputPath + '/api/**/*',
-      fnsInputPath + '/props/**/*',
-    ],
-    ['js', 'ts']
-  )
+  let fnsPaths = []
+  const pathsToResolve = [
+    fnsInputPath + '/*',
+    fnsInputPath + '/api/**/*',
+    fnsInputPath + '/props/**/*',
+  ]
 
-  const { staticRoutes, dynamicRoutes } = pathsToRoutes(fnsPaths, {
-    fnsInputPath,
-  })
+  const generateVirtualEntryCode = async () => {
+    fnsPaths = await resolveFiles(pathsToResolve, ['js', 'ts'])
 
-  const virtualEntry =
-    fnsPaths
-      .map((route, index) => `import dep${index} from '${route}'`)
-      .join('\n') +
-    '\n' +
-    `export default {
+    const { staticRoutes, dynamicRoutes } = pathsToRoutes(fnsPaths, {
+      fnsInputPath,
+    })
+
+    return (
+      fnsPaths
+        .map((route, index) => `import dep${index} from '${route}'`)
+        .join('\n') +
+      '\n' +
+      `export default {
        staticMap: new Map([${staticRoutes
          .map((route) => `["${route}", dep${route.index}]`)
          .join(',\n')}]),
@@ -58,50 +55,111 @@ export default async function buildFunctions({
          })
          .join(',\n')}])
      }`
+    )
+  }
 
-  const { rollupOptions: { output, ...bundleOptions } = {}, resolve = {} } =
-    options
+  const virtualEntryName = 'virtual:vitedge-functions'
+  const format = options.build?.rollupOptions?.output?.format || 'es'
+  const outDir = options.build?.outDir || fnsOutputPath
+  const mainFields = options.resolve?.mainFields || ['module', 'main']
+  const extensions = options.resolve?.mainFields || [
+    '.mjs',
+    '.js',
+    '.json',
+    '.node',
+    '.ts',
+  ]
 
-  const bundle = await rollup({
-    ...bundleOptions,
-    input: 'entry',
+  const fnsResult = await build({
+    ...options,
+    root: fnsInputPath,
+    configFile: false,
+    envFile: false,
+    resolve: {
+      ...options.resolve,
+      mainFields,
+      extensions,
+    },
     plugins: [
-      virtual({ entry: virtualEntry }),
-      alias({ entries: resolve.alias || [] }),
-      replace({
-        values: await resolveEnvVariables({ mode }),
-        preventAssignment: true,
-      }),
-      esbuild(options.esbuild),
+      {
+        name: virtualEntryName,
+        resolveId: (id) =>
+          id === virtualEntryName ? virtualEntryName : undefined,
+        load: (id) =>
+          id === virtualEntryName ? generateVirtualEntryCode() : undefined,
+        async config() {
+          return {
+            define: await defineEnvVariables({ mode }),
+          }
+        },
+        buildStart() {
+          if (watch) {
+            // Add new files to the watcher
+            fg.sync(pathsToResolve, { dot: true }).forEach((filename) => {
+              this.addWatchFile(filename)
+            })
+          }
+        },
+        generateBundle(options, bundle) {
+          // Vite lib-build adds the format to the extension.
+          // This renames the output file.
+          const [[key, value]] = Object.entries(bundle)
+          delete bundle[key]
+          value.fileName = fileName
+          bundle[fileName] = value
+          options.entryFileNames = fileName
+        },
+      },
+      // This shouldn't be required but Vite
+      // cannot import TS files with .js extension
+      // without adding this extra plugin.
       nodeResolve({
-        dedupe: resolve.dedupe || [],
-        exportConditions: resolve.conditions || [],
-        mainFields: resolve.mainFields || ['module', 'main'],
-        extensions: resolve.extensions || [
-          '.mjs',
-          '.js',
-          '.json',
-          '.node',
-          '.ts',
-        ],
+        mainFields,
+        extensions,
+        dedupe: options.resolve?.dedupe || [],
+        exportConditions: options.resolve?.conditions || [],
       }),
-      commonjs(options.commonjsOptions),
-      json({ compact: true, ...options.json }),
       ...(options.plugins || []),
     ],
+    build: {
+      outDir,
+      minify: false,
+      target: 'es2019',
+      ...options.build,
+      rollupOptions: {
+        ...options.build?.rollupOptions,
+        input: virtualEntryName,
+      },
+      lib: {
+        entry: virtualEntryName,
+        formats: [format],
+        fileName,
+      },
+      watch: watch
+        ? { include: pathsToResolve, exclude: 'node_modules/**' }
+        : undefined,
+    },
   })
 
-  await bundle.write({
-    ...output,
-    file: fnsOutputPath,
-    format: 'es',
-  })
+  const isWatching = Object.prototype.hasOwnProperty.call(
+    fnsResult,
+    '_maxListeners'
+  )
+
+  if (isWatching) {
+    fnsResult.on('event', async ({ result }) => {
+      if (result) {
+        result.close()
+      }
+    })
+  }
 
   return {
-    propsHandlerNames: fnsPaths
-      .filter((filepath) => filepath.includes('/props/'))
-      .map((filepath) =>
-        filepath.split('/props/')[1].replace(/\.[jt]sx?$/, '')
-      ),
+    getPropsHandlerNames: () =>
+      fnsPaths
+        .filter((filepath) => filepath.includes('/props/'))
+        .map((filepath) =>
+          filepath.split('/props/')[1].replace(/\.[jt]sx?$/, '')
+        ),
   }
 }
