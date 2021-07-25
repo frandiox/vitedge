@@ -1,7 +1,5 @@
-import path from 'path'
 import fg from 'fast-glob'
 import { build } from 'vite'
-import { promises as fs } from 'fs'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import { defineEnvVariables } from '../utils/env.js'
 import { pathsToRoutes, routeToRegexp } from '../utils/api-routes.js'
@@ -102,6 +100,15 @@ export default async function buildFunctions({
             })
           }
         },
+        generateBundle(options, bundle) {
+          // Vite lib-build adds the format to the extension.
+          // This renames the output file.
+          const [[key, value]] = Object.entries(bundle)
+          delete bundle[key]
+          value.fileName = fileName
+          bundle[fileName] = value
+          options.entryFileNames = fileName
+        },
       },
       // This shouldn't be required but Vite
       // cannot import TS files with .js extension
@@ -126,7 +133,7 @@ export default async function buildFunctions({
       lib: {
         entry: virtualEntryName,
         formats: [format],
-        fileName: fileName.replace('.js', ''),
+        fileName,
       },
       watch: watch
         ? { include: pathsToResolve, exclude: 'node_modules/**' }
@@ -143,12 +150,8 @@ export default async function buildFunctions({
     fnsResult.on('event', async ({ result }) => {
       if (result) {
         result.close()
-        await renameBundle({ outDir, fileName, format })
       }
     })
-  } else {
-    // Vite lib adds the format to the extension. Remove it here.
-    await renameBundle({ outDir, fileName, format })
   }
 
   return {
@@ -159,11 +162,4 @@ export default async function buildFunctions({
           filepath.split('/props/')[1].replace(/\.[jt]sx?$/, '')
         ),
   }
-}
-
-function renameBundle({ outDir, fileName, format }) {
-  return fs.rename(
-    path.resolve(outDir, fileName.replace('.js', `.${format}.js`)),
-    path.resolve(outDir, fileName)
-  )
 }
