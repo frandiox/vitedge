@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vitedge --ssr --force",
     "dev:spa": "vitedge --force",
+    "preview": "vitedge preview",
     "build": "rm -rf dist && vitedge build",
     "refresh": "rm -rf node_modules/vitedge && cp -r ../../src node_modules/vitedge && cp ../../src/bin/cli.js node_modules/.bin/vitedge",
     "serve:worker": "export EXAMPLE_NAME=react && cd ../worker-site && yarn serve --env react",
@@ -22,6 +23,6 @@
     "@vitejs/plugin-react-refresh": "^1.1.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3",
-    "vite": "^2.3.7"
+    "vite": "2.4.3"
   }
 }
