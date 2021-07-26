@@ -1,6 +1,5 @@
 import path from 'path'
 import { promises as fs } from 'fs'
-import { networkInterfaces } from 'os'
 import build from './index.js'
 import { meta, getProjectInfo } from '../config.js'
 import { lookupFile } from '../utils/files.js'

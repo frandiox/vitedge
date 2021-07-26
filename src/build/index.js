@@ -1,5 +1,4 @@
 import path from 'path'
-import { promises as fs } from 'fs'
 import buildSSR from 'vite-ssr/build/index.js'
 import buildFunctions from './functions.js'
 import buildWorker from './worker.js'
