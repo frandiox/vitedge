@@ -56,6 +56,7 @@ export default async function preview({
       ...options,
       scriptPath: path.resolve(meta.outDir, meta.workerOutFile),
       sitePath: path.resolve(meta.outDir, meta.clientOutDir),
+      disableCache: !!buildWatch,
       watch: !!buildWatch,
       port: Number(port),
       log: createLogger({ logDebug, prefix: '[miniflare]' }),
