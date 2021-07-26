@@ -41,7 +41,7 @@ const [command] = args
   } else if (command === 'preview') {
     const { default: preview } = await import('vitedge/build/preview.js')
     const options = parseOptions({
-      onlyStringArgs: ['ssr', 'mode', 'entry', 'wrangler', 'port'],
+      onlyStringArgs: ['ssr', 'mode', 'entry', 'port'],
     })
 
     await preview(options)

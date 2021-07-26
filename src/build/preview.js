@@ -1,8 +1,11 @@
 import path from 'path'
+import { promises as fs } from 'fs'
 import { networkInterfaces } from 'os'
 import build from './index.js'
 import { meta, getProjectInfo } from '../config.js'
 import { lookupFile } from '../utils/files.js'
+import { createRequire } from 'module'
+import chalk from 'chalk'
 
 const defaultPort = '5000'
 
@@ -14,7 +17,7 @@ export default async function preview({
   wranglerConfig,
   port = defaultPort,
   https,
-  debug,
+  debug: logDebug,
   ...options
 }) {
   if (buildWatch) {
@@ -39,7 +42,9 @@ export default async function preview({
   })
 
   if (wranglerConfig) {
-    const { Miniflare, ConsoleLog } = await import('miniflare')
+    const viteInternals = await getViteInternals()
+    const { Miniflare } = await import('miniflare')
+    const mfPkg = createRequire(import.meta.url)('miniflare/package.json')
 
     const httpsOptions = Object.entries(options)
       .filter(([key]) => key.startsWith('https'))
@@ -54,32 +59,39 @@ export default async function preview({
       sitePath: path.resolve(meta.outDir, meta.clientOutDir),
       watch: !!buildWatch,
       port: Number(port),
-      log: new ConsoleLog(!!debug),
+      log: createLogger({ logDebug, prefix: '[miniflare]' }),
       https: httpsOptions.length > 0 ? Object.fromEntries(httpsOptions) : https,
     })
 
-    console.log('\n')
+    console.log('') // New line
 
     mf.getOptions()
       .then(async ({ host, port = Number(defaultPort), processedHttps }) => {
         const secure = processedHttps !== undefined
 
-        ;(await mf.createServer(secure)).listen(port, host, async () => {
+        const server = await mf.createServer(secure)
+
+        server.listen(port, host, async () => {
           const protocol = secure ? 'https' : 'http'
 
-          mf.log.info(
-            `${
-              buildWatch ? ' Waiting for build updates. ' : ''
-            }Preview ready at:`
+          mf.log.log(
+            chalk.cyan(`\n  miniflare v${mfPkg.version}`),
+            chalk.green(`server running at:\n`)
           )
 
-          if (host) {
-            mf.log.info(`- ${protocol}://${host}:${port}`)
-          } else {
-            for (const accessibleHost of getAccessibleHosts(true)) {
-              mf.log.info(`- ${protocol}://${accessibleHost}:${port}`)
-            }
-          }
+          viteInternals.printServerUrls(
+            viteInternals.resolveHostname(host),
+            protocol,
+            port,
+            '',
+            (...strings) => mf.log.log(...strings)
+          )
+
+          mf.log.log(
+            '\n -- Preview mode' +
+              (buildWatch ? '. Waiting for updates' : '') +
+              '\n'
+          )
         })
       })
       .catch((err) => mf.log.error(err))
@@ -92,13 +104,59 @@ export default async function preview({
   }
 }
 
-function getAccessibleHosts(ipv4 = false) {
-  const hosts = []
-  Object.values(networkInterfaces()).forEach((net) =>
-    net?.forEach(({ family, address }) => {
-      if (!ipv4 || family === 'IPv4') hosts.push(address)
-    })
-  )
+function createLogger({ logDebug = false, colors, prefix }) {
+  const colorMap = {
+    debug: 'grey',
+    info: 'cyan',
+    warn: 'yellow',
+    error: 'red',
+    ...colors,
+  }
 
-  return hosts
+  return new Proxy(
+    {},
+    {
+      get(target, key) {
+        if (key === 'log') return console.log.bind(console)
+
+        const isDebug = key === 'debug'
+        const tag = colorMap[key]
+          ? chalk[colorMap[key]].bold((prefix || `[${key}]`).padEnd(7, ' '))
+          : ''
+
+        return (...strings) =>
+          isDebug || logDebug
+            ? console.log(
+                chalk.dim(new Date().toLocaleTimeString()),
+                tag,
+                ...(isDebug
+                  ? strings.map((s) => chalk[colorMap[key]](s))
+                  : strings)
+              )
+            : undefined
+      },
+    }
+  )
+}
+
+async function getViteInternals() {
+  try {
+    /* This is just to reuse Vite styles and some logic */
+    const require = createRequire(import.meta.url)
+    const vitePath = require.resolve('vite')
+    let tmp = await fs.readFile(vitePath, 'utf-8')
+    const [, chunk] = tmp.match(/require\('(\.\/chunks\/.+)'\)/) || []
+    tmp = null
+
+    let internals = await import(path.resolve(path.dirname(vitePath), chunk))
+    internals = internals.default || internals
+
+    return internals
+  } catch (error) {
+    console.warn(
+      '\nCould not import internal Vite module. This likely means Vite internals have been updated in a new version.\n'
+    )
+
+    throw error
+  }
 }
