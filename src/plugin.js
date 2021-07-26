@@ -6,6 +6,8 @@ const entryServer = '/entry-server'
 const entryClient = '/entry-client'
 
 export default (options = {}) => {
+  let framework
+
   return [
     viteSSR({
       plugin: pluginName,
@@ -14,17 +16,20 @@ export default (options = {}) => {
     {
       name: pluginName,
       fnsOptions: options.functions, // Store for later
+      getFramework: () => framework,
       configureServer, // Provide API/Props during development
       configResolved: (config) => {
-        let lib = '/vue' // default
+        framework = 'vue'
 
         if (
           config.plugins.findIndex(
             (plugin) => plugin.name === 'react-refresh'
           ) >= 0
         ) {
-          lib = '/react'
+          framework = 'react'
         }
+
+        const lib = '/' + framework
 
         // config.alias is pre-beta.69
         ;(config.resolve.alias || config.alias).push({

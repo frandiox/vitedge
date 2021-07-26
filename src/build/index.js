@@ -23,7 +23,7 @@ export default async function ({
   entry,
 } = {}) {
   const { config, rootDir } = await getProjectInfo(mode)
-  const { fnsOptions = {} } =
+  const { fnsOptions = {}, getFramework } =
     config.plugins.find((plugin) => plugin.name === 'vitedge') || {}
 
   const { getPropsHandlerNames } = await buildFunctions({
@@ -104,6 +104,7 @@ export default async function ({
       fileName: workerOutFile,
       workerOutputPath: outDir,
       workerInputPath: entry,
+      framework: getFramework(),
     })
   }
 }

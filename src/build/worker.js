@@ -7,7 +7,10 @@ export default function buildWorker({
   workerInputPath,
   workerOutputPath,
   fileName,
+  framework,
 }) {
+  const isVue = framework === 'vue'
+
   return new Promise(async (resolve) => {
     const aliases = meta.resolveAliases(root)
 
@@ -21,7 +24,9 @@ export default function buildWorker({
           find,
           replacement,
         })),
-        mainFields: ['browser', 'module', 'main'],
+        mainFields: isVue
+          ? ['browser', 'main', 'module']
+          : ['browser', 'module', 'main'],
       },
       build: {
         outDir: workerOutputPath,
