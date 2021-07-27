@@ -21,7 +21,7 @@ export default async function preview({
   ...options
 }) {
   if (buildWatch) {
-    await build({ mode, ssr, entry, watch: true })
+    await build({ ...options, mode, ssr, entry, watch: true })
   }
 
   const { rootDir } = await getProjectInfo(mode)
