@@ -1,87 +1,63 @@
-import { build } from 'vite'
+import path from 'path'
+import chalk from 'chalk'
+import { promises as fs } from 'fs'
+import { build } from 'esbuild'
+import esbuildAlias from 'esbuild-plugin-alias'
+import esbuildGlobals from 'esbuild-plugin-globals'
 import { meta } from '../config.js'
+import { requireJson } from '../utils/files.js'
 
-export default function buildWorker({
-  root,
+export default async function buildWorker({
+  platform,
   watch,
-  workerInputPath,
-  workerOutputPath,
+  inputPath,
+  outputPath,
   fileName,
-  framework,
+  viteConfig: { root, logger },
+  noBundle = false,
 }) {
-  const isVue = framework === 'vue'
+  const aliases = meta.resolveAliases(root)
 
-  return new Promise(async (resolve) => {
-    const aliases = meta.resolveAliases(root)
+  // ESBuild does not resolve entry point looking at package.json
+  const pkg = requireJson(aliases.__vitedge_meta__)
+  aliases.__vitedge_router__ = path.join(aliases.__vitedge_router__, pkg.main)
 
-    const workerResult = await build({
-      root,
-      configFile: false,
-      envFile: false,
-      publicDir: false,
-      resolve: {
-        alias: Object.entries(aliases).map(([find, replacement]) => ({
-          find,
-          replacement,
-        })),
-        mainFields: isVue
-          ? ['browser', 'main', 'module']
-          : ['browser', 'module', 'main'],
-      },
-      build: {
-        outDir: workerOutputPath,
-        minify: false,
-        emptyOutDir: false,
-        target: 'es2019',
-        rollupOptions: {
-          input: workerInputPath,
-        },
-        lib: {
-          entry: workerInputPath,
-          formats: ['es'],
-          fileName,
-        },
-        // package.json is the last file written to disk after
-        // a watcher event. Therefore, we only need to rebuild the
-        // final worker bundle after this file is in place.
-        watch: watch ? { include: aliases.__vitedge_meta__ } : undefined,
-      },
-      plugins: [
-        {
-          name: 'vitedge-worker',
-          buildStart() {
-            if (watch) {
-              // Make sure the package.json is watched
-              this.addWatchFile(aliases.__vitedge_meta__)
-            }
-          },
-          generateBundle(options, bundle) {
-            // Vite lib-build adds the format to the extension.
-            // This renames the output file.
-            const [[key, value]] = Object.entries(bundle)
-            delete bundle[key]
-            value.fileName = fileName
-            bundle[fileName] = value
-            options.entryFileNames = fileName
-          },
-        },
-      ],
-    })
-
-    const isWatching = Object.prototype.hasOwnProperty.call(
-      workerResult,
-      '_maxListeners'
-    )
-
-    if (isWatching) {
-      workerResult.on('event', async ({ result }) => {
-        if (result) {
-          result.close()
-          resolve(null)
+  await build({
+    sourceRoot: root,
+    bundle: !noBundle,
+    minify: true,
+    sourcemap: true,
+    format: 'esm',
+    platform: platform === 'worker' ? 'browser' : 'node',
+    entryPoints: [inputPath],
+    outfile: path.resolve(outputPath, fileName),
+    define: {
+      // Minified version of Vue contains this global
+      __VUE_PROD_DEVTOOLS__: false,
+    },
+    // stream is imported in vue@3
+    plugins: [esbuildAlias(aliases), esbuildGlobals({ stream: '{}' })],
+    watch: watch
+      ? {
+          onRebuild: (error) =>
+            error
+              ? logger.error(error)
+              : printBundleResult(logger, outputPath, fileName),
         }
-      })
-    } else {
-      resolve(null)
-    }
+      : false,
   })
+
+  await printBundleResult(logger, outputPath, fileName)
+}
+
+async function printBundleResult(logger, outDir, fileName) {
+  const stat = await fs.stat(path.resolve(outDir, fileName))
+  const kbs = stat.size / 1000
+  const sizeColor = kbs > 1000 ? chalk.yellow : chalk.dim
+
+  logger.info(
+    `${chalk.gray(chalk.white.dim(outDir + '/'))}${chalk.cyan(
+      fileName
+    )}  ${sizeColor(`${kbs.toFixed(2)}kb`)}`
+  )
 }

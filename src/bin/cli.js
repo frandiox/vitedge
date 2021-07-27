@@ -44,7 +44,12 @@ const [command] = args
       onlyStringArgs: ['ssr', 'mode', 'entry', 'port'],
     })
 
-    await preview(options)
+    try {
+      await preview(options)
+    } catch (error) {
+      console.error(error)
+      process.exit()
+    }
   } else if (
     command === 'dev' ||
     command === undefined ||
