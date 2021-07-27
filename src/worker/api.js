@@ -103,10 +103,12 @@ export async function handleApiRequest(event) {
 
 const originalFetch = globalThis.fetch
 
-export function createLocalFetch(instanceRequest) {
+export function createLocalFetch(instanceRequest, waitUntil) {
   return function localFetch(resource, options = {}) {
     if (typeof resource === 'string' && resource.startsWith('/')) {
       const event = {
+        type: 'fetch',
+        waitUntil,
         request: new Request(
           new URL(instanceRequest.url).origin + resource,
           new Request(instanceRequest, options)

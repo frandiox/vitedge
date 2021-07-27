@@ -42,7 +42,7 @@ export async function handleEvent(
     )
   }
 
-  globalThis.fetch = createLocalFetch(event.request)
+  globalThis.fetch = createLocalFetch(event.request, event.waitUntil)
 
   // --- PROPS ENDPOINTS
   if (isPropsRequest(event)) {
