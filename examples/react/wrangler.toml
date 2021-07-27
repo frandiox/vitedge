@@ -1,0 +1,17 @@
+name = "vitedge-react"
+type = "javascript"
+account_id = "<YOUR ID>"
+workers_dev = true
+route = ""
+zone_id = ""
+
+[site]
+bucket = "dist/client"
+entry-point = "."
+
+[build]
+command = ""
+watch_dir = "dist/worker"
+
+[build.upload]
+format = "service-worker"

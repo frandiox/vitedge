@@ -1,13 +1,31 @@
 import path from 'path'
 import buildSSR from 'vite-ssr/build/index.js'
 import buildFunctions from './functions.js'
-
+import buildWorker from './worker.js'
 import { meta, getProjectInfo } from '../config.js'
+import { lookupFile } from '../utils/files.js'
+import { findWranglerFilePath } from '../utils/wrangler.js'
 
-const { outDir, clientOutDir, ssrOutDir, fnsInDir, fnsOutFile, commitHash } =
-  meta
+const {
+  outDir,
+  clientOutDir,
+  ssrOutDir,
+  fnsInDir,
+  fnsOutFile,
+  commitHash,
+  workerOutDir,
+  workerOutFile,
+  nodeOutFile,
+} = meta
 
-export default async function ({ mode = 'production', ssr, watch } = {}) {
+export default async function ({
+  mode = 'production',
+  ssr,
+  watch,
+  entry,
+  worker,
+  noBundle,
+} = {}) {
   const { config, rootDir } = await getProjectInfo(mode)
   const { fnsOptions = {} } =
     config.plugins.find((plugin) => plugin.name === 'vitedge') || {}
@@ -15,6 +33,7 @@ export default async function ({ mode = 'production', ssr, watch } = {}) {
   const { getPropsHandlerNames } = await buildFunctions({
     mode,
     watch,
+    root: rootDir,
     fnsInputPath: path.resolve(rootDir, fnsInDir),
     fnsOutputPath: path.resolve(rootDir, outDir),
     fileName: fnsOutFile,
@@ -70,4 +89,29 @@ export default async function ({ mode = 'production', ssr, watch } = {}) {
       },
     },
   })
+
+  if (entry === undefined || entry === true) {
+    const defaultEntry = lookupFile({
+      dir: path.resolve(rootDir, fnsInDir),
+      formats: ['js', 'ts', 'mjs'].map((ext) => 'index.' + ext),
+      pathOnly: true,
+      bubble: false,
+    })
+
+    entry = defaultEntry || false
+  }
+
+  if (entry) {
+    const isWorker = !!(worker || findWranglerFilePath(rootDir))
+
+    await buildWorker({
+      watch,
+      noBundle,
+      inputPath: entry,
+      viteConfig: config,
+      platform: isWorker ? 'worker' : 'node',
+      fileName: isWorker ? workerOutFile : nodeOutFile,
+      outputPath: isWorker ? path.join(outDir, workerOutDir) : outDir,
+    })
+  }
 }

@@ -1,13 +1,16 @@
 {
   "name": "react-example",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
+  "main": "dist/worker/script.js",
   "scripts": {
     "dev": "vitedge --ssr --force",
     "dev:spa": "vitedge --force",
+    "preview": "vitedge preview",
     "build": "rm -rf dist && vitedge build",
     "refresh": "rm -rf node_modules/vitedge && cp -r ../../src node_modules/vitedge && cp ../../src/bin/cli.js node_modules/.bin/vitedge",
-    "serve:worker": "export EXAMPLE_NAME=react && cd ../worker-site && yarn serve --env react",
+    "serve:worker": "wrangler dev",
     "serve:node": "cd ../node-server && yarn serve react"
   },
   "dependencies": {
@@ -20,8 +23,9 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react-refresh": "^1.1.0",
+    "miniflare": "^1.3.3",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3",
-    "vite": "^2.3.7"
+    "vite": "2.4.3"
   }
 }
