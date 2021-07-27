@@ -1,5 +1,10 @@
 import fs from 'fs'
 import path from 'path'
+import { createRequire } from 'module'
+
+export function requireJson(path) {
+  return createRequire(import.meta.url)(path)
+}
 
 export function lookupFile({ dir, formats, pathOnly = false, bubble = false }) {
   for (const format of formats) {

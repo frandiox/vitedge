@@ -2,7 +2,7 @@ import path from 'path'
 import { promises as fs } from 'fs'
 import build from './index.js'
 import { meta, getProjectInfo } from '../config.js'
-import { lookupFile } from '../utils/files.js'
+import { lookupFile, requireJson } from '../utils/files.js'
 import { createRequire } from 'module'
 import chalk from 'chalk'
 
@@ -43,7 +43,7 @@ export default async function preview({
   if (wranglerConfig) {
     const viteInternals = await getViteInternals()
     const { Miniflare } = await import('miniflare')
-    const mfPkg = createRequire(import.meta.url)('miniflare/package.json')
+    const mfPkg = requireJson('miniflare/package.json')
 
     const httpsOptions = Object.entries(options)
       .filter(([key]) => key.startsWith('https'))
