@@ -710,6 +710,16 @@ env-paths@^2.2.1:
   resolved "https://registry.yarnpkg.com/env-paths/-/env-paths-2.2.1.tgz#420399d416ce1fbe9bc0a07c62fa68d67fd0f8f2"
   integrity sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A==
 
+esbuild-plugin-alias@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/esbuild-plugin-alias/-/esbuild-plugin-alias-0.1.2.tgz#1232fbde807c0c8ad44c44ec859819eb492e12a8"
+  integrity sha512-WsX0OJy8IGOsGZV+4oHEU5B6XQUpxOsZN1iSoYf9COTDbY7WXcOwd1oCLYNWUIWCExyGXSghIGq2k7sXBldxwQ==
+
+esbuild-plugin-globals@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/esbuild-plugin-globals/-/esbuild-plugin-globals-0.1.1.tgz#ee1f9fa91fce3c6b675e1fd07edf4f5f9c0a2097"
+  integrity sha512-BK0OJ02paAPJp4tGyFBum/YHerGYeRvonCRuRpkIbJemQrFHw3uWy6MEXcKgOwecAyXo3fOY5opl8ude2kHVrw==
+
 esbuild@^0.12.8:
   version "0.12.16"
   resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.12.16.tgz#c397144ce13b445a6ead9c1f747da11f79ec5e67"
@@ -1620,6 +1630,10 @@ vite@2.4.3:
   dependencies:
     "@cloudflare/kv-asset-handler" "^0.1.3"
     "@rollup/plugin-node-resolve" "^13.0.2"
+    chalk "^4.1.1"
+    esbuild "^0.12.8"
+    esbuild-plugin-alias "^0.1.2"
+    esbuild-plugin-globals "^0.1.1"
     fast-glob "^3.2.7"
     node-fetch "^2.6.1"
     regexparam "^1.3.0"
