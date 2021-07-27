@@ -24,7 +24,7 @@ export default async function ({
   watch,
   entry,
   worker,
-  noBundle,
+  ...workerOptions
 } = {}) {
   const { config, rootDir } = await getProjectInfo(mode)
   const { fnsOptions = {} } =
@@ -105,8 +105,8 @@ export default async function ({
     const isWorker = !!(worker || findWranglerFilePath(rootDir))
 
     await buildWorker({
+      ...workerOptions,
       watch,
-      noBundle,
       inputPath: entry,
       viteConfig: config,
       platform: isWorker ? 'worker' : 'node',

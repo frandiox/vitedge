@@ -15,6 +15,11 @@ export default async function buildWorker({
   fileName,
   viteConfig: { root, logger },
   noBundle = false,
+  noMinify = false,
+  noSourcemap = false,
+  keepNames = false,
+  target = 'es2019',
+  format = 'esm',
 }) {
   const aliases = meta.resolveAliases(root)
 
@@ -25,9 +30,11 @@ export default async function buildWorker({
   await build({
     sourceRoot: root,
     bundle: !noBundle,
-    minify: true,
-    sourcemap: true,
-    format: 'esm',
+    minify: !noMinify,
+    sourcemap: !noSourcemap,
+    keepNames,
+    format,
+    target,
     platform: platform === 'worker' ? 'browser' : 'node',
     entryPoints: [inputPath],
     outfile: path.resolve(outputPath, fileName),
