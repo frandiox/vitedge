@@ -1,10 +1,10 @@
 import path from 'path'
+import chalk from 'chalk'
 import { promises as fs } from 'fs'
+import { createRequire } from 'module'
 import build from './index.js'
 import { meta, getProjectInfo } from '../config.js'
 import { requireJson } from '../utils/files.js'
-import { createRequire } from 'module'
-import chalk from 'chalk'
 import { findWranglerFilePath } from '../utils/wrangler.js'
 
 const defaultPort = '5000'
@@ -48,7 +48,11 @@ export default async function preview({
 
   const mf = new Miniflare({
     ...options,
-    scriptPath: path.resolve(meta.outDir, meta.workerOutFile),
+    scriptPath: path.resolve(
+      meta.outDir,
+      meta.workerOutDir,
+      meta.workerOutFile
+    ),
     sitePath: path.resolve(meta.outDir, meta.clientOutDir),
     disableCache: !!buildWatch,
     watch: !!buildWatch,

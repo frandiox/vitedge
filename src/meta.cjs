@@ -12,8 +12,9 @@ const meta = {
   ssrOutDir: 'ssr',
   fnsInDir: 'functions',
   fnsOutFile: 'functions.js',
-  workerInFile: 'index.js',
-  workerOutFile: 'bundle.js',
+  workerOutDir: 'worker',
+  workerOutFile: 'script.js',
+  nodeOutFile: 'bundle.js',
 }
 
 module.exports = {

@@ -4,6 +4,7 @@ import buildFunctions from './functions.js'
 import buildWorker from './worker.js'
 import { meta, getProjectInfo } from '../config.js'
 import { lookupFile } from '../utils/files.js'
+import { findWranglerFilePath } from '../utils/wrangler.js'
 
 const {
   outDir,
@@ -12,8 +13,9 @@ const {
   fnsInDir,
   fnsOutFile,
   commitHash,
-  workerInFile,
+  workerOutDir,
   workerOutFile,
+  nodeOutFile,
 } = meta
 
 export default async function ({
@@ -21,9 +23,11 @@ export default async function ({
   ssr,
   watch,
   entry,
+  worker,
+  noBundle,
 } = {}) {
   const { config, rootDir } = await getProjectInfo(mode)
-  const { fnsOptions = {}, getFramework } =
+  const { fnsOptions = {} } =
     config.plugins.find((plugin) => plugin.name === 'vitedge') || {}
 
   const { getPropsHandlerNames } = await buildFunctions({
@@ -89,7 +93,7 @@ export default async function ({
   if (entry === undefined || entry === true) {
     const defaultEntry = lookupFile({
       dir: path.resolve(rootDir, fnsInDir),
-      formats: [workerInFile, workerInFile.replace('.js', '.ts')],
+      formats: ['js', 'ts', 'mjs'].map((ext) => 'index.' + ext),
       pathOnly: true,
       bubble: false,
     })
@@ -98,13 +102,16 @@ export default async function ({
   }
 
   if (entry) {
+    const isWorker = !!(worker || findWranglerFilePath(rootDir))
+
     await buildWorker({
-      root: rootDir,
       watch,
-      fileName: workerOutFile,
-      workerOutputPath: outDir,
-      workerInputPath: entry,
-      framework: getFramework(),
+      noBundle,
+      inputPath: entry,
+      viteConfig: config,
+      platform: isWorker ? 'worker' : 'node',
+      fileName: isWorker ? workerOutFile : nodeOutFile,
+      outputPath: isWorker ? path.join(outDir, workerOutDir) : outDir,
     })
   }
 }
