@@ -77,7 +77,7 @@ export async function handleEvent(
   const response = await handleViewRendering(event, { http2ServerPush })
 
   return (
-    (didRequestRender && (await didRequestRender({ event, html, response }))) ||
+    (didRequestRender && (await didRequestRender({ event, response }))) ||
     response
   )
 }
