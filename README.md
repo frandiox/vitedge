@@ -62,7 +62,7 @@ To talk about Vitedge, join [ViteLand Discord](https://discord.gg/taRZdpzHhR) an
 - [ ] Mockup DO in development.
 - [ ] Rewrite in TypeScript.
 - [ ] Guide to bring your own view framework.
-- [ ] Preview mode to simulate Worker environment in development.
+- [x] Preview mode to simulate Worker environment in development.
 
 ## Contributing
 
