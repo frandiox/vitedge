@@ -1,4 +1,5 @@
 import type { UserConfig, BuildOptions } from 'vite'
+import type { BuildOptions as ESBuildOptions } from 'esbuild'
 
 type RollupOptions = Exclude<BuildOptions['rollupOptions'], undefined>
 
@@ -13,6 +14,20 @@ interface VitedgeOptions {
     > & {
       rollupOptions?: Omit<RollupOptions, 'input' | 'watch'>
     }
+  }
+  worker?: {
+    build?: Omit<
+      ESBuildOptions,
+      | 'entryPoints'
+      | 'external'
+      | 'write'
+      | 'watch'
+      | 'outdir'
+      | 'outfile'
+      | 'outbase'
+      | 'outExtension'
+      | 'metafile'
+    >
   }
 }
 

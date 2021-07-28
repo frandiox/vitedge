@@ -1828,10 +1828,10 @@ uuid@^8.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
-vite-ssr@0.11.2:
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.11.2.tgz#aec01ba7fed2a9290cb5e2586c05c3872b99c158"
-  integrity sha512-6jXZiosK5r517NjqdjQXgPFDZrLRc46LlPw/KVy4UfacNx33LqxQqh7ysh8/TWkzGv6FBUJcRcWEUU4uOoJ3Dw==
+vite-ssr@0.11.3:
+  version "0.11.3"
+  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.11.3.tgz#c1cdfc89c87397b8ff5a4d5f53d52f07396cd67a"
+  integrity sha512-ZEC3ZGexDEp1+4Zq2KCSVVDnhUSMPTEEUmeVR0VbU86nF+f2Mylw3F+K3u+2/F2GNnB7QLRQ9RjVifhiUIKyZw==
   dependencies:
     "@rollup/plugin-replace" "^3.0.0"
     "@vue/server-renderer" "^3.0.0"
@@ -1852,15 +1852,19 @@ vite@2.4.3:
     fsevents "~2.3.2"
 
 "vitedge@file:../../src":
-  version "0.14.0"
+  version "0.15.0"
   dependencies:
     "@cloudflare/kv-asset-handler" "^0.1.3"
     "@rollup/plugin-node-resolve" "^13.0.2"
+    chalk "^4.1.1"
+    esbuild "^0.12.8"
+    esbuild-plugin-alias "^0.1.2"
+    esbuild-plugin-globals "^0.1.1"
     fast-glob "^3.2.7"
     node-fetch "^2.6.1"
     regexparam "^1.3.0"
     route-sort "^1.0.0"
-    vite-ssr "0.11.2"
+    vite-ssr "0.11.3"
 
 vscode-languageserver-textdocument@^1.0.1:
   version "1.0.1"

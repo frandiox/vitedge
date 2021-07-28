@@ -15,7 +15,8 @@ export default (options = {}) => {
     }),
     {
       name: pluginName,
-      fnsOptions: options.functions, // Store for later
+      fnsOptions: options.functions || {}, // Store for later
+      workerOptions: options.worker || {}, // Store for later
       getFramework: () => framework,
       configureServer, // Provide API/Props during development
       configResolved: (config) => {

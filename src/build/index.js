@@ -24,10 +24,10 @@ export default async function ({
   watch,
   entry,
   worker,
-  ...workerOptions
+  ...workerFlags
 } = {}) {
   const { config, rootDir } = await getProjectInfo(mode)
-  const { fnsOptions = {} } =
+  const { fnsOptions = {}, workerOptions = {} } =
     config.plugins.find((plugin) => plugin.name === 'vitedge') || {}
 
   const { getPropsHandlerNames } = await buildFunctions({
@@ -105,8 +105,9 @@ export default async function ({
     const isWorker = !!(worker || findWranglerFilePath(rootDir))
 
     await buildWorker({
-      ...workerOptions,
+      ...workerFlags,
       watch,
+      esbuildOptions: workerOptions.build,
       inputPath: entry,
       viteConfig: config,
       platform: isWorker ? 'worker' : 'node',
