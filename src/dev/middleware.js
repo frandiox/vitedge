@@ -357,14 +357,8 @@ export async function getRenderContext({
       })
 
       if (res.status >= 300 && res.status < 400) {
-        const headers = {}
-
-        for (const [key, value] of res.headers.entries()) {
-          headers[key] = value
-        }
-
         // Returning a response like this will skip rendering
-        return { status: res.status, headers }
+        return { status: res.status, headers: Object.fromEntries(res.headers) }
       }
 
       const data = await res.json()

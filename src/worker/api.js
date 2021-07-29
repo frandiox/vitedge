@@ -25,13 +25,7 @@ export function isApiRequest(event) {
 export function parseQuerystring(event) {
   const url = new URL(event.request.url)
   // Parse querystring similarly to Express or Rails (there's no standard for this)
-  const query = Array.from(url.searchParams.entries()).reduce(
-    (acc, [key, value]) => ({
-      ...acc,
-      [key]: value,
-    }),
-    {}
-  )
+  const query = Object.fromEntries(url.searchParams)
 
   return { url, query }
 }

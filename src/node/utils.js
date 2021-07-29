@@ -60,7 +60,7 @@ export function fetchToNodeResponse(fetchResponse) {
     data: fetchResponse.body,
     status: fetchResponse.status,
     statusText: fetchResponse.statusText,
-    headers: Object.fromEntries(fetchResponse.headers.entries()),
+    headers: Object.fromEntries(fetchResponse.headers),
   }
 }
 
