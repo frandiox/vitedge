@@ -13,30 +13,13 @@ import {
   nodeToFetchRequest,
   parseHandlerResponse,
 } from '../node/utils.js'
+import { polyfillWebAPIs } from './polyfills.js'
 
 const { fnsInDir } = meta
 
-let originalFetch
-
-async function polyfillWebAPIs() {
-  globalThis.atob = (str) => Buffer.from(str, 'base64').toString('binary')
-  globalThis.btoa = (str) => Buffer.from(str).toString('base64')
-
-  try {
-    const { Crypto } = await import('node-webcrypto-ossl')
-    globalThis.crypto = new Crypto()
-  } catch {}
-
-  try {
-    const fetch = await import('node-fetch')
-    globalThis.fetch = originalFetch = fetch.default || fetch
-    globalThis.Request = fetch.Request
-    globalThis.Response = fetch.Response
-  } catch {}
-}
-
 async function prepareEnvironment(config) {
   await polyfillWebAPIs()
+
   await loadEnv({
     dry: false,
     mode: config.mode,
@@ -316,7 +299,7 @@ export async function configureServer({ middlewares, config, watcher, ws }) {
   })
 }
 
-let fetchWrapApplied = false
+const WrapAppliedSymbol = Symbol('ssr')
 /**
  * Returns the initial state used for the first server-side rendered page.
  * It mimics entry-client logic, but runs in the server.
@@ -327,9 +310,8 @@ export async function getRenderContext({
 }) {
   url = new URL(url)
 
-  if (!fetchWrapApplied) {
-    fetchWrapApplied = true
-
+  if (!globalThis.fetch[WrapAppliedSymbol]) {
+    const originalFetch = globalThis.fetch
     globalThis.fetch = function (resource, options) {
       if (typeof resource === 'string' && resource.startsWith('/')) {
         resource = url.origin + resource
@@ -337,6 +319,8 @@ export async function getRenderContext({
 
       return originalFetch(resource, options)
     }
+
+    globalThis.fetch[WrapAppliedSymbol] = true
   }
 
   const propsRoute = resolve(url)
