@@ -13,12 +13,16 @@ import {
   nodeToFetchRequest,
   parseHandlerResponse,
 } from '../node/utils.js'
-import { polyfillWebAPIs } from './polyfills.js'
+import { polyfillWorkerAPIs, polyfillWebAPIs } from './polyfills.js'
 
 const { fnsInDir } = meta
 
 async function prepareEnvironment(config) {
-  await polyfillWebAPIs()
+  try {
+    await polyfillWorkerAPIs(config)
+  } catch (_) {
+    await polyfillWebAPIs()
+  }
 
   await loadEnv({
     dry: false,
