@@ -8,6 +8,7 @@ declare module 'vitedge' {
       base?: (params: { url: URL }) => string
       pageProps?: { passToPage: boolean }
       debug?: { mount?: boolean }
+      styleCollector?: any
     },
     hook: (params: {
       app: any
