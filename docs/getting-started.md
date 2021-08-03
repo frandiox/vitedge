@@ -7,7 +7,7 @@
 
 ## Installation
 
-For a complete **starter template** with Vue, i18n, file routing and layout system, see [Vitessedge Template](https://github.com/frandiox/vitessedge-template). Otherwise, create a new project from scratch following these steps:
+For a complete **starter template** with i18n, file routing and more, see [Vitesse for Vue](https://github.com/frandiox/vitessedge-template) or [Reactesse for React](https://github.com/frandiox/reactesse-edge-template). Otherwise, create a new project from scratch following these steps:
 
 ### 1. Create a Vite app
 

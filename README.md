@@ -10,7 +10,7 @@ It can replace static site generators in some situations since it builds on the 
 
 Even though running it at the edge is ideal, it is actually compatible with any Node environment such as Vercel or Netlify.
 
-See [live demo](https://vitessedge.zable.workers.dev/) and [Vue starter template](https://github.com/frandiox/vitessedge-template).
+See [live demo](https://vitessedge.zable.workers.dev/), and [Vue](https://github.com/frandiox/vitessedge-template) or [React](https://github.com/frandiox/reactesse-edge-template) starter templates.
 
 ## Features
 
@@ -29,6 +29,7 @@ To talk about Vitedge, join [ViteLand Discord](https://discord.gg/taRZdpzHhR) an
 ## Starters
 
 - Vue, TS, i18n - [Code](https://github.com/frandiox/vitessedge-template) | [Demo](https://vitessedge.zable.workers.dev/)
+- React, TS, i18n - [Code](https://github.com/frandiox/reactesse-edge-template) | [Demo](https://reactesse.zable.workers.dev/)
 
 ## Roadmap
 
@@ -46,7 +47,7 @@ To talk about Vitedge, join [ViteLand Discord](https://discord.gg/taRZdpzHhR) an
 - [x] Add an SSR mode for local development (web worker?).
 - [x] Support GraphQL, sitemap and other dynamic endpoints.
 - [x] React compatibility.
-- [ ] Provide React starter template.
+- [x] Provide React starter template.
 - [ ] Svelte compatibility.
 - [x] Support Vite 2.
 - [x] HMR for API side.
