@@ -55,18 +55,18 @@ export function nodeToFetchRequest(nodeRequest) {
   })
 }
 
-export function fetchToNodeResponse(fetchResponse) {
+async function fetchToNodeResponse(fetchResponse) {
   return {
-    data: fetchResponse.body,
+    data: Buffer.from(await fetchResponse.arrayBuffer()),
     status: fetchResponse.status,
     statusText: fetchResponse.statusText,
     headers: Object.fromEntries(fetchResponse.headers),
   }
 }
 
-export function parseHandlerResponse(handlerResponse, staticOptions) {
-  if (handlerResponse.clone) {
-    handlerResponse = fetchToNodeResponse(handlerResponse)
+export async function parseHandlerResponse(handlerResponse, staticOptions) {
+  if (typeof handlerResponse.arrayBuffer === 'function') {
+    handlerResponse = await fetchToNodeResponse(handlerResponse)
   }
 
   const { data, ...options } = handlerResponse

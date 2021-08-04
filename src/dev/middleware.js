@@ -59,10 +59,8 @@ async function handleFunctionRequest(
           })
         )
 
-        const { statusCode, statusText, headers, body } = parseHandlerResponse(
-          handlerResponse,
-          endpointMeta.options
-        )
+        const { statusCode, statusText, headers, body } =
+          await parseHandlerResponse(handlerResponse, endpointMeta.options)
 
         res.statusMessage = statusText
         res.statusCode =
