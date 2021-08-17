@@ -720,6 +720,11 @@ esbuild-plugin-globals@^0.1.1:
   resolved "https://registry.yarnpkg.com/esbuild-plugin-globals/-/esbuild-plugin-globals-0.1.1.tgz#ee1f9fa91fce3c6b675e1fd07edf4f5f9c0a2097"
   integrity sha512-BK0OJ02paAPJp4tGyFBum/YHerGYeRvonCRuRpkIbJemQrFHw3uWy6MEXcKgOwecAyXo3fOY5opl8ude2kHVrw==
 
+esbuild@^0.12.17:
+  version "0.12.17"
+  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.12.17.tgz#5816f905c2905de0ebbc658860df7b5b48afbcd3"
+  integrity sha512-GshKJyVYUnlSXIZj/NheC2O0Kblh42CS7P1wJyTbbIHevTG4jYMS9NNw8EOd8dDWD0dzydYHS01MpZoUcQXB4g==
+
 esbuild@^0.12.8:
   version "0.12.16"
   resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.12.16.tgz#c397144ce13b445a6ead9c1f747da11f79ec5e67"
@@ -1173,7 +1178,7 @@ picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.2.2, picomatch@^2.2.3:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.0.tgz#f1f061de8f6a4bf022892e2d128234fb98302972"
   integrity sha512-lY1Q/PiJGC2zOv/z391WOTD+Z02bCgsFfvxoXXf6h7kv9o+WmsmzYqrAwY63sNgOxE4xEdq0WyUnXfKeBrSvYw==
 
-postcss@^8.3.5:
+postcss@^8.3.6:
   version "8.3.6"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.3.6.tgz#2730dd76a97969f37f53b9a6096197be311cc4ea"
   integrity sha512-wG1cc/JhRgdqB6WHEuyLTedf3KIRuD0hG6ldkFEZNCjRxiC+3i6kkWUUbiJQayP28iwG35cEmAbe98585BYV0A==
@@ -1602,10 +1607,10 @@ value-equal@^1.0.1:
   resolved "https://registry.yarnpkg.com/value-equal/-/value-equal-1.0.1.tgz#1e0b794c734c5c0cade179c437d356d931a34d6c"
   integrity sha512-NOJ6JZCAWr0zlxZt+xqCHNTEKOsrks2HQd4MqhP1qy4z1SkbEP467eNx6TgDKXMvUOb+OENfJCZwM+16n7fRfw==
 
-vite-ssr@0.11.3:
-  version "0.11.3"
-  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.11.3.tgz#c1cdfc89c87397b8ff5a4d5f53d52f07396cd67a"
-  integrity sha512-ZEC3ZGexDEp1+4Zq2KCSVVDnhUSMPTEEUmeVR0VbU86nF+f2Mylw3F+K3u+2/F2GNnB7QLRQ9RjVifhiUIKyZw==
+vite-ssr@0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.12.0.tgz#af94207b7ca6b3549d331e52565201149f5d29d5"
+  integrity sha512-vmoyR9WR045BPJitXIU93GFT+NxfNDilf90nVeHq5NUnfbh10KgYZ4lZcwx1QcQ3gY5G6L4Da6zl3OccZqAfvg==
   dependencies:
     "@rollup/plugin-replace" "^3.0.0"
     "@vue/server-renderer" "^3.0.0"
@@ -1613,20 +1618,20 @@ vite-ssr@0.11.3:
     node-fetch "^2.6.1"
     react-ssr-prepass "^1.4.0"
 
-vite@2.4.3:
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-2.4.3.tgz#fe4aa78e9dd7d36bcb12eccbd52313b26cfadf77"
-  integrity sha512-iT6NPeiUUZ2FkzC3eazytOEMRaM4J+xgRQcNcpRcbmfYjakCFP4WKPJpeEz1U5JEKHAtwv3ZBQketQUFhFU3ng==
+vite@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-2.5.0.tgz#111ba3679432d426e44566acf480005a7914cbd6"
+  integrity sha512-Dn4B+g54PJsMG5WCc4QeFy1ygMXRdTtFrUPegqfk4+vzVQcbF/DqqmI/1bxezArzbujBJg/67QeT5wz8edfJVQ==
   dependencies:
-    esbuild "^0.12.8"
-    postcss "^8.3.5"
+    esbuild "^0.12.17"
+    postcss "^8.3.6"
     resolve "^1.20.0"
     rollup "^2.38.5"
   optionalDependencies:
     fsevents "~2.3.2"
 
 "vitedge@file:../../src":
-  version "0.15.0"
+  version "0.15.1"
   dependencies:
     "@cloudflare/kv-asset-handler" "^0.1.3"
     "@rollup/plugin-node-resolve" "^13.0.2"
@@ -1638,7 +1643,7 @@ vite@2.4.3:
     node-fetch "^2.6.1"
     regexparam "^1.3.0"
     route-sort "^1.0.0"
-    vite-ssr "0.11.3"
+    vite-ssr "0.12.0"
 
 web-streams-polyfill@^3.0.1:
   version "3.1.0"
