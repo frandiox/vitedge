@@ -1607,10 +1607,10 @@ value-equal@^1.0.1:
   resolved "https://registry.yarnpkg.com/value-equal/-/value-equal-1.0.1.tgz#1e0b794c734c5c0cade179c437d356d931a34d6c"
   integrity sha512-NOJ6JZCAWr0zlxZt+xqCHNTEKOsrks2HQd4MqhP1qy4z1SkbEP467eNx6TgDKXMvUOb+OENfJCZwM+16n7fRfw==
 
-vite-ssr@0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.12.0.tgz#af94207b7ca6b3549d331e52565201149f5d29d5"
-  integrity sha512-vmoyR9WR045BPJitXIU93GFT+NxfNDilf90nVeHq5NUnfbh10KgYZ4lZcwx1QcQ3gY5G6L4Da6zl3OccZqAfvg==
+vite-ssr@0.12.1:
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.12.1.tgz#835bf5cb1d357aa575cbef0eecb4ab5f2039b995"
+  integrity sha512-Fl5hy4j8YOZIlKJqLd5S3Sn6UYO5ObgB3HC1wExFcUaScgQniKGr6lLk8DlmF4BFNL0oYi1MaATKyvfHhZx88g==
   dependencies:
     "@rollup/plugin-replace" "^3.0.0"
     "@vue/server-renderer" "^3.0.0"
@@ -1643,7 +1643,7 @@ vite@^2.5.0:
     node-fetch "^2.6.1"
     regexparam "^1.3.0"
     route-sort "^1.0.0"
-    vite-ssr "0.12.0"
+    vite-ssr "0.12.1"
 
 web-streams-polyfill@^3.0.1:
   version "3.1.0"
