@@ -13,12 +13,14 @@ import { normalizePathname, handleFunctionRequest } from './request.js'
 
 const { fnsInDir } = meta
 
-async function prepareEnvironment(config) {
+async function prepareEnvironment(params) {
   try {
-    await polyfillWorkerAPIs(config)
+    await polyfillWorkerAPIs(params)
   } catch (_) {
     await polyfillWebAPIs()
   }
+
+  const { config } = params
 
   await loadEnv({
     dry: false,
@@ -163,9 +165,19 @@ async function watchAvailablePropsEndpoints({ fnsInputPath, watcher, ws }) {
   }
 }
 
-export async function configureServer({ middlewares, config, watcher, ws }) {
+export async function configureServer({
+  middlewares,
+  httpServer,
+  watcher,
+  config,
+  ws,
+}) {
   const fnsInputPath = `${config.root}/${fnsInDir}`
-  await prepareEnvironment(config)
+  await prepareEnvironment({
+    config,
+    httpServer,
+    fnsInputPath,
+  })
 
   const { dynamicFileRouteSet, staticApiRouteSet, dynamicApiRouteMap } =
     await getAllFunctionFiles({ fnsInputPath, watcher })
@@ -187,9 +199,7 @@ export async function configureServer({ middlewares, config, watcher, ws }) {
       })
     }
 
-    const normalizedPathname = url.pathname.includes('.')
-      ? url.pathname.slice(0, url.pathname.lastIndexOf('.'))
-      : url.pathname
+    const normalizedPathname = normalizePathname(url)
 
     if (
       url.pathname.startsWith('/api/') ||
@@ -242,7 +252,8 @@ export async function configureServer({ middlewares, config, watcher, ws }) {
   })
 }
 
-const WrapAppliedSymbol = Symbol('ssr')
+const WRAP_APPLIED_SYMBOL = Symbol('ssr')
+
 /**
  * Returns the initial state used for the first server-side rendered page.
  * It mimics entry-client logic, but runs in the server.
@@ -253,7 +264,7 @@ export async function getRenderContext({
 }) {
   url = new URL(url)
 
-  if (!globalThis.fetch[WrapAppliedSymbol]) {
+  if (!globalThis.fetch[WRAP_APPLIED_SYMBOL]) {
     const originalFetch = globalThis.fetch
     globalThis.fetch = function (resource, options) {
       if (typeof resource === 'string' && resource.startsWith('/')) {
@@ -263,7 +274,7 @@ export async function getRenderContext({
       return originalFetch(resource, options)
     }
 
-    globalThis.fetch[WrapAppliedSymbol] = true
+    globalThis.fetch[WRAP_APPLIED_SYMBOL] = true
   }
 
   const propsRoute = resolve(url)

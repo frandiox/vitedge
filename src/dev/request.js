@@ -35,29 +35,35 @@ export async function handleFunctionRequest(
           })
         )
 
-        const { statusCode, statusText, headers, body } =
+        const { statusCode, statusText, headers, body, ...other } =
           await parseHandlerResponse(handlerResponse, endpointMeta.options)
 
-        res.statusMessage = statusText
-        res.statusCode =
-          (statusCode >= 300) & (statusCode < 400) && mockRedirect
-            ? 299
-            : statusCode
+        if (res) {
+          res.statusMessage = statusText
+          res.statusCode =
+            (statusCode >= 300) & (statusCode < 400) && mockRedirect
+              ? 299
+              : statusCode
 
-        for (const [key, value] of Object.entries(headers)) {
-          res.setHeader(key, value)
+          for (const [key, value] of Object.entries(headers)) {
+            res.setHeader(key, value)
+          }
+
+          res.end(body)
         }
 
-        return res.end(body)
+        return { statusCode, statusText, headers, body, ...other }
       }
     }
   } catch (error) {
     console.error(error)
+    if (!res) return
     res.statusMessage = error.message
     res.statusCode = 500
     return res.end()
   }
 
+  if (!res) return
   res.statusCode = 404
   return res.end()
 }

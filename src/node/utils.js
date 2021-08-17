@@ -61,6 +61,7 @@ async function fetchToNodeResponse(fetchResponse) {
     status: fetchResponse.status,
     statusText: fetchResponse.statusText,
     headers: Object.fromEntries(fetchResponse.headers),
+    webSocket: fetchResponse.webSocket,
   }
 }
 
