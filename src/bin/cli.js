@@ -55,7 +55,9 @@ const [command] = args
     command === undefined ||
     command.startsWith('-')
   ) {
-    const options = parseOptions({ onlyStringArgs: ['mode'] })
+    const options = parseOptions({ onlyStringArgs: ['mode', 'middleware'] })
+
+    let binPath = './node_modules/.bin/vite'
 
     if (options.ssr) {
       if (typeof options.ssr !== 'string') {
@@ -63,10 +65,10 @@ const [command] = args
         args.splice(args.indexOf('--ssr'), 1)
       }
 
-      args.unshift('node_modules/.bin/vite-ssr')
-    } else {
-      args.unshift('node_modules/.bin/vite')
+      binPath = './node_modules/.bin/vite-ssr'
     }
+
+    args.unshift(options.middleware || binPath)
 
     const { getProjectInfo } = await import('vitedge/config.js')
     const { isTS } = await getProjectInfo()
