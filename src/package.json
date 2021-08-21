@@ -87,6 +87,6 @@
     "rollup": "^2.56.2",
     "rollup-plugin-esbuild": "^4.5.0",
     "route-sort": "^1.0.0",
-    "vite-ssr": "0.12.1"
+    "vite-ssr": "0.13.0"
   }
 }
