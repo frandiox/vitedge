@@ -1,11 +1,10 @@
 import path from 'path'
-import chalk from 'chalk'
-import { promises as fs } from 'fs'
 import { build } from 'esbuild'
 import esbuildAlias from 'esbuild-plugin-alias'
 import esbuildGlobals from 'esbuild-plugin-globals'
 import { meta } from '../config.js'
 import { requireJson } from '../utils/files.js'
+import { printBundleResult } from './utils.js'
 
 const getNegativeFlagValue = (option, flag) =>
   flag === true ? false : option === undefined ? true : option
@@ -70,16 +69,4 @@ export default async function buildWorker({
   })
 
   await printBundleResult(logger, outputPath, fileName)
-}
-
-async function printBundleResult(logger, outDir, fileName) {
-  const stat = await fs.stat(path.resolve(outDir, fileName))
-  const kbs = stat.size / 1000
-  const sizeColor = kbs > 1000 ? chalk.yellow : chalk.dim
-
-  logger.info(
-    `${chalk.gray(chalk.white.dim(outDir + '/'))}${chalk.cyan(
-      fileName
-    )}  ${sizeColor(`${kbs.toFixed(2)}kb`)}`
-  )
 }
