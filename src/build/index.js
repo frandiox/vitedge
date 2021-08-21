@@ -30,38 +30,37 @@ export default async function ({
   const { fnsOptions = {}, workerOptions = {} } =
     config.plugins.find((plugin) => plugin.name === 'vitedge') || {}
 
-  const { getPropsHandlerNames } = await buildFunctions({
+  const { getPropsHandlerNames, logFunctionsBuild } = await buildFunctions({
     mode,
     watch,
     root: rootDir,
-    fnsInputPath: path.resolve(rootDir, fnsInDir),
-    fnsOutputPath: path.resolve(rootDir, outDir),
+    logger: config.logger,
+    inDir: fnsInDir,
+    outDir,
     fileName: fnsOutFile,
-    options: fnsOptions.build,
+    options: fnsOptions,
   })
 
   const sep = '|'
-  const plugins = [
-    {
-      name: 'vitedge-props-replacer',
-      transform(code, id) {
-        // Use `transform` hook for replacing variables because `config`
-        // hook is not retriggered on watcher events.
-        if (id.endsWith('/vitedge/utils/props.js')) {
-          watch && this.addWatchFile(path.resolve(rootDir, outDir, fnsOutFile))
-          return code.replace(
-            'globalThis.__AVAILABLE_PROPS_ENDPOINTS__',
-            JSON.stringify(sep + getPropsHandlerNames().join(sep) + sep)
-          )
-        }
-      },
+  const propsReplacerPlugin = {
+    name: 'vitedge-props-replacer',
+    transform(code, id) {
+      // Use `transform` hook for replacing variables because `config`
+      // hook is not retriggered on watcher events.
+      if (id.endsWith('/vitedge/utils/props.js')) {
+        watch && this.addWatchFile(path.resolve(rootDir, outDir, fnsOutFile))
+        return code.replace(
+          'globalThis.__AVAILABLE_PROPS_ENDPOINTS__',
+          JSON.stringify(sep + getPropsHandlerNames().join(sep) + sep)
+        )
+      }
     },
-  ]
+  }
 
   await buildSSR({
     clientOptions: {
       mode,
-      plugins,
+      plugins: [propsReplacerPlugin],
       build: {
         watch,
         outDir: path.resolve(rootDir, outDir, clientOutDir),
@@ -70,7 +69,7 @@ export default async function ({
     serverOptions: {
       mode,
       ssr: { target: 'webworker' },
-      plugins,
+      plugins: [{ ...propsReplacerPlugin, writeBundle: logFunctionsBuild }],
       build: {
         ssr,
         outDir: path.resolve(rootDir, outDir, ssrOutDir),
