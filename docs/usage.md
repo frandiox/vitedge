@@ -17,6 +17,47 @@ You can pass any Vite's CLI option to this command. E.g. `vitedge dev --open --p
 The local SSR server is a Node.js environment to speed up development. This might have some inconsistencies at times with Worker environments, especially if you have third-party dependencies that rely on Node APIs instead of Web Standards. For testing your app in a Worker environment, have a look at [preview mode](#preview).
 :::
 
+### Custom dev servers
+
+If you are deploying to Node.js environments, it might be interesting running the development environment using your own Node server. Just like Vite itself, Vitedge can be run in middleware mode as follows:
+
+```js
+// my-server.js
+import express from 'express'
+import { createSsrServer } from 'vitedge/dev'
+
+async function createServer() {
+  const app = express()
+
+  // Create Vitedge server in middleware mode
+  const viteServer = await createSsrServer({
+    server: { middlewareMode: 'ssr' },
+  })
+
+  // Use Vite's connect instance as middleware
+  app.use(viteServer.middlewares)
+
+  app.listen(3000)
+}
+
+createServer()
+```
+
+Since Vitedge requires experimental Node flags and other features when running (e.g. TypeScript, ESM and JSON imports), you can run your server using one of the following commands:
+
+```bash
+# Simple version, Vitedge applies flags
+vitedge dev --ssr --middleware ./my-server.js
+
+# Raw version for TS, manual flags
+node --loader vitedge/dev/ts-loader.js --experimental-json-modules --experimental-specifier-resolution=node ./my-server.js
+
+# Raw version for JS, manual flags
+node --loader vitedge/dev/js-loader.js --experimental-json-modules --experimental-specifier-resolution=node ./my-server.js
+```
+
+If you are using CommonJS and have problems importing from `vitedge/dev`, try requiring from `vitedge/dev/index.cjs` instead.
+
 ## Production
 
 Once the app is ready, run `vitedge build` to create 3 different builds:
