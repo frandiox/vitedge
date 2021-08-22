@@ -5,6 +5,11 @@ workers_dev = true
 route = ""
 zone_id = ""
 
+kv_namespaces = [
+  { binding = "TEST_NAMESPACE1", id = "<ignored>", preview_id = "<ignored>" },
+  { binding = "TEST_NAMESPACE2", id = "<ignored>", preview_id = "<ignored>" }
+]
+
 [site]
 bucket = "dist/client"
 entry-point = "."
