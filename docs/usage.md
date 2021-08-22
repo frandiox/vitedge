@@ -92,7 +92,9 @@ Currently, there are two ways to generate a bundled worker script and deploy usi
 
 #### Webpack
 
-Using Wrangler's Webpack build, add the following to your `wrangler.toml`:
+Make sure your `package.json`'s `main` field points to the worker **entry file** (i.e. where you use `addEventListener`, not the script output). This file can be located anywhere, but it is common to place it in `<root>/worker-site/index.js` and have a separate `<root>/worker-site/package.json` as well. Full example [here](https://github.com/frandiox/vitedge/tree/master/examples/worker-site).
+
+Using Wrangler's Webpack build, add the following to your `<root>/worker-site/wrangler.toml`:
 
 ```toml
 name = "<your app>"
@@ -107,8 +109,6 @@ webpack_config = "webpack.config.js"
 bucket = "dist/client"
 entry-point = "."
 ```
-
-Make sure your `package.json`'s `main` field points to the worker entry file.
 
 Import Vitedge's webpack configuration in your worker's webpack config file:
 
@@ -130,7 +130,7 @@ ESBuild bundler is experimental, make sure you test your app before switching fr
 Vitedge can generate a worker script ready to be deployed using ESBuild. Follow these steps:
 
 1. Move your worker entry file to `<root>/functions/index.js` (or `*.ts`).
-2. Add `"main" : "dist/worker/script.js"` to your `package.json`.
+2. Add `"main" : "dist/worker/script.js"` to your `<root>/package.json`.
 3. Place your `wrangler.toml` file at the root (next to `package.json`) with the following content:
 
 ```toml
