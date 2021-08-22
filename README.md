@@ -48,7 +48,6 @@ To talk about Vitedge, join [ViteLand Discord](https://discord.gg/taRZdpzHhR) an
 - [x] Support GraphQL, sitemap and other dynamic endpoints.
 - [x] React compatibility.
 - [x] Provide React starter template.
-- [ ] Svelte compatibility.
 - [x] Support Vite 2.
 - [x] HMR for API side.
 - [x] Page props HMR in browser on file save.
@@ -59,7 +58,7 @@ To talk about Vitedge, join [ViteLand Discord](https://discord.gg/taRZdpzHhR) an
 - [x] CORS defaults.
 - [x] Throw errors from API/Props endpoints.
 - [x] Redirects with 3xx HTTP codes.
-- [ ] Mockup KV in development.
+- [x] Mockup KV and cache in development.
 - [ ] Mockup DO in development.
 - [ ] Rewrite in TypeScript.
 - [ ] Guide to bring your own view framework.

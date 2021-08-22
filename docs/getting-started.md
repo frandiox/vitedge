@@ -113,8 +113,10 @@ TypeScript is fully supported but needs some extra setup:
 - Rename all your files (including `vite.config`) to have `*.ts` extension.
 - Install `typescript` and `ts-node>=9.1` as `devDependencies`.
 
-### Web Polyfills (optional)
+### Web and Worker Polyfills (optional)
 
 Vitedge automatically polyfills some Web-only functionaly during development in Node.js, such as `fetch`, `btoa`, etc. If you need WebCrypto for anything related to JWT verification or Crypto in general, simply install [`node-webcrypto-ossl`](https://www.npmjs.com/package/node-webcrypto-ossl) as `devDependencies` and Vitedge will use it automatically during development.
+
+For CFWorker-only APIs such as Key-Value store (Workers KV), edge cache or WebSocketPair, you will need to add `miniflare@^1.3.3` as a dev-dependency. Vitedge will use it to polyfill these APIs during development.
 
 For other polyfills, please open feature requests in the repo.
