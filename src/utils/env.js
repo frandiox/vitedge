@@ -43,6 +43,6 @@ export async function defineEnvVariables({ mode, root }) {
       }),
       {}
     ),
-    'process.env': JSON.stringify(env),
+    'process.env': '(' + JSON.stringify(env) + ')',
   }
 }
