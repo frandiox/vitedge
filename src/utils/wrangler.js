@@ -1,9 +1,11 @@
 import path from 'path'
 import { lookupFile } from './files.js'
 
+const WRANGLER_TOML = 'wrangler.toml'
+
 export function findWranglerFilePath(rootDir, userProvidedPath) {
   let wranglerDir = rootDir
-  let wranglerFile = 'wrangler.toml'
+  let wranglerFile = WRANGLER_TOML
 
   if (userProvidedPath) {
     wranglerDir = path.dirname(userProvidedPath)
@@ -21,7 +23,7 @@ export function findWranglerFilePath(rootDir, userProvidedPath) {
 export async function getWranglerConfig(viteConfig) {
   const wranglerToml = lookupFile({
     dir: viteConfig.root,
-    formats: ['wrangler.toml'],
+    formats: [WRANGLER_TOML],
   })
 
   if (wranglerToml) {
@@ -30,11 +32,16 @@ export async function getWranglerConfig(viteConfig) {
         'miniflare/dist/options/wrangler.js'
       )
 
-      return await getWranglerOptions(
+      const wranglerConfig = await getWranglerOptions(
         wranglerToml,
         viteConfig.root,
         viteConfig.mode
       )
+
+      return {
+        ...wranglerConfig,
+        type: (wranglerToml.match(/^\s*type\s*=\s*"(\w+)"\s*$/im) || [])[1],
+      }
     } catch (error) {}
   }
 

@@ -4,7 +4,7 @@ import buildFunctions from './functions.js'
 import buildWorker from './worker.js'
 import { meta, getProjectInfo } from '../config.js'
 import { lookupFile } from '../utils/files.js'
-import { findWranglerFilePath } from '../utils/wrangler.js'
+import { getWranglerConfig } from '../utils/wrangler.js'
 
 const {
   outDir,
@@ -26,15 +26,15 @@ export default async function ({
   worker,
   ...workerFlags
 } = {}) {
-  const { config, rootDir } = await getProjectInfo(mode)
+  const { config: viteConfig, rootDir } = await getProjectInfo(mode)
   const { fnsOptions = {}, workerOptions = {} } =
-    config.plugins.find((plugin) => plugin.name === 'vitedge') || {}
+    viteConfig.plugins.find((plugin) => plugin.name === 'vitedge') || {}
 
   const { getPropsHandlerNames, logFunctionsBuild } = await buildFunctions({
     mode,
     watch,
     root: rootDir,
-    logger: config.logger,
+    logger: viteConfig.logger,
     inDir: fnsInDir,
     outDir,
     fileName: fnsOutFile,
@@ -101,14 +101,20 @@ export default async function ({
   }
 
   if (entry) {
-    const isWorker = !!(worker || findWranglerFilePath(rootDir))
+    const wranglerConfig = await getWranglerConfig(viteConfig)
+    const isWorker = !!(worker || wranglerConfig)
+
+    if (isWorker && wranglerConfig.type !== 'javascript') {
+      // Do not build script when using Webpack
+      return
+    }
 
     await buildWorker({
       ...workerFlags,
       watch,
       esbuildOptions: workerOptions.build,
       inputPath: entry,
-      viteConfig: config,
+      viteConfig,
       platform: isWorker ? 'worker' : 'node',
       fileName: isWorker ? workerOutFile : nodeOutFile,
       outputPath: isWorker ? path.join(outDir, workerOutDir) : outDir,
