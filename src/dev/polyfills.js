@@ -1,4 +1,4 @@
-import { lookupFile } from '../utils/files.js'
+import { getWranglerConfig } from '../utils/wrangler.js'
 import { handleFunctionRequest, normalizePathname } from './request.js'
 import { getUrlFromNodeRequest } from '../node/utils.js'
 
@@ -38,30 +38,14 @@ export async function polyfillWorkerAPIs({ config: viteConfig, ...options }) {
     ws.buildSandbox()
   )
 
-  const wranglerToml = lookupFile({
-    dir: viteConfig.root,
-    formats: ['wrangler.toml'],
-  })
+  const wranglerConfig = await getWranglerConfig(viteConfig)
+  if (wranglerConfig && (wranglerConfig.kvNamespaces || []).length > 0) {
+    const kv = new KVModule()
 
-  if (wranglerToml) {
-    const { getWranglerOptions } = await import(
-      'miniflare/dist/options/wrangler.js'
+    Object.assign(
+      globalThis,
+      kv.buildEnvironment({ kvNamespaces: wranglerConfig.kvNamespaces })
     )
-
-    const wranglerConfig = await getWranglerOptions(
-      wranglerToml,
-      viteConfig.root,
-      viteConfig.mode
-    )
-
-    if (wranglerConfig && (wranglerConfig.kvNamespaces || []).length > 0) {
-      const kv = new KVModule()
-
-      Object.assign(
-        globalThis,
-        kv.buildEnvironment({ kvNamespaces: wranglerConfig.kvNamespaces })
-      )
-    }
   }
 
   if (options.httpServer) {

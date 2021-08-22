@@ -17,3 +17,26 @@ export function findWranglerFilePath(rootDir, userProvidedPath) {
     bubble: false,
   })
 }
+
+export async function getWranglerConfig(viteConfig) {
+  const wranglerToml = lookupFile({
+    dir: viteConfig.root,
+    formats: ['wrangler.toml'],
+  })
+
+  if (wranglerToml) {
+    try {
+      const { getWranglerOptions } = await import(
+        'miniflare/dist/options/wrangler.js'
+      )
+
+      return await getWranglerOptions(
+        wranglerToml,
+        viteConfig.root,
+        viteConfig.mode
+      )
+    } catch (error) {}
+  }
+
+  return null
+}
