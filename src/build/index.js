@@ -37,7 +37,7 @@ export default async function ({
     fnsInputPath: path.resolve(rootDir, fnsInDir),
     fnsOutputPath: path.resolve(rootDir, outDir),
     fileName: fnsOutFile,
-    options: fnsOptions.build,
+    options: fnsOptions,
   })
 
   const sep = '|'
