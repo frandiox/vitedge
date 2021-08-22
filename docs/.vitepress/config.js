@@ -74,7 +74,7 @@ module.exports = {
         text: 'Extras',
         children: [
           {
-            text: 'Common Integrations',
+            text: 'Integrations & How-tos',
             link: '/integrations',
           },
           {

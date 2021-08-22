@@ -1,4 +1,4 @@
-# Integrations
+# Integrations & How-tos
 
 Here's a list of common modules or libraries integrated with Vitedge.
 
@@ -33,6 +33,27 @@ export default vitedge(App, { routes }, ({ app, initialState }) => {
 ```
 
 ## React
+
+### CSS in JS (Style Collectors)
+
+There are many CSS-in-JS solutions for React and each of them implements a custom way to extract CSS during SSR. Vitedge provides a Style Collector API to let you hook into the rendering process and extract the CSS. Common implementations are provided out of the box and just need to be imported as follows:
+
+```js
+import App from './App.jsx'
+import routes from './routes'
+import vitedge from 'vitedge'
+import styleCollector from 'vitedge/react/style-collectors/styled-components.js'
+
+export default vitedge(App, { routes, styleCollector }, (ctx) => {})
+```
+
+Currently, the following style collectors are provided from `vitedge/react/style-collectors`:
+
+- `styled-components` - [Link](https://styled-components.com/).
+- `material-ui-core-v4` - [Link](https://material-ui.com/).
+- `emotion` - [Link](https://emotion.sh/). Related [issue](https://github.com/emotion-js/emotion/issues/2446).
+
+You can create your own (or modify an existing one) following the [examples shown here](https://github.com/frandiox/vite-ssr/blob/master/src/react/style-collectors). Please, consider submitting Pull Requests to add new style collectors for other libraries.
 
 ### Apollo GraphQL
 
