@@ -64,6 +64,11 @@ module.exports = {
             text: 'CORS',
             link: '/cors',
           },
+
+          {
+            text: 'Plugin Options',
+            link: '/plugin',
+          },
         ],
       },
       {
@@ -87,12 +92,12 @@ module.exports = {
         text: 'Extras',
         children: [
           {
-            text: 'Troubleshooting',
-            link: '/troubleshooting',
-          },
-          {
             text: 'Useful Plugins',
             link: '/useful-plugins',
+          },
+          {
+            text: 'Troubleshooting',
+            link: '/troubleshooting',
           },
         ],
       },
