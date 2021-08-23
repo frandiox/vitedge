@@ -2,8 +2,9 @@
 
 ## Requirements
 
-- Vitedge relies on native ES Modules. Therefore, during development, it is recommended using Node version `>=14`, but `12.x` should also work in production.
-- Currently, Vitedge supports Vue and React. For other frameworks, please open feature requests.
+- Vitedge relies on **native ES Modules**. Therefore, during development, it is recommended using Node version `>=14`. However, `12.x` should also work in production.
+- Currently, Vitedge supports **Vue** and **React** out of the box. For other frameworks, please open feature requests.
+- A Vitedge app can be deployed to **any Node.js environment** (monolith or serverless) or to **Cloudflare Workers**. For the latter, you must open an account at [Cloudflare](https://www.cloudflare.com/).
 
 ## Installation
 

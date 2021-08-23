@@ -100,7 +100,8 @@ Any error thrown in the handler will translate to a JSON payload containing the 
     status: 500,
     message: 'yikes',
     details: { /* ... */ },
-    stack: 'Available only during development' }
+    stack: 'Available only during development'
+  }
 }
 ```
 

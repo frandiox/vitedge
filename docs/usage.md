@@ -1,6 +1,6 @@
 # Usage
 
-Once Vitedge is installed, you can use its CLI for develoing and building. See a full example project [here](https://github.com/frandiox/vitedge/tree/master/examples/vue).
+Once Vitedge is installed, you can use its CLI for developing and building.
 
 ## Development
 
@@ -19,7 +19,7 @@ The local SSR server is a Node.js environment to speed up development. This migh
 
 ### Custom dev servers
 
-If you are deploying to Node.js environments, it might be interesting running the development environment using your own Node server. Just like Vite itself, Vitedge can be run in middleware mode as follows:
+If you are deploying to Node.js environments, it might be interesting running the development environment using your own Node server. Just like Vite itself, Vitedge can run in middleware mode as follows:
 
 ```js
 // my-server.js

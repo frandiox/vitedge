@@ -64,9 +64,22 @@ module.exports = {
             text: 'CORS',
             link: '/cors',
           },
+        ],
+      },
+      {
+        text: 'Recipes',
+        children: [
           {
-            text: 'Troubleshooting',
-            link: '/troubleshooting',
+            text: 'Cloudflare Workers',
+            link: '/recipes/cloudflare-workers',
+          },
+          {
+            text: 'Vue',
+            link: '/recipes/vue',
+          },
+          {
+            text: 'React',
+            link: '/recipes/react',
           },
         ],
       },
@@ -74,8 +87,8 @@ module.exports = {
         text: 'Extras',
         children: [
           {
-            text: 'Integrations & How-tos',
-            link: '/integrations',
+            text: 'Troubleshooting',
+            link: '/troubleshooting',
           },
           {
             text: 'Useful Plugins',
