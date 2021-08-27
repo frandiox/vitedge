@@ -1,6 +1,6 @@
 import path from 'path'
-import fg from 'fast-glob'
 import { loadEnv } from '../utils/env.js'
+import { resolveFunctionsFiles } from '../utils/files.js'
 import { meta } from '../config.js'
 import {
   findRouteValue,
@@ -33,6 +33,8 @@ async function watchFnsFiles(
   globs = [],
   { fnsInputPath, watcher, onChange = () => null }
 ) {
+  globs = globs.map((glob) => `${fnsInputPath}/${glob}`)
+
   const getFileFromPath = (filepath) => {
     const file = filepath.includes('/')
       ? filepath.split(`/${fnsInDir}/`)[1]
@@ -44,17 +46,7 @@ async function watchFnsFiles(
   }
 
   const fnsDirFiles = new Set(
-    (
-      await fg(
-        globs.map((glob) => `${fnsInputPath}/${glob}.{js,ts}`),
-        {
-          ignore: ['node_modules', '.git', '**/index.*'],
-          onlyFiles: true,
-        }
-      )
-    )
-      .map(getFileFromPath)
-      .filter(Boolean)
+    (await resolveFunctionsFiles(globs)).map(getFileFromPath).filter(Boolean)
   )
 
   watcher.on('add', (path) => {

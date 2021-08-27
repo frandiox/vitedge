@@ -2,17 +2,8 @@ import fg from 'fast-glob'
 import { build } from 'vite'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import { defineEnvVariables } from '../utils/env.js'
+import { resolveFunctionsFiles } from '../utils/files.js'
 import { pathsToRoutes, routeToRegexp } from '../utils/api-routes.js'
-
-function resolveFiles(globs, extensions) {
-  return fg(
-    globs.map((glob) => `${glob}.{${extensions.join(',')}}`),
-    {
-      ignore: ['node_modules', '.git', '**/index.*'],
-      onlyFiles: true,
-    }
-  )
-}
 
 export default function buildFunctions({
   mode,
@@ -41,7 +32,7 @@ export default function buildFunctions({
     ]
 
     const generateVirtualEntryCode = async () => {
-      fnsPaths = await resolveFiles(pathsToResolve, ['js', 'ts'])
+      fnsPaths = await resolveFunctionsFiles(pathsToResolve)
 
       const { staticRoutes, dynamicRoutes } = pathsToRoutes(fnsPaths, {
         fnsInputPath,
