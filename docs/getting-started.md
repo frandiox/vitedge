@@ -107,6 +107,26 @@ Create a `<root>/functions/` directory and populate `<root>/functions/api/` with
 
 You can also add [environment files](./environment) in this directory.
 
+### 6. Replace NPM scripts to use Vitedge CLI
+
+Vitedge CLI is a simple wrapper around Vite that conveniently adds some experimental Node flags (e.g. JSON imports) to your command and detects TS projects automatically.
+
+Therefore, you must replace your scripts in `package.json` to run `vitedge` instead.
+
+```json
+{
+  "scripts": {
+    "dev": "vitedge --ssr",
+    "dev:spa": "vitedge",
+    "preview": "vitedge preview",
+    "preview:watch": "vitedge preview --build-watch",
+    "build": "rm -rf dist && vitedge build"
+  }
+}
+```
+
+See [Usage](./usage) for more information.
+
 ### TypeScript (optional)
 
 TypeScript is fully supported but needs some extra setup:
