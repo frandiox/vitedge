@@ -34,7 +34,8 @@ export function pathsToRoutes(paths, { fnsInputPath }) {
   for (let i = 0; i < paths.length; i++) {
     let route = paths[i].replace(fnsInputPath, '').replace(/\.[tj]sx?$/i, '')
 
-    if (/\[/.test(route)) {
+    // Props are always static
+    if (!route.startsWith('/props/') && /\[/.test(route)) {
       const original = route
       let wild
 
