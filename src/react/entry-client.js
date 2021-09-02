@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import viteSSR from 'vite-ssr/react/entry-client'
-import { buildPropsRoute } from '../utils/props'
+import { buildPropsRoute, fetchPageProps } from '../utils/props'
 import { onFunctionReload, setupPropsEndpointsWatcher } from '../dev/hmr'
-import { safeHandler } from '../errors'
 
 export { ClientOnly, useContext } from 'vite-ssr/react/entry-client'
 
@@ -11,7 +10,7 @@ export default function (App, { routes, ...options }, hook) {
   return viteSSR(App, { routes, PropsProvider, ...options }, async (ctx) => {
     if (import.meta.hot) {
       setupPropsEndpointsWatcher()
-      onFunctionReload(ctx.router.getCurrentRoute, fetchPageProps)
+      onFunctionReload(ctx.router.getCurrentRoute, fetchPagePropsAsync)
     }
 
     if (hook) {
@@ -20,22 +19,13 @@ export default function (App, { routes, ...options }, hook) {
   })
 }
 
-function fetchPageProps(route, setState = (route.meta || {}).setState) {
+function fetchPagePropsAsync(route, setState = (route.meta || {}).setState) {
   const propsRoute = buildPropsRoute(route)
 
   if (propsRoute) {
-    safeHandler(() =>
-      fetch(propsRoute.fullPath, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      }).then((res) =>
-        res.status === 299
-          ? { data: { __redirect: true, to: res.headers.get('Location') } }
-          : res.json().then((data) => ({ data }))
-      )
-    ).then(({ data }) => {
-      route.meta.state = data
-      setState(data)
+    fetchPageProps(propsRoute.fullPath).then(({ redirect, data }) => {
+      route.meta.state = redirect ? { __redirect: redirect } : data
+      setState(route.meta.state)
     })
   }
 
@@ -59,7 +49,7 @@ function PropsProvider({
 
   if (state && state.__redirect) {
     to.meta.state = null
-    return React.createElement(Redirect, state)
+    return React.createElement(Redirect, { to: state.__redirect })
   }
 
   if (import.meta.env.DEV) {
@@ -78,7 +68,7 @@ function PropsProvider({
     } else {
       to.meta.state = {}
 
-      const isFetching = fetchPageProps(to, setState)
+      const isFetching = fetchPagePropsAsync(to, setState)
 
       if (isFetching) {
         if (state) {

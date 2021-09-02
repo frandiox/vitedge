@@ -1,9 +1,8 @@
 import { ref } from 'vue'
 import viteSSR, { ClientOnly } from 'vite-ssr/vue/entry-client'
-import { buildPropsRoute } from '../utils/props'
+import { buildPropsRoute, fetchPageProps } from '../utils/props'
 import { createHead } from '@vueuse/head'
 import { onFunctionReload, setupPropsEndpointsWatcher } from '../dev/hmr'
-import { safeHandler } from '../errors'
 
 export { ClientOnly }
 export { useContext } from 'vite-ssr/vue/entry-client'
@@ -94,21 +93,4 @@ export default function (App, { routes, ...options }, hook) {
       }
     }
   )
-}
-
-async function fetchPageProps(propsRoutePath) {
-  return safeHandler(async () => {
-    const res = await fetch(propsRoutePath, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    })
-
-    if (res.status === 299) {
-      // 299 is a mock code to bypass fetch opaque responses
-      // on 3xx codes for redirection.
-      return { redirect: res.headers.get('Location') }
-    }
-
-    return { data: await res.json() }
-  })
 }
