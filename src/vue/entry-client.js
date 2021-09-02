@@ -31,12 +31,19 @@ export default function (App, { routes, ...options }, hook) {
         onFunctionReload(
           () => router.currentRoute.value,
           async (route) => {
-            const redirect = await fetchPageProps(route)
-            if (redirect) {
-              router.replace(redirect)
-            } else {
-              // Trigger reactivity:
-              route.meta.hmr.value = !route.meta.hmr.value
+            const propsRoute = buildPropsRoute(route)
+            if (propsRoute) {
+              const { data, redirect } = await fetchPageProps(
+                propsRoute.fullPath
+              )
+
+              if (redirect) {
+                router.replace(redirect)
+              } else {
+                route.meta.state = data
+                // Trigger reactivity:
+                route.meta.hmr.value = !route.meta.hmr.value
+              }
             }
           }
         )
