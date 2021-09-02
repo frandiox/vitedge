@@ -467,10 +467,10 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
-vite-ssr@0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.13.0.tgz#4fe3697b609f93b955d601f8ebba2c7d19e68600"
-  integrity sha512-VWmD7wdXmHj1xwFiJq4jHXU4qQwOSV2EtE502Odo4EEXzohpsWhUs1H7praI/zUXdJ7Simtg0MKAUgKsN1yEYw==
+vite-ssr@0.13.1:
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.13.1.tgz#01367f888e6058d6db413a02412705d1a2183e7f"
+  integrity sha512-JGxkBlLCJFP8+Df6vJVUgP4oCchUqhXPVcbgGJeT54t8ANKiVuIhuezMqjxM7FSnaQRnhUTD5nIHi7xbUWYjOQ==
   dependencies:
     "@rollup/plugin-replace" "^3.0.0"
     "@vue/server-renderer" "^3.0.0"
