@@ -227,7 +227,7 @@ export async function configureServer({
         fnsInputPath,
         functionPath,
         extra: {
-          query: url.searchParams,
+          query: Object.fromEntries(url.searchParams),
           params,
           url,
         },
