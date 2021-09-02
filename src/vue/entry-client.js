@@ -43,7 +43,7 @@ export default function (App, { routes, ...options }, hook) {
       }
 
       let isFirstRoute = true
-      router.beforeEach(async (to, from) => {
+      router.beforeEach((to, from) => {
         if (isFirstRoute) {
           isFirstRoute = false
           if (!!to.meta.state) {
@@ -59,7 +59,27 @@ export default function (App, { routes, ...options }, hook) {
           return
         }
 
-        return await fetchPageProps(to)
+        const propsRoute = buildPropsRoute(to)
+        if (propsRoute) {
+          // Asynchronous promise to enable downloading
+          // page component and props in parallel.
+          to.meta.statePromise = fetchPageProps(propsRoute.fullPath)
+        }
+      })
+
+      router.beforeResolve(async (to) => {
+        const { statePromise } = to.meta || {}
+        if (statePromise) {
+          to.meta.statePromise = null
+
+          const { data, redirect } = await statePromise
+
+          if (redirect) {
+            return redirect
+          }
+
+          to.meta.state = data
+        }
       })
 
       if (hook) {
@@ -69,29 +89,19 @@ export default function (App, { routes, ...options }, hook) {
   )
 }
 
-async function fetchPageProps(route) {
-  const propsRoute = buildPropsRoute(route)
-
-  if (propsRoute) {
-    const { data, redirect } = await safeHandler(async () => {
-      const res = await fetch(propsRoute.fullPath, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      })
-
-      if (res.status === 299) {
-        // 299 is a mock code to bypass fetch opaque responses
-        // on 3xx codes for redirection.
-        return { redirect: res.headers.get('Location') }
-      }
-
-      return { data: await res.json() }
+async function fetchPageProps(propsRoutePath) {
+  return safeHandler(async () => {
+    const res = await fetch(propsRoutePath, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
     })
 
-    if (redirect) {
-      return redirect
+    if (res.status === 299) {
+      // 299 is a mock code to bypass fetch opaque responses
+      // on 3xx codes for redirection.
+      return { redirect: res.headers.get('Location') }
     }
 
-    route.meta.state = data
-  }
+    return { data: await res.json() }
+  })
 }
