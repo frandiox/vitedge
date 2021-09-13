@@ -12,7 +12,7 @@ const {
   ssrOutDir,
   fnsInDir,
   fnsOutFile,
-  commitHash,
+  getCommitHash,
   workerOutDir,
   workerOutFile,
   nodeOutFile,
@@ -84,7 +84,7 @@ export default async function ({
       packageJson: {
         type: 'module',
         vitedge: {
-          commitHash,
+          commitHash: getCommitHash(),
         },
       },
     },

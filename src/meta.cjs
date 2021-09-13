@@ -1,11 +1,3 @@
-let commitHash
-try {
-  commitHash = require('child_process')
-    .execSync('git rev-parse HEAD')
-    .toString()
-    .trim()
-} catch (_) {}
-
 const meta = {
   outDir: 'dist',
   clientOutDir: 'client',
@@ -19,7 +11,16 @@ const meta = {
 
 module.exports = {
   ...meta,
-  commitHash,
+  getCommitHash: () => {
+    try {
+      return require('child_process')
+        .execSync('git rev-parse HEAD', { stdio: ['ignore', 'pipe', 'ignore'] })
+        .toString()
+        .trim()
+    } catch (_) {
+      return (Math.random() + 1).toString(36).substring(2)
+    }
+  },
   resolveAliases: (rootDir) => {
     const path = require('path')
 
