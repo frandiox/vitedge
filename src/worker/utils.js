@@ -47,3 +47,53 @@ export function addCorsHeaders(maybeResponse, options) {
     ? maybeResponse.then(handleCors.bind(null, options))
     : handleCors(options, maybeResponse)
 }
+
+function hasAttribute(string, attr) {
+  return new RegExp(`\\s${attr}[\\s>]`).test(string)
+}
+
+function extractAttribute(string, attr) {
+  const [_, content] = string.match(new RegExp(`${attr}="(.*?)"`)) || []
+  return content
+}
+
+export function buildLinkHeader(html, { destinations = [] } = {}) {
+  const filesToPush = []
+
+  // Only care about head part
+  const [head = ''] = html.split('</head>')
+
+  const matches =
+    // Regexp should be OK for parsing this HTML subset
+    head.match(/<(script[\s\w="]+src.+?)>|<(link[\s\w="]+href.+?)>/gm) || []
+
+  for (const match of matches) {
+    if (match) {
+      let resource, destination
+
+      if (destinations.includes('script') && match.startsWith('<script')) {
+        if (!hasAttribute(match, 'async') && !hasAttribute(match, 'defer')) {
+          destination = 'script'
+          resource = extractAttribute(match, 'src')
+        }
+      } else if (match.startsWith('<link')) {
+        const rel = extractAttribute(match, 'rel')
+        if (destinations.includes('style') && rel === 'stylesheet') {
+          destination = 'style'
+          resource = extractAttribute(match, 'href')
+        }
+      }
+
+      if (resource && destination) {
+        filesToPush.push(
+          `<${resource.replace(
+            /^https?:/i,
+            ''
+          )}>; rel=preload; as=${destination}`
+        )
+      }
+    }
+  }
+
+  return filesToPush.join(',')
+}
