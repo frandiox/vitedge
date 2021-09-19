@@ -70,7 +70,7 @@ export default vitedge(App, {
 })
 ```
 
-The `defaultTransformer` is what Vitedge would normally apply if `transformState` hook isn't provided. This is useful to apply custom modifications to the state and then let Vitedge continue its normal flow. See [Apollo GraphQL integration](./recipes/react#apollo-graphql) for an example.
+The `defaultTransformer` is what Vitedge would normally apply if `transformState` hook isn't provided. This is useful to apply custom modifications to the state and then let Vitedge continue its normal flow.
 
 ## Data fetching
 
