@@ -37,48 +37,33 @@ import App from './App'
 import routes from './routes'
 import { InMemoryCache } from '@apollo/client'
 
-export default vitedge(
-  App,
-  {
-    routes,
-    transformState(state, defaultTransformer) {
-      if (import.meta.env.SSR) {
-        // Make Apollo Cache serializable in SSR
-        state.apolloCache = state.apolloCache.extract()
-      }
+export default vitedge(App, { routes }, (context) => {
+  // Create a new Apollo cache (once per request)
+  // and make it available in the App function context
+  const cache = new InMemoryCache()
+  context.apolloCache = cache
 
-      // Continue default serialization/deserializaion
-      return defaultTransformer(state)
-    },
-  },
-  ({ initialState }) => {
-    // Main initialization hook
-    if (import.meta.env.SSR) {
-      // Create a new Apollo Cache instance in SSR.
-      initialState.apolloCache = new InMemoryCache()
-    } else {
-      // Hydrate the serialized Apollo Cache in browser.
-      initialState.apolloCache = new InMemoryCache().restore(
-        initialState.apolloCache
-      )
-    }
+  // Sync initialState and Apollo cache:
+  if (import.meta.env.SSR) {
+    // Placeholder for Apollo cache state during SSR:
+    context.initialState.apolloState = { toJSON: () => cache.extract() }
+  } else {
+    // Hydrate the Apollo cache in browser using existing state:
+    cache.restore(context.initialState.apolloState)
   }
-)
+})
 ```
 
 ```js
 // App.jsx
 import { ApolloClient, ApolloProvider, createHttpLink } from '@apollo/client'
 
-// -- Later, use this cache instance to initialize Apollo Client where needed.
-export default function App({ isClient, url, initialState }) {
+// -- Later, use the created cache instance to initialize Apollo Client.
+export default function App({ isClient, apolloCache }) {
   const client = new ApolloClient({
-    link: createHttpLink({
-      uri: `${isClient ? '' : url.origin}/graphql`,
-      credentials: 'same-origin',
-    }),
+    link: createHttpLink({ uri: '/graphql', credentials: 'same-origin' }),
     ssrMode: !isClient,
-    cache: initialState.apolloCache,
+    cache: apolloCache,
     credentials: 'same-origin',
   })
 
