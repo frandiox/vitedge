@@ -41,7 +41,7 @@ export async function handleFunctionRequest(
         if (res) {
           res.statusMessage = statusText
           res.statusCode =
-            (statusCode >= 300) & (statusCode < 400) && mockRedirect
+            statusCode >= 300 && statusCode < 400 && mockRedirect
               ? 299
               : statusCode
 
