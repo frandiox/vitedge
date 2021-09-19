@@ -245,6 +245,13 @@ export async function configureServer({
 }
 
 const WRAP_APPLIED_SYMBOL = Symbol('ssr')
+const DEFAULT_FETCH_HEADERS = new Set([
+  'connection',
+  'content-length',
+  'content-type',
+  'keep-alive',
+  'date',
+])
 
 /**
  * Returns the initial state used for the first server-side rendered page.
@@ -288,13 +295,28 @@ export async function getRenderContext({
         headers: { ...(request || {}).headers, accept: 'application/json' },
       })
 
-      if (res.status >= 300 && res.status < 400) {
-        // Returning a response like this will skip rendering
-        return { status: res.status, headers: Object.fromEntries(res.headers) }
+      // Cleanup headers added by Fetch
+      const headers = Object.fromEntries(res.headers)
+      for (const header of DEFAULT_FETCH_HEADERS) {
+        delete headers[header]
       }
 
-      const data = await res.json()
-      return { initialState: data, propsStatusCode: res.status }
+      const context = {
+        headers,
+        status: res.status,
+        statusText: res.statusText,
+      }
+
+      if (res.status >= 300 && res.status < 400) {
+        // Returning a response like this will skip rendering
+        return context
+      }
+
+      return {
+        ...context,
+        propsStatusCode: res.status,
+        initialState: await res.json(),
+      }
     } catch (error) {
       console.log(`Could not get page props for route "${propsRoute.name}"`)
       console.error(error)

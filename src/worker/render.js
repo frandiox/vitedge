@@ -25,8 +25,8 @@ export async function handleViewRendering(event, { http2ServerPush }) {
 
   const {
     html,
-    status = 200,
-    statusText,
+    status = propsResponse.status || 200,
+    statusText = propsResponse.statusText,
     headers: renderingHeaders,
   } = await router.render(event.request.url, {
     initialState,

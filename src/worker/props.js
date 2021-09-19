@@ -63,7 +63,7 @@ export async function getPageProps(event) {
   if (!handler) {
     return {
       response: createNotFoundResponse(),
-      options: staticOptions,
+      options: staticOptions || {},
     }
   }
 

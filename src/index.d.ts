@@ -27,6 +27,7 @@ declare module 'vitedge' {
 
 export type PropsOptions = {
   status?: number
+  statusText?: string
   headers?: Record<string, string>
   cache?: {
     api?: number | boolean

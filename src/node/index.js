@@ -54,8 +54,8 @@ export async function handleEvent(
   // If it didn't match anything else up to here, fallback to HTML rendering
   const {
     html: body,
-    status: statusCode = 200,
-    statusText: statusMessage,
+    status: statusCode = propsOptions.status || 200,
+    statusText: statusMessage = propsOptions.statusText,
     headers: renderingHeaders,
     ...extra
   } = await router.render(url, {
