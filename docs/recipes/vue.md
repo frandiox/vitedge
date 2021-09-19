@@ -55,3 +55,39 @@ export default vitedge(App, { routes }, ({ app, initialState }) => {
   app.use(store)
 })
 ```
+
+## URQL
+
+A GraphQL client that is growing in popularity, [URQL](https://formidable.com/open-source/urql/), can be integrated like this:
+
+```js
+import vitedge from 'vitedge'
+import App from './App'
+import routes from './routes'
+import urql from '@urql/vue'
+import {
+  dedupExchange,
+  cacheExchange,
+  fetchExchange,
+  ssrExchange,
+} from '@urql/core'
+
+export default vitedge(App, { routes }, ({ app, initialState, isClient }) => {
+  const ssrCache = ssrExchange({ isClient, staleWhileRevalidate: true })
+
+  // Sync initialState with the client cache:
+  if (import.meta.env.SSR) {
+    // This is a placeholder that will return the URQL state during SSR.
+    // See how JSON.stringify works:
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description
+    initialState.urqlState = { toJSON: () => ssrCache.extractData() }
+  } else {
+    ssrCache.restoreData(initialState.urqlState)
+  }
+
+  app.use(urql, {
+    url: '/graphql', // My GraphQL URL
+    exchanges: [dedupExchange, cacheExchange, ssrCache, fetchExchange],
+  })
+})
+```
