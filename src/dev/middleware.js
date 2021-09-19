@@ -253,6 +253,7 @@ const WRAP_APPLIED_SYMBOL = Symbol('ssr')
 export async function getRenderContext({
   url,
   resolvedEntryPoint: { resolve },
+  request,
 }) {
   url = new URL(url)
 
@@ -281,9 +282,10 @@ export async function getRenderContext({
 
     try {
       const res = await fetch(url.toString(), {
-        method: 'GET',
-        redirect: 'manual', // Relay redirects to make the browser change URL
-        headers: { 'content-type': 'application/json; charset=utf-8' },
+        // Relay redirects to make the browser change URL
+        redirect: 'manual',
+        // Keep original headers to forward cookies, etc.
+        headers: { ...(request || {}).headers, accept: 'application/json' },
       })
 
       if (res.status >= 300 && res.status < 400) {
