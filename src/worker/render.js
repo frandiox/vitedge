@@ -62,19 +62,16 @@ export async function handleViewRendering(event, { http2ServerPush }) {
     return cachedResponse
   }
 
-  const [pageProps, manifest] = await Promise.all([
-    getPageProps(event),
-    getSsrManifest(event),
-  ])
+  const [{ response: propsResponse, options: propsOptions = {} }, manifest] =
+    await Promise.all([getPageProps(event), getSsrManifest(event)])
 
-  if (isRedirect(pageProps.response)) {
+  if (isRedirect(propsResponse)) {
     // Redirect
-    return pageProps.response
+    return propsResponse
   }
 
-  const options = pageProps.options || {}
   const initialState =
-    (pageProps.response.body && (await pageProps.response.json())) || {}
+    (propsResponse.body && (await propsResponse.json())) || {}
 
   const {
     html,
@@ -83,13 +80,13 @@ export async function handleViewRendering(event, { http2ServerPush }) {
     headers: renderingHeaders,
   } = await router.render(event.request.url, {
     initialState,
-    propsStatusCode: pageProps.response.status,
+    propsStatusCode: propsResponse.status,
     request: event.request,
     manifest,
     preload: true,
   })
 
-  const headers = { ...options.headers, ...renderingHeaders }
+  const headers = { ...propsOptions.headers, ...renderingHeaders }
 
   if (html) {
     headers['content-type'] = 'text/html;charset=UTF-8'
@@ -105,7 +102,7 @@ export async function handleViewRendering(event, { http2ServerPush }) {
     headers,
   })
 
-  setCachedResponse(event, response, cacheKey, (options.cache || {}).html)
+  setCachedResponse(event, response, cacheKey, (propsOptions.cache || {}).html)
 
   return response
 }
