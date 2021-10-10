@@ -19,7 +19,11 @@ export async function handleEvent(
     event.request = await nodeToFetchRequest(event.request)
   }
 
-  globalThis.fetch = createLocalFetch({ url, functions })
+  globalThis.fetch = createLocalFetch({
+    url,
+    functions,
+    headers: event.request.headers,
+  })
 
   if (type === 'api') {
     return handleApiRequest({ url, functions }, event)

@@ -267,8 +267,30 @@ export async function getRenderContext({
   if (!globalThis.fetch[WRAP_APPLIED_SYMBOL]) {
     const originalFetch = globalThis.fetch
     globalThis.fetch = function (resource, options) {
-      if (typeof resource === 'string' && resource.startsWith('/')) {
+      const isSameOrigin =
+        typeof resource === 'string' && resource.startsWith('/')
+
+      if (isSameOrigin) {
         resource = url.origin + resource
+      }
+
+      // Relay HTTP cookies for manual fetch subrequests
+      // (SSR requests do this automatically)
+      const { cookie } = request.headers || {}
+      const { credentials } = options || {}
+
+      if (
+        cookie &&
+        credentials !== 'omit' &&
+        (isSameOrigin || credentials === 'include')
+      ) {
+        if (!options || !options.headers) {
+          options = { ...options, headers: {} }
+        }
+
+        // Cookie header cannot be provided programmatically in
+        // fetch options so it's fine to override it here.
+        options.headers.cookie = cookie
       }
 
       return originalFetch(resource, options)

@@ -27,10 +27,28 @@ export async function handleApiRequest({ url, functions }, event) {
 
 const originalFetch = globalThis.fetch
 
-export function createLocalFetch({ url, functions }) {
+export function createLocalFetch({ url, functions, headers: ssrHeaders }) {
   // Redirect API requests during SSR to bundled functions
   return async function localFetch(resource, options = {}) {
-    if (typeof resource === 'string' && resource.startsWith('/')) {
+    const cookie = ssrHeaders.get('cookie')
+    const { credentials } = options || {}
+    const isSameOrigin =
+      typeof resource === 'string' && resource.startsWith('/')
+
+    if (
+      cookie &&
+      credentials !== 'omit' &&
+      (isSameOrigin || credentials === 'include')
+    ) {
+      // Relay HTTP cookies for manual fetch subrequests
+      // (SSR requests do this automatically)
+      options.headers = {
+        ...options.headers,
+        cookie,
+      }
+    }
+
+    if (isSameOrigin) {
       url = new URL(url)
       ;[url.pathname, url.search] = resource.split('?')
 

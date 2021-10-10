@@ -99,7 +99,25 @@ const originalFetch = globalThis.fetch
 
 export function createLocalFetch(instanceRequest, waitUntil) {
   return function localFetch(resource, options = {}) {
-    if (typeof resource === 'string' && resource.startsWith('/')) {
+    const cookie = instanceRequest.headers.get('cookie')
+    const { credentials } = options || {}
+    const isSameOrigin =
+      typeof resource === 'string' && resource.startsWith('/')
+
+    if (
+      cookie &&
+      credentials !== 'omit' &&
+      (isSameOrigin || credentials === 'include')
+    ) {
+      // Relay HTTP cookies for manual fetch subrequests
+      // (SSR requests do this automatically)
+      options.headers = {
+        ...options.headers,
+        cookie,
+      }
+    }
+
+    if (isSameOrigin) {
       const event = {
         type: 'fetch',
         waitUntil,
