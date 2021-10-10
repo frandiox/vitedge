@@ -5,10 +5,8 @@ const pluginName = 'vitedge'
 const entryServer = '/entry-server'
 const entryClient = '/entry-client'
 
-let lib
-
 export default (options = {}) => {
-  let framework
+  let lib
 
   return [
     viteSSR({
@@ -19,7 +17,7 @@ export default (options = {}) => {
       name: pluginName,
       fnsOptions: options.functions || {}, // Store for later
       workerOptions: options.worker || {}, // Store for later
-      getFramework: () => framework,
+      getFramework: () => lib,
       configureServer, // Provide API/Props during development
       config: ({ plugins }) => {
         const isVue = hasPlugin(plugins, 'vite:vue')
