@@ -17,11 +17,6 @@ export default function (App, { routes, base, ...options }, hook) {
 
         app.component(ClientOnly.name, ClientOnly)
 
-        router.beforeEach((to, from, next) => {
-          to.meta.state = initialState || {}
-          next()
-        })
-
         if (hook) {
           await hook({
             app,
