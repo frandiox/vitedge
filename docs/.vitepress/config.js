@@ -64,10 +64,13 @@ module.exports = {
             text: 'CORS',
             link: '/cors',
           },
-
           {
             text: 'Plugin Options',
             link: '/plugin',
+          },
+          {
+            text: 'Custom Rendering',
+            link: '/custom-rendering',
           },
         ],
       },

@@ -1,6 +1,6 @@
 # Vitedge
 
-[Vite](https://github.com/vitejs/vite) _Edge Side Rendering_ (ESR) framework for Vue and React.
+[Vite](https://github.com/vitejs/vite) _Edge Side Rendering_ (ESR) framework for Vue and React, or bring your own view library.
 
 > What's ESR? Think of SSR (Server Side Rendering) in CDN nodes instead of actual servers. This is possible today thanks to [Cloudflare Workers](https://workers.cloudflare.com/) (and maybe some other platforms in the near future).
 
@@ -10,7 +10,7 @@ It can replace static site generators in some situations since it builds on the 
 
 Even though running it at the edge is ideal, it is actually compatible with any Node environment such as Vercel or Netlify.
 
-See [live demo](https://vitessedge.zable.workers.dev/), and [Vue](https://github.com/frandiox/vitessedge-template) or [React](https://github.com/frandiox/reactesse-edge-template) starter templates.
+See [live demo](https://vitessedge.zable.workers.dev/), and [Vue](https://github.com/frandiox/vitessedge-template) or [React](https://github.com/frandiox/reactesse-edge-template) starter templates. If you want to bring your own view library, have a look at the [Vanilla JS example](./examples/vanilla) as a guide.
 
 ## Features
 
@@ -61,7 +61,7 @@ To talk about Vitedge, join [ViteLand Discord](https://discord.gg/taRZdpzHhR) an
 - [x] Mockup KV and cache in development.
 - [ ] Mockup DO in development.
 - [ ] Rewrite in TypeScript.
-- [ ] Guide to bring your own view framework.
+- [x] Guide to bring your own view framework.
 - [x] Preview mode to simulate Worker environment in development.
 
 ## Contributing
