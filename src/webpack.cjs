@@ -42,9 +42,14 @@ module.exports = ({ root } = {}) => {
 
   let isReact = false
   try {
-    require.resolve('@vitejs/plugin-react-refresh')
+    require.resolve('@vitejs/plugin-react')
     isReact = true
-  } catch (error) {}
+  } catch (error) {
+    try {
+      require.resolve('@vitejs/plugin-react-refresh')
+      isReact = true
+    } catch (error) {}
+  }
 
   return {
     entry: './index',

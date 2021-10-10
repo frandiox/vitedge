@@ -52,10 +52,10 @@ Import `vitedge/plugin.js` in your `vite.config.js`:
 ```js
 import vitedgePlugin from 'vitedge/plugin.js'
 import vue from '@vitejs/plugin-vue'
-// import reactRefresh from '@vitejs/plugin-react-refresh'
+// import react from '@vitejs/plugin-react'
 
 export default {
-  plugins: [vitedgePlugin(), vue() /* reactRefresh() */],
+  plugins: [vitedgePlugin(), vue() /* react() */],
 }
 ```
 

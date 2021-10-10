@@ -1,8 +1,8 @@
 import { UserConfig } from 'vite'
 import vitedge from 'vitedge/plugin.js'
-import reactRefresh from '@vitejs/plugin-react-refresh'
+import react from '@vitejs/plugin-react'
 
 export default {
-  plugins: [vitedge(), reactRefresh()],
+  plugins: [vitedge(), react()],
   optimizeDeps: {},
 } as UserConfig
