@@ -78,6 +78,10 @@ module.exports = {
         text: 'Recipes',
         children: [
           {
+            text: 'Authentication',
+            link: '/recipes/authentication',
+          },
+          {
             text: 'Cloudflare Workers',
             link: '/recipes/cloudflare-workers',
           },

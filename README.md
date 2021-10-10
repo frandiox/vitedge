@@ -40,7 +40,7 @@ To talk about Vitedge, join [ViteLand Discord](https://discord.gg/taRZdpzHhR) an
 - [x] Cache props/html in worker and make it configurable.
 - [x] i18n compatible.
 - [x] Starter template.
-- [ ] Auth utilities/guide (passing JWT in requests as cookies).
+- [x] Auth utilities/guide (passing JWT in requests as cookies).
 - [x] Compatibility with Node runtime for other providers (Vercel/Netlify...).
 - [ ] Add example using Vercel's edge cache.
 - [x] Detect imported files in HTML and push them with HTTP/2.
