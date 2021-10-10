@@ -31,6 +31,9 @@ export function nodeToFetchRequest(nodeRequest) {
     const contentType = nodeRequest.headers['content-type'] || ''
     return Promise.resolve(
       new Request(getUrlFromNodeRequest(nodeRequest), {
+        // Weird issue with enumerated properties and spread operator:
+        // https://github.com/frandiox/vitedge/discussions/61#discussioncomment-1353819
+        headers: nodeRequest.headers,
         ...nodeRequest,
         body:
           typeof body !== 'string' && contentType.includes('application/json')
@@ -47,6 +50,9 @@ export function nodeToFetchRequest(nodeRequest) {
     nodeRequest.on('end', () => {
       resolve(
         new Request(getUrlFromNodeRequest(nodeRequest), {
+          // Weird issue with enumerated properties and spread operator:
+          // https://github.com/frandiox/vitedge/discussions/61#discussioncomment-1353819
+          headers: nodeRequest.headers,
           ...nodeRequest,
           body: data.length === 0 ? undefined : Buffer.concat(data),
         })
