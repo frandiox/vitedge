@@ -64,7 +64,7 @@ export async function handleEvent(
     ...extra
   } = await router.render(url, {
     ...event,
-    initialState: pageProps,
+    initialState: { ...event.initialState, ...pageProps },
     propsStatusCode: propsOptions.status,
     manifest,
     preload,
