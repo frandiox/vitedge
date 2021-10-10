@@ -2,7 +2,7 @@
 
 Authentication in an SSR context can be challenging, especially if you rely on [JSON Web Tokens](https://en.wikipedia.org/wiki/JSON_Web_Token) instead of cookies. The JWT can be passed in `fetch` requests without issues but, in SSR requests (i.e. when the browser makes the first page request to the backend), the browser cannot be instructed to find your JWT in local storage.
 
-On the other hand, HTTP cookies are passed **automatically** by the browser when making an SSR request. Therefore, the simplest solution to authentication with JWT is to store it in an [HTTP-only cookie](shttps://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies).
+On the other hand, HTTP cookies are passed **automatically** by the browser when making an SSR request. Therefore, the simplest solution to authentication with JWT is to store it in an [HTTP-only cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies).
 
 In order to do this, you need to create an endpoint in your API that is called right after your user is authenticated, receiving the new JWT (access token) in the body, querystring or headers. Then, simply set the `Set-Cookie` header in the response:
 
