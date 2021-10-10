@@ -13,8 +13,7 @@ export function isPropsRequest(event) {
 }
 
 function resolvePropsRoute(url = '') {
-  const { href, origin } = new URL(url)
-  const route = router.resolve(href.replace(origin, ''))
+  const route = router.resolve(new URL(url))
 
   const resolvedFn = route && resolveFnsEndpoint(route.propsGetter, true)
 
