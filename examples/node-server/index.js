@@ -9,7 +9,12 @@ if (!example) {
 }
 
 const { default: functions } = await import(`../${example}/dist/functions.js`)
-const { default: router } = await import(`../${example}/dist/ssr/main.js`)
+const { default: packageJson } = await import(
+  `../${example}/dist/ssr/package.json`
+)
+const { default: router } = await import(
+  `../${example}/dist/ssr/${packageJson.main}`
+)
 const { default: manifest } = await import(
   `../${example}/dist/client/ssr-manifest.json`
 )
