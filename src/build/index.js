@@ -1,3 +1,5 @@
+import { promises as fs } from 'fs'
+import { createRequire } from 'module'
 import path from 'path'
 import buildSSR from 'vite-ssr/build/index.js'
 import buildFunctions from './functions.js'
@@ -27,8 +29,11 @@ export default async function ({
   ...workerFlags
 } = {}) {
   const { config: viteConfig, rootDir } = await getProjectInfo(mode)
-  const { fnsOptions = {}, workerOptions = {} } =
-    viteConfig.plugins.find((plugin) => plugin.name === 'vitedge') || {}
+  const {
+    fnsOptions = {},
+    workerOptions = {},
+    getFramework,
+  } = viteConfig.plugins.find((plugin) => plugin.name === 'vitedge') || {}
 
   const { getPropsHandlerNames } = await buildFunctions({
     mode,
@@ -89,6 +94,21 @@ export default async function ({
       },
     },
   })
+
+  if (getFramework() === 'react') {
+    // FIXME This is a workaround related to @vite/plugin-react and type:module
+    const ssrDistDirectory = path.resolve(rootDir, outDir, ssrOutDir)
+    const require = createRequire(import.meta.url)
+    const packageJson = require(path.join(ssrDistDirectory, 'package.json'))
+    const serverBundlePath = path.join(ssrDistDirectory, packageJson.main)
+
+    const serverBundle = await fs.readFile(serverBundlePath, 'utf-8')
+    await fs.writeFile(
+      serverBundlePath,
+      serverBundle.replace('"react/jsx-runtime"', '"react/jsx-runtime.js"'),
+      'utf-8'
+    )
+  }
 
   if (entry === undefined || entry === true) {
     const defaultEntry = lookupFile({
