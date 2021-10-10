@@ -1,0 +1,24 @@
+{
+  "name": "example",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/worker/script.js",
+  "scripts": {
+    "dev": "vitedge --force --ssr src/entry-server.js",
+    "dev:spa": "vitedge --force",
+    "preview": "vitedge preview",
+    "build": "rm -rf dist && vitedge build --ssr src/entry-server.js",
+    "refresh": "rm -rf node_modules/vitedge && cp -r ../../src node_modules/vitedge && cp ../../src/bin/cli.js node_modules/.bin/vitedge",
+    "serve:worker": "wrangler dev",
+    "serve:node": "cd ../node-server && yarn serve vanilla",
+    "deploy": "export EXAMPLE_NAME=vanilla && cd ../worker-site && yarn deploy --env vanilla"
+  },
+  "dependencies": {
+    "vite": "2.5.0",
+    "vitedge": "file:../../src"
+  },
+  "devDependencies": {
+    "miniflare": "1.3.3"
+  }
+}
