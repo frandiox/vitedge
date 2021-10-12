@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
-import viteSSR from 'vite-ssr/react/entry-client'
+import viteSSR, { useContext } from 'vite-ssr/react/entry-client'
 import { buildPropsRoute, fetchPageProps } from '../utils/props'
 import { onFunctionReload, setupPropsEndpointsWatcher } from '../dev/hmr'
 
@@ -87,4 +87,10 @@ function PropsProvider({
     ...((passToPage && state) || {}),
     ...rest,
   })
+}
+
+export function usePageProps() {
+  const { router } = useContext()
+  const { meta = {} } = router.getCurrentRoute() || {}
+  return { ...meta.state }
 }

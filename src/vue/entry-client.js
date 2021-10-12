@@ -1,11 +1,11 @@
-import { ref } from 'vue'
+import { ref, watch, shallowReadonly, shallowReactive } from 'vue'
+import { useRoute } from 'vue-router'
 import viteSSR, { ClientOnly } from 'vite-ssr/vue/entry-client'
 import { buildPropsRoute, fetchPageProps } from '../utils/props'
 import { createHead } from '@vueuse/head'
 import { onFunctionReload, setupPropsEndpointsWatcher } from '../dev/hmr'
 
-export { ClientOnly }
-export { useContext } from 'vite-ssr/vue/entry-client'
+export { ClientOnly, useContext } from 'vite-ssr/vue/entry-client'
 
 export default function (App, { routes, ...options }, hook) {
   if (import.meta.env.DEV) {
@@ -93,4 +93,25 @@ export default function (App, { routes, ...options }, hook) {
       }
     }
   )
+}
+
+export function usePageProps() {
+  const { meta = {} } = useRoute() || {}
+
+  // Props reactivity in dev
+  if (import.meta.env.DEV) {
+    const pageProps = shallowReactive(meta.state || {})
+
+    watch(meta.hmr, () => {
+      for (const key of Object.keys(pageProps)) {
+        delete pageProps[key]
+      }
+
+      Object.assign(pageProps, meta.state || {})
+    })
+
+    return shallowReadonly(pageProps)
+  }
+
+  return shallowReadonly(meta.state || {})
 }

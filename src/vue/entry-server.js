@@ -1,9 +1,10 @@
+import { shallowReadonly } from 'vue'
+import { useRoute } from 'vue-router'
 import viteSSR, { ClientOnly } from 'vite-ssr/vue/entry-server'
 import { resolvePropsRoute } from './utils'
 import { createHead } from '@vueuse/head'
 
-export { ClientOnly }
-export { useContext } from 'vite-ssr/vue/entry-server'
+export { ClientOnly, useContext } from 'vite-ssr/vue/entry-server'
 
 export default function (App, { routes, base, ...options }, hook) {
   return {
@@ -31,4 +32,9 @@ export default function (App, { routes, base, ...options }, hook) {
       }
     ),
   }
+}
+
+export function usePageProps() {
+  const { meta = {} } = useRoute() || {}
+  return shallowReadonly(meta.state || {})
 }

@@ -23,6 +23,7 @@ declare module 'vitedge' {
 
   export const ClientOnly: any
   export const useContext: Omit<SharedContext, 'request' | 'response'>
+  export const usePageProps: Record<string, any>
 }
 
 export type PropsOptions = {
