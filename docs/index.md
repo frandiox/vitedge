@@ -9,7 +9,7 @@ actionLink: /getting-started
 features:
   - title: Just a Vite app™
     details: Powered by Vite, provides ultrafast HMR and great DX.
-  - title: Edge side redering
+  - title: Edge side rendering
     details: Rendering performed in CDN nodes. Cached at the edge.
   - title: Fullstack
     details: Generate API endpoints automatically from filesystem routes.
