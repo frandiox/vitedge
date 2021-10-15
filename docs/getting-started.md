@@ -1,5 +1,22 @@
 # Getting Started
 
+Vitedge is a [Vite](https://vitejs.dev) _Edge Side Rendering_ (ESR) framework. It supports Vue and React out of the box but can work with any view library (or Vanilla JS).
+
+::: info What is ESR?
+ Think of SSR (Server Side Rendering) in CDN nodes instead of actual servers. This is possible today thanks to [**Cloudflare Workers**](https://workers.cloudflare.com/) (and maybe some other platforms in the near future).
+:::
+
+Vitedge is **just a Vite app ™** that prerenders the first view in an edge worker and runs the rest as an SPA. That means it will lead to **good SEO** while keeping the **snappy routing** and **DX of an SPA**.
+
+It can replace static site generators in some situations since it builds on the fly and caches at the edge. Therefore, instead of getting a static `index.html` from the CDN, the CDN itself will create it on the fly or provide it from cache if it was already accessed (with configurable cache age + stale-while-revalidate).
+
+Even though running it at the edge is ideal, it is actually **compatible with any Node environment** such as **Vercel** or **Netlify**.
+
+
+::: tip Get in touch
+Join [ViteLand Discord](https://discord.gg/taRZdpzHhR) and check `#vitedge` channel or use [GitHub's Discussions](https://github.com/frandiox/vitedge/discussions).
+:::
+
 ## Requirements
 
 - Vitedge relies on **native ES Modules**. Therefore, during development, it is recommended using Node version `>=14`. However, `12.x` should also work in production.
