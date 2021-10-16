@@ -27,6 +27,50 @@ Currently, the following style collectors are provided from `vitedge/react/style
 
 You can create your own (or modify an existing one) following the [examples shown here](https://github.com/frandiox/vite-ssr/blob/master/src/react/style-collectors). Please, consider submitting Pull Requests to add new style collectors for other libraries.
 
+## React Query
+
+[React Query](https://react-query.tanstack.com/) is a very handy library to handle data fetching and synchronization:
+
+```js
+import vitedge from 'vitedge'
+import App from './App'
+import routes from './routes'
+import { QueryClient, hydrate, dehydrate } from 'react-query'
+
+export default vitedge(App, { routes }, (context) => {
+  // Create a fresh client (once per request) and
+  // specify suspense option by default for all queries
+  // so the server can await for them.
+  const client = new QueryClient({
+    defaultOptions: { queries: { suspense: true } },
+  })
+
+  // Save the client in the context to make it
+  // available in the App root function later
+  context.reactQueryClient = client
+
+  // Sync initialState and ReactQuery state:
+  if (import.meta.env.SSR) {
+    // Instruct how to access ReactQuery state after SSR:
+    context.initialState.reactQuery = { toJSON: () => dehydrate(client) }
+  } else {
+    // Hydrate ReactQuery client in browser using existing state:
+    hydrate(client, context.initialState.reactQuery)
+  }
+})
+
+```
+
+```js
+import { QueryClientProvider } from 'react-query'
+
+function App({ reactQueryClient }) {
+  return (
+    <QueryClientProvider client={reactQueryClient}>...</QueryClientProvider>
+  )
+}
+```
+
 ## Apollo GraphQL
 
 [Apollo GraphQL](https://www.apollographql.com/docs/react/) in React works by utilizing a cache instance:
