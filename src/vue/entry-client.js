@@ -4,6 +4,7 @@ import viteSSR, { ClientOnly } from 'vite-ssr/vue/entry-client'
 import { buildPropsRoute, fetchPageProps } from '../utils/props'
 import { createHead } from '@vueuse/head'
 import { onFunctionReload, setupPropsEndpointsWatcher } from '../dev/hmr'
+import { IS_SSR_PAGE } from '../utils/dom'
 
 export { ClientOnly, useContext } from 'vite-ssr/vue/entry-client'
 
@@ -28,7 +29,6 @@ export default function (App, { routes, ...options }, hook) {
 
       // @ts-ignore
       if (__HOT__) {
-        setupPropsEndpointsWatcher()
         onFunctionReload(
           () => router.currentRoute.value,
           async (route) => {
@@ -48,13 +48,15 @@ export default function (App, { routes, ...options }, hook) {
             }
           }
         )
+
+        await setupPropsEndpointsWatcher()
       }
 
       let isFirstRoute = true
       router.beforeEach((to, from) => {
         if (isFirstRoute) {
           isFirstRoute = false
-          if (!!to.meta.state) {
+          if (!!to.meta.state && IS_SSR_PAGE) {
             // Do not get props the first time for the entry
             // route since it is already rendered in the server.
             return
