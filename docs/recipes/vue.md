@@ -101,35 +101,25 @@ A simple in-component data fetcher tool such as [Vue Query](https://vue-query.ve
 import vitedge from 'vitedge'
 import App from './App.vue'
 import routes from './routes'
-import { QueryClient, hydrate, dehydrate } from 'vue-query'
+import { QueryClient, hydrate, dehydrate, VUE_QUERY_CLIENT } from 'vue-query'
 
 export default vitedge(App, { routes }, ({ app, initialState }) => {
   // Create a new VueQuery client inside the main hook (once per request)
   const client = new QueryClient()
-  // Since VueQuery does not support plugin-like installation,
-  // we must provide it manually so it can be used later in the app root.
-  app.provide('vueQueryClient', client)
+
+  // Mount and provide the client to the app components
+  client.mount()
+  app.provide(VUE_QUERY_CLIENT, client)
 
   // Sync initialState with the client cache:
   if (import.meta.env.SSR) {
-    // This is a placeholder that will return the VueQuery state during SSR.
-    // See how JSON.stringify works:
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description
+    // This is a placeholder that will return the VueQuery state during SSR:
     initialState.vueQueryState = { toJSON: () => dehydrate(client) }
   } else {
+    // Hydrate the client in browser with existing state:
     hydrate(client, initialState.vueQueryState)
   }
 })
-```
-
-```html
-<!-- App.vue -->
-<script setup>
-  import { inject } from 'vue'
-  import { useQueryProvider } from 'vue-query'
-
-  useQueryProvider(inject('vueQueryClient'))
-</script>
 ```
 
 ```html
