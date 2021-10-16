@@ -15,8 +15,13 @@ export default (options = {}) => {
     }),
     {
       name: pluginName,
-      fnsOptions: options.functions || {}, // Store for later
-      workerOptions: options.worker || {}, // Store for later
+      // Store for later
+      pluginOptions: {
+        clientOptions: options.client || {},
+        ssrOptions: options.ssr || {},
+        fnsOptions: options.functions || {},
+        workerOptions: options.worker || {},
+      },
       getFramework: () => lib,
       configureServer, // Provide API/Props during development
       config: ({ plugins, server }, env) => {

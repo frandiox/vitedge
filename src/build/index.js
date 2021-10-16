@@ -7,6 +7,7 @@ import buildWorker from './worker.js'
 import { meta, getProjectInfo } from '../config.js'
 import { lookupFile } from '../utils/files.js'
 import { getWranglerConfig } from '../utils/wrangler.js'
+import { mergeConfig } from 'vite'
 
 const {
   outDir,
@@ -30,9 +31,13 @@ export default async function ({
 } = {}) {
   const { config: viteConfig, rootDir } = await getProjectInfo(mode)
   const {
-    fnsOptions = {},
-    workerOptions = {},
     getFramework,
+    pluginOptions: {
+      fnsOptions = {},
+      workerOptions = {},
+      clientOptions = {},
+      ssrOptions = {},
+    },
   } = viteConfig.plugins.find((plugin) => plugin.name === 'vitedge') || {}
 
   const { getPropsHandlerNames } = await buildFunctions({
@@ -64,35 +69,41 @@ export default async function ({
   ]
 
   await buildSSR({
-    clientOptions: {
-      mode,
-      plugins,
-      build: {
-        watch,
-        outDir: path.resolve(rootDir, outDir, clientOutDir),
+    clientOptions: mergeConfig(
+      {
+        mode,
+        plugins,
+        build: {
+          watch,
+          outDir: path.resolve(rootDir, outDir, clientOutDir),
+        },
       },
-    },
-    serverOptions: {
-      mode,
-      ssr: { target: 'webworker' },
-      plugins,
-      build: {
-        ssr,
-        outDir: path.resolve(rootDir, outDir, ssrOutDir),
-        target: 'es2019', // Support Node 12
-        rollupOptions: {
-          output: {
-            format: 'es',
+      clientOptions
+    ),
+    serverOptions: mergeConfig(
+      {
+        mode,
+        ssr: { target: 'webworker' },
+        plugins,
+        build: {
+          ssr,
+          outDir: path.resolve(rootDir, outDir, ssrOutDir),
+          target: 'es2019', // Support Node 12
+          rollupOptions: {
+            output: {
+              format: 'es',
+            },
+          },
+        },
+        packageJson: {
+          type: 'module',
+          vitedge: {
+            commitHash: getCommitHash(),
           },
         },
       },
-      packageJson: {
-        type: 'module',
-        vitedge: {
-          commitHash: getCommitHash(),
-        },
-      },
-    },
+      ssrOptions
+    ),
   })
 
   if (getFramework() === 'react') {

@@ -1,9 +1,12 @@
 import type { UserConfig, BuildOptions } from 'vite'
 import type { BuildOptions as ESBuildOptions } from 'esbuild'
+import type { BuildOptions as SsrBuildOptions } from 'vite-ssr/config'
 
 type RollupOptions = Exclude<BuildOptions['rollupOptions'], undefined>
 
 interface VitedgeOptions {
+  client?: SsrBuildOptions['clientOptions']
+  ssr?: SsrBuildOptions['serverOptions']
   functions?: Pick<
     UserConfig,
     'resolve' | 'plugins' | 'define' | 'json' | 'esbuild'
