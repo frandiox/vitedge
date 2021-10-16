@@ -19,7 +19,7 @@ export default (options = {}) => {
       workerOptions: options.worker || {}, // Store for later
       getFramework: () => lib,
       configureServer, // Provide API/Props during development
-      config: ({ plugins }, env) => {
+      config: ({ plugins, server }, env) => {
         const isVue = hasPlugin(plugins, 'vite:vue')
         const isReact =
           hasPlugin(plugins, 'vite:react') ||
@@ -32,6 +32,7 @@ export default (options = {}) => {
             // Vite 2.6.0 bug: use this
             // instead of import.meta
             __DEV__: env.mode !== 'production',
+            __HOT__: (server || {}).hmr !== false,
           },
         }
       },

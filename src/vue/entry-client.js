@@ -26,7 +26,8 @@ export default function (App, { routes, ...options }, hook) {
 
       app.component(ClientOnly.name, ClientOnly)
 
-      if (import.meta.hot) {
+      // @ts-ignore
+      if (__HOT__) {
         setupPropsEndpointsWatcher()
         onFunctionReload(
           () => router.currentRoute.value,
