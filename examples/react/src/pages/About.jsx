@@ -1,5 +1,5 @@
 import React from 'react'
-import { usePageProps } from 'vitedge/react'
+import { usePageProps } from 'vitedge'
 
 function Child() {
   const pageProps = usePageProps()
