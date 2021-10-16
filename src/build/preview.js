@@ -34,7 +34,6 @@ export default async function preview({
     )
   }
 
-  const viteInternals = await getViteInternals()
   const { Miniflare } = await import('miniflare')
   const mfPkg = requireJson('miniflare/package.json')
 
@@ -64,25 +63,42 @@ export default async function preview({
 
   mf.getOptions()
     .then(async ({ host, port = Number(defaultPort), processedHttps }) => {
-      const secure = processedHttps !== undefined
+      const https = processedHttps !== undefined
 
-      const server = await mf.createServer(secure)
+      const server = await mf.createServer(https)
 
       server.listen(port, host, async () => {
-        const protocol = secure ? 'https' : 'http'
-
         mf.log.log(
           chalk.cyan(`\n  miniflare v${mfPkg.version}`),
           chalk.green(`server running at:\n`)
         )
 
-        viteInternals.printServerUrls(
-          viteInternals.resolveHostname(host),
-          protocol,
-          port,
-          '',
-          (...strings) => mf.log.log(...strings)
-        )
+        const { printHttpServerUrls } = await import('vite')
+
+        if (printHttpServerUrls) {
+          // Vite 2.6.x exposes this function
+          printHttpServerUrls(
+            {
+              address: () => ({ port, address: true }),
+            },
+            {
+              base: '',
+              logger: { info: mf.log.log },
+              server: { host, https },
+            }
+          )
+        } else {
+          // Older versions of Vite
+          const viteInternals = await getViteInternals()
+          const protocol = https ? 'https' : 'http'
+          viteInternals.printServerUrls(
+            viteInternals.resolveHostname(host),
+            protocol,
+            port,
+            '',
+            (...strings) => mf.log.log(...strings)
+          )
+        }
 
         mf.log.log(
           '\n -- Preview mode' +

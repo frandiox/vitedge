@@ -15,6 +15,7 @@ export async function printBundleResult(logger, outDir, fileName) {
   )
 }
 
+// Used for printing server info in preview for Vite <= 2.5.x
 export async function getViteInternals() {
   try {
     /* This is just to reuse Vite styles and some logic */
