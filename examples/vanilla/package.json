@@ -15,7 +15,7 @@
     "deploy": "export EXAMPLE_NAME=vanilla && cd ../worker-site && yarn deploy --env vanilla"
   },
   "dependencies": {
-    "vite": "2.5.*",
+    "vite": "2.6.x",
     "vitedge": "file:../../src"
   },
   "devDependencies": {

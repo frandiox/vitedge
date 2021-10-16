@@ -27,12 +27,14 @@ export default (options = {}) => {
 
         lib = isVue ? 'vue' : isReact ? 'react' : 'core'
 
+        const isDev = env.mode !== 'production'
+
         return {
           define: {
             // Vite 2.6.0 bug: use this
             // instead of import.meta
-            __DEV__: env.mode !== 'production',
-            __HOT__: (server || {}).hmr !== false,
+            __DEV__: isDev,
+            __HOT__: isDev && (server || {}).hmr !== false,
           },
         }
       },
