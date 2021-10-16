@@ -92,7 +92,7 @@ export default vitedge(App, { routes }, ({ app, initialState, isClient }) => {
 })
 ```
 
-## VueQuery
+## Vue Query
 
 A simple in-component data fetcher tool such as [Vue Query](https://vue-query.vercel.app/) can be integrated as follows:
 

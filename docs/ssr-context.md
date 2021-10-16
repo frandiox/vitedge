@@ -80,7 +80,7 @@ However, in certain circumstances you might want to fetch data directly from wit
 
 ### Vue
 
-- Calling your API directly from Vue components using Suspense, and storing the result in the SSR initial state.
+- Calling your API directly from Vue components using Suspense, and storing the result in the SSR initial state. Some libraries like [Vue Query](./recipes/vue.md#vue-query) can handle this automatically.
 
 ```jsx
 // Use Suspense in your app root
@@ -133,7 +133,7 @@ export default {
 
 ### React
 
-- Call your API and throw a promise in order to leverage React's Suspense (in both browser and server) anywhere in your components. Vitedge is already adding Suspense to the root so you don't need to provide it.
+- Call your API and throw a promise in order to leverage React's Suspense (in both browser and server) anywhere in your components. Vitedge is already adding Suspense to the root so you don't need to provide it. Some libraries like [React Query](./recipes/react.md#react-query) can handle this automatically.
 
 ```jsx
 function MyComponent({ initialState }) {
