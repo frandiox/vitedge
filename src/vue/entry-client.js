@@ -8,7 +8,8 @@ import { onFunctionReload, setupPropsEndpointsWatcher } from '../dev/hmr'
 export { ClientOnly, useContext } from 'vite-ssr/vue/entry-client'
 
 export default function (App, { routes, ...options }, hook) {
-  if (import.meta.env.DEV) {
+  // @ts-ignore
+  if (__DEV__) {
     // Will be used in HMR later
     routes.forEach((route) => {
       route.meta = route.meta || {}
@@ -99,7 +100,8 @@ export function usePageProps() {
   const { meta = {} } = useRoute() || {}
 
   // Props reactivity in dev
-  if (import.meta.env.DEV) {
+  // @ts-ignore
+  if (__DEV__) {
     const pageProps = shallowReactive(meta.state || {})
 
     watch(meta.hmr, () => {

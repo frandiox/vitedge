@@ -8,6 +8,7 @@ export { ClientOnly, useContext } from 'vite-ssr/react/entry-client'
 
 export default function (App, { routes, ...options }, hook) {
   return viteSSR(App, { routes, PropsProvider, ...options }, async (ctx) => {
+    // This won't work in Vite 2.6.x
     if (import.meta.hot) {
       setupPropsEndpointsWatcher()
       onFunctionReload(ctx.router.getCurrentRoute, fetchPagePropsAsync)
@@ -52,7 +53,8 @@ function PropsProvider({
     return React.createElement(Redirect, { to: state.__redirect })
   }
 
-  if (import.meta.env.DEV) {
+  // @ts-ignore
+  if (__DEV__) {
     // For props HMR
     to.meta.setState = setState
   }
