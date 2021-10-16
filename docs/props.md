@@ -1,4 +1,4 @@
-# Edge Page Props
+# Page Props (data fetching)
 
 When a page is rendered it normally requires getting data from the server that cannot be provided in the frontend. This is normally done via a "get page props" call to the API. The API would return data that is later used to render the page.
 
@@ -161,7 +161,7 @@ export default defineEdgeProps({
 })
 ```
 
-## Using props
+## Using page props
 
 Vitedge will pass the result of this request to your page component as props.
 
@@ -176,6 +176,19 @@ export default {
 }
 ```
 
+Page props can also be accessed from any descendant component of the current page by using `usePageProps` hook:
+
+```js
+import { usePageProps } from 'vitedge'
+
+function MyComponent() {
+  const props = usePageProps()
+  // ...
+}
+```
+
+This hook is also reactive during development so it will rerender your view when the props handler file is saved. [Avoid destructuring the object in Vue](https://v3.vuejs.org/guide/reactivity-fundamentals.html#destructuring-reactive-state) if you don't want to lose this behavior.
+
 Alternatively, you can disable passing props to components globally from the main entry point if you prefer relying on stores:
 
 ```js
@@ -187,10 +200,10 @@ export default vitedge(
     const store = createStore(initialState)
     app.use(store)
 
-    router.beforeEach((to) => {
+    router.beforeResolve((to) => {
       // Page props requests are available
       // in each route's meta.state
-      store.update(to.meta.state)
+      store.update(to.name, to.meta.state)
     })
   }
 )
