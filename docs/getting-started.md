@@ -2,8 +2,8 @@
 
 Vitedge is a [Vite](https://vitejs.dev) _Edge Side Rendering_ (ESR) framework. It supports Vue and React out of the box but can work with any view library (or Vanilla JS).
 
-::: info What is ESR?
-Think of SSR (Server Side Rendering) in CDN nodes instead of actual servers. This is possible today thanks to [**Cloudflare Workers**](https://workers.cloudflare.com/) (and maybe some other platforms in the near future).
+::: tip What is ESR?
+Think of SSR (Server Side Rendering) in CDN nodes instead of actual servers. This is possible today thanks to [**Cloudflare Workers**](https://workers.cloudflare.com/), and maybe some other platforms in the near future.
 :::
 
 Vitedge is **just a Vite app ™** that prerenders the first view in an edge worker and runs the rest as an SPA. That means it will lead to **good SEO** while keeping the **snappy routing** and **DX of an SPA**.
