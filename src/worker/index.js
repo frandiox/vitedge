@@ -49,7 +49,7 @@ export async function handleEvent(
     const { url, query } = parseQuerystring(event)
 
     willRequestProps && (await willRequestProps({ event, url, query }))
-    const response = await handlePropsRequest(event)
+    const response = await handlePropsRequest(event) || createNotFoundResponse()
 
     return (
       (didRequestProps &&

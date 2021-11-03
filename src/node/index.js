@@ -44,7 +44,7 @@ export async function handleEvent(
   // This handles SPA page props requests from the browser
   if (type === 'props' || isRedirecting) {
     // Mock status when this is a props request to bypass Fetch opaque responses
-    const status = type === 'props' && isRedirecting ? 299 : propsOptions.status
+    const status = type === 'props' && isRedirecting ? 299 : propsOptions.status || 404
 
     return {
       statusCode: status,
