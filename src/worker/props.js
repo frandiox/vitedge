@@ -98,12 +98,12 @@ export async function getPageProps(event) {
 }
 
 export async function handlePropsRequest(event) {
-  const page = await getPageProps(event)
+  const { response = createNotFoundResponse() } = await getPageProps(event)
 
-  if (page.response.status >= 300 && page.response.status < 400) {
+  if (response.status >= 300 && response.status < 400) {
     // Mock redirect status on props request to bypass Fetch opaque responses
-    return new Response(page.response.body, { ...page.response, status: 299 })
+    return new Response(response.body, { ...response, status: 299 })
   }
 
-  return page.response
+  return response
 }
