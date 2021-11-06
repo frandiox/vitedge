@@ -12,7 +12,7 @@ export async function handleViewRendering(event, { http2ServerPush }) {
     return cachedResponse
   }
 
-  const [{ response: propsResponse, options: propsOptions = {} }, manifest] =
+  const [{ response: propsResponse = {}, options: propsOptions = {} }, manifest] =
     await Promise.all([getPageProps(event), getSsrManifest(event)])
 
   if (isRedirect(propsResponse)) {

@@ -24,6 +24,11 @@ export default [
     },
   },
   {
+    path: '/c',
+    component: () => import('./pages/PageC.vue'),
+    name: 'c',
+  },
+  {
     path: '/example/:resource',
     component: () => import('./pages/PageB.vue'),
     name: 'example',
