@@ -1992,10 +1992,10 @@ uuid@^8.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
-vite-ssr@0.14.2:
-  version "0.14.2"
-  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.14.2.tgz#f501edb09199ab340493f405a9d335b44177f7ce"
-  integrity sha512-twPWHm+Vr8qGtTjWc6elgdebDP08Scfti3n3TZ7+BzsALaEYb4g9ffE1/2PpZE+IlspLfJut22+asyQKsLXnOw==
+vite-ssr@0.14.3:
+  version "0.14.3"
+  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.14.3.tgz#d50a5d79d8116f96f884de68e3d7097921dd1df8"
+  integrity sha512-uxw0jzKoIRLI9+Q+sxmkGgmvoKsydMUQPT/TM+o98XF+jDprUtjcCS+dR8+HhSa8nSqJ7QV7vha6qef4glutMA==
   dependencies:
     "@rollup/plugin-replace" "^3.0.0"
     "@vue/server-renderer" "^3.2.0"
@@ -2003,7 +2003,6 @@ vite-ssr@0.14.2:
     connect "^3.7.0"
     node-fetch "^2.6.1"
     react-ssr-prepass "^1.4.0"
-    strip-ansi "^6.0.0"
 
 vite@2.6.x:
   version "2.6.7"
@@ -2018,7 +2017,7 @@ vite@2.6.x:
     fsevents "~2.3.2"
 
 "vitedge@file:../../src":
-  version "0.17.0"
+  version "0.17.2"
   dependencies:
     "@cloudflare/kv-asset-handler" "^0.1.3"
     "@rollup/plugin-node-resolve" "^13.0.2"
@@ -2030,7 +2029,7 @@ vite@2.6.x:
     node-fetch "^2.6.1"
     regexparam "^1.3.0"
     route-sort "^1.0.0"
-    vite-ssr "0.14.2"
+    vite-ssr "0.14.3"
 
 vscode-languageserver-textdocument@^1.0.1:
   version "1.0.1"

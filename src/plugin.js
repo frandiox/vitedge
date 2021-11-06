@@ -12,6 +12,7 @@ export default (options = {}) => {
     viteSSR({
       plugin: pluginName,
       getRenderContext,
+      excludeSsrComponents: options.excludeSsrComponents,
     }),
     {
       name: pluginName,

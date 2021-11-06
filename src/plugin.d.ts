@@ -1,6 +1,9 @@
 import type { UserConfig, BuildOptions } from 'vite'
 import type { BuildOptions as ESBuildOptions } from 'esbuild'
-import type { BuildOptions as SsrBuildOptions } from 'vite-ssr/config'
+import type {
+  BuildOptions as SsrBuildOptions,
+  ViteSsrPluginOptions,
+} from 'vite-ssr/config'
 
 type RollupOptions = Exclude<BuildOptions['rollupOptions'], undefined>
 
@@ -32,6 +35,7 @@ interface VitedgeOptions {
       | 'metafile'
     >
   }
+  excludeSsrComponents?: ViteSsrPluginOptions['excludeSsrComponents']
 }
 
 declare module 'vitedge/plugin' {

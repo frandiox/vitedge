@@ -134,11 +134,6 @@
   resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.2.12.tgz#304064a4b56fc6c7b9169d80e9ee62ecb4bf0a1c"
   integrity sha512-5CkaifUCJwcTuru7FDwKFacPJuEoGUTw0LKSa5bw40B23s0TS+MGlYR1285nbV/ju3QUGlA6d6PD+GJkWy7uFg==
 
-ansi-regex@^5.0.0:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-5.0.1.tgz#082cb2c89c9fe8659a311a53bd6a4dc5301db304"
-  integrity sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==
-
 ansi-styles@^4.1.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-4.3.0.tgz#edd803628ae71c04c85ae7a0906edad34b648937"
@@ -443,13 +438,6 @@ statuses@~1.5.0:
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.5.0.tgz#161c7dac177659fd9811f43771fa99381478628c"
   integrity sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=
 
-strip-ansi@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.0.tgz#0b1571dd7669ccd4f3e06e14ef1eed26225ae532"
-  integrity sha512-AuvKTrTfQNYNIctbR1K/YGTR1756GycPsg7b9bdV9Duqur4gv6aKqHXah67Z8ImS7WEz5QVcOtlfW2rZEugt6w==
-  dependencies:
-    ansi-regex "^5.0.0"
-
 supports-color@^7.1.0:
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-7.2.0.tgz#1b7dcdcb32b8138801b3e478ba6a51caa89648da"
@@ -479,10 +467,10 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
-vite-ssr@0.14.2:
-  version "0.14.2"
-  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.14.2.tgz#f501edb09199ab340493f405a9d335b44177f7ce"
-  integrity sha512-twPWHm+Vr8qGtTjWc6elgdebDP08Scfti3n3TZ7+BzsALaEYb4g9ffE1/2PpZE+IlspLfJut22+asyQKsLXnOw==
+vite-ssr@0.14.3:
+  version "0.14.3"
+  resolved "https://registry.yarnpkg.com/vite-ssr/-/vite-ssr-0.14.3.tgz#d50a5d79d8116f96f884de68e3d7097921dd1df8"
+  integrity sha512-uxw0jzKoIRLI9+Q+sxmkGgmvoKsydMUQPT/TM+o98XF+jDprUtjcCS+dR8+HhSa8nSqJ7QV7vha6qef4glutMA==
   dependencies:
     "@rollup/plugin-replace" "^3.0.0"
     "@vue/server-renderer" "^3.2.0"
@@ -490,4 +478,3 @@ vite-ssr@0.14.2:
     connect "^3.7.0"
     node-fetch "^2.6.1"
     react-ssr-prepass "^1.4.0"
-    strip-ansi "^6.0.0"
