@@ -5,15 +5,17 @@ import { getCachedResponse, setCachedResponse } from './cache'
 import { getPageProps } from './props'
 import { createResponse, buildLinkHeader } from './utils'
 
-export async function handleViewRendering(event, { http2ServerPush }) {
+export async function handleViewRendering(event, { http2ServerPush, skipSSR }) {
   const cacheKey = event.request.url
   const cachedResponse = await getCachedResponse(cacheKey)
   if (cachedResponse) {
     return cachedResponse
   }
 
-  const [{ response: propsResponse = {}, options: propsOptions = {} }, manifest] =
-    await Promise.all([getPageProps(event), getSsrManifest(event)])
+  const [
+    { response: propsResponse = {}, options: propsOptions = {} },
+    manifest,
+  ] = await Promise.all([getPageProps(event), getSsrManifest(event)])
 
   if (isRedirect(propsResponse)) {
     // Redirect
@@ -34,6 +36,7 @@ export async function handleViewRendering(event, { http2ServerPush }) {
     request: event.request,
     manifest,
     preload: true,
+    skip: skipSSR,
   })
 
   const headers = { ...propsOptions.headers, ...renderingHeaders }

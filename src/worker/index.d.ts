@@ -15,6 +15,7 @@ declare module 'vitedge/worker' {
     event: FetchEvent,
     options?: {
       // Options
+      skipSSR?: boolean
       http2ServerPush?: {
         destinations: ('script' | 'style')[]
       }

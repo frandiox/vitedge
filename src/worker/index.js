@@ -14,6 +14,7 @@ export async function handleEvent(
   event,
   {
     // Options
+    skipSSR,
     http2ServerPush,
     // Hooks
     willRequestAsset,
@@ -74,7 +75,10 @@ export async function handleEvent(
 
   // --- SSR
   willRequestRender && (await willRequestRender({ event }))
-  const response = await handleViewRendering(event, { http2ServerPush })
+  const response = await handleViewRendering(event, {
+    skipSSR,
+    http2ServerPush,
+  })
 
   return (
     (didRequestRender && (await didRequestRender({ event, response }))) ||

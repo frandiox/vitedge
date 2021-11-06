@@ -6,6 +6,7 @@ declare module 'vitedge/node' {
       url: URL
       preload?: boolean
       manifest?: any
+      skipSSR?: boolean
     },
     event: Record<string, any>
   ) => Promise<{
