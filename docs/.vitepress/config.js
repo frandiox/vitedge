@@ -57,8 +57,8 @@ module.exports = {
             link: '/conditional-rendering',
           },
           {
-            text: 'Request Lifecycle',
-            link: '/request-lifecycle',
+            text: 'Handle Event Options',
+            link: '/handle-event',
           },
           {
             text: 'CORS',

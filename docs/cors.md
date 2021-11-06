@@ -25,7 +25,7 @@ addEventListener('fetch', (event) => {
 })
 ```
 
-This will add CORS headers to every response. For more granular control, use the [lifecycle hooks](./request-lifecycle):
+This will add CORS headers to every response. For more granular control, use the [lifecycle hooks](./handle-event#request-lifecycle):
 
 ```js
 import { handleEvent, cors } from 'vitedge/worker'

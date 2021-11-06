@@ -1,10 +1,14 @@
-# Request Lifecycle
+# Handle Event Options
+
+> Currently this is not available in development, only in production or preview modes
+
+When running in [production or preview mode](./usage.md#production), Vitedge's `handleEvent` function accepts the following options.
+
+## Request Lifecycle
 
 > Only available when deploying to Cloudflare Workers
 
-Vitedge provides a set of lifecycle hooks that can be used to modify requests or add logs. Currently, these hooks are only available when deploying to Cloudflare Workers or in preview mode, not during development.
-
-Hooks can be provided in the worker entry file when calling `handleEvent`:
+Vitedge provides a set of lifecycle hooks that can be used to modify requests or add logs.
 
 ```js
 import { handleEvent } from 'vitedge/worker'
@@ -43,3 +47,29 @@ This is the list of the available lifecycle hooks:
 - `didRequestProps`: Called after a Page Props handler returns. Receive `{ event, url, query, response }` in the arguments. It can modify the response.
 - `willRequestRender`: Called before a page is rendered. Receive `{ event }` in the arguments.
 - `didRequestRender`: Called after a page is rendered. Receive `{ event response }` in the arguments. It can modify the response.
+
+## Skip SSR
+
+The option `skipSSR: boolean` allows to skip the rendering for certain routes and simply return the naked `index.html` to fallback to a simple SPA. For example, the following would behave as an SPA for any route that includes `/admin/`.
+
+```js
+handleEvent(event, {
+  skipSSR: event.request.url.includes('/admin/')
+})
+```
+
+## HTTP2 Server Push
+
+Thanks to [HTTP/2 Server Push](https://developers.google.com/web/fundamentals/performance/http2#server_push) it is possible to push certain assets to the browser in parallel to the current request to avoid waterfall requests. The `http2ServerPush: Array<'script' | 'style'>` option allows selecting which assets are pushed.
+
+```js
+handleEvent(event, {
+  http2ServerPush: {
+    destinations: ['style'],
+  },
+})
+```
+
+This will populate the `Link` header, which is then used by the browser to preload the assets.
+
+**Note**: Behavior might differ depending on the browser.
