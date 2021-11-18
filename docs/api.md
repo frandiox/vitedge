@@ -20,7 +20,7 @@ Dynamic routes (e.g. `/api/users/:id`) can be specified by using brackets in fil
 
 - **Required parameter**: Single brackets `<root>/functions/api/users/[id].js`. This will match `/api/users/xxx` and provide `{ params: { id: 'xxx' } }` to the handler.
 - **Optional parameter**: Double brackets `<root>/functions/api/users/[[id]].js`. This will match the previous example in the same way, but also `/api/users` and provide `{ params: undefined }` to the handler.
-- **Catch all**: Brackets with `...` prefix `<root>/functions/api/path/[...all].js`. This will match `/api/users/deep/value` and provide `{ params: { all: 'deep/value' } }` to the handler. Note that this won't match a missing parameter (`/api/users`).
+- **Catch all**: Brackets with `...` prefix `<root>/functions/api/users/[...all].js`. This will match `/api/users/deep/value` and provide `{ params: { all: 'deep/value' } }` to the handler. Note that this won't match a missing parameter (`/api/users`).
 
 Directories can also follow the same naming convention to have more than 1 parameter: `<root>/functions/api/[:directory]/[:file].js` turns into `{ params: { directory: '...', file: '...' } }`.
 
