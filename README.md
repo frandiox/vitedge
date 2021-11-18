@@ -63,6 +63,10 @@ To talk about Vitedge, join [ViteLand Discord](https://discord.gg/taRZdpzHhR) an
 - [ ] Rewrite in TypeScript.
 - [x] Guide to bring your own view framework.
 - [x] Preview mode to simulate Worker environment in development.
+- [ ] Support Wrangler v2.
+- [ ] Deploy to fullstack Cloudflare Pages.
+- [ ] Streaming mode.
+- [ ] Support React 18
 
 ## Contributing
 
