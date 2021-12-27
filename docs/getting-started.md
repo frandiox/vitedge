@@ -22,6 +22,10 @@ Join [ViteLand Discord](https://discord.gg/taRZdpzHhR) and check `#vitedge` chan
 - Currently, Vitedge supports **Vue** and **React** out of the box. For other frameworks, please open feature requests.
 - A Vitedge app can be deployed to **any Node.js environment** (monolith or serverless) or to **Cloudflare Workers**. For the latter, you must open an account at [Cloudflare](https://www.cloudflare.com/).
 
+::: tip Current incompatibilities
+Due to some breaking changes in Vite and Node.js, Vitedge is not yet compatible with `Vite >= 2.7` and `Node >= 16.2`.
+:::
+
 ## Installation
 
 For a complete **starter template** with i18n, file routing and more, see [Vitesse for Vue](https://github.com/frandiox/vitessedge-template) or [Reactesse for React](https://github.com/frandiox/reactesse-edge-template). Otherwise, create a new project from scratch following these steps:
@@ -44,6 +48,12 @@ First, add the following to your `package.json`:
 
 ```json
 "type": "module",
+```
+
+Make sure your `index.html` contains a root element with id `app`:
+
+```html
+<div id="app"></div>
 ```
 
 Then, add Vitedge package:
