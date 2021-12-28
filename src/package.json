@@ -37,7 +37,8 @@
     "react-helmet-async": "^1.0.0",
     "react-router-config": "^5.0.0",
     "react-router-dom": "^5.0.0",
-    "vite": "^2.5.x",
+    "ts-node": "^10.4.0",
+    "vite": "^2.5.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0"
   },
@@ -67,6 +68,9 @@
       "optional": true
     },
     "react-router-dom": {
+      "optional": true
+    },
+    "ts-node": {
       "optional": true
     }
   },

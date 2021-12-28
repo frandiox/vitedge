@@ -158,7 +158,7 @@ See [Usage](./usage) for more information.
 TypeScript is fully supported but needs some extra setup:
 
 - Rename all your files (including `vite.config`) to have `*.ts` extension.
-- Install `typescript` and `ts-node>=9.1` as `devDependencies`.
+- Install `typescript` and `ts-node>=10.4` as `devDependencies`.
 
 ### Web and Worker Polyfills (optional)
 

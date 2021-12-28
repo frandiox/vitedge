@@ -7,7 +7,10 @@ const isFnsFile = (url) =>
 export const cacheBust = (resolved) => {
   const url = new URL(resolved.url)
   return isFnsFile(url)
-    ? { url: url.href + `?id=${Math.random().toString(36).substring(3)}` }
+    ? {
+        ...resolved,
+        url: url.href + `?id=${Math.random().toString(36).substring(3)}`,
+      }
     : resolved
 }
 
