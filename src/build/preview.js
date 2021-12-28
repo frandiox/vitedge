@@ -6,7 +6,8 @@ import { getViteInternals, createLogger } from './utils.js'
 import { requireJson } from '../utils/files.js'
 import { findWranglerFilePath } from '../utils/wrangler.js'
 
-const defaultPort = '5000'
+// Port 5000 is taken by default in macOS Monterey
+const defaultPort = '5050'
 
 export default async function preview({
   mode,
