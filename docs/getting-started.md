@@ -19,12 +19,8 @@ Join [ViteLand Discord](https://discord.gg/taRZdpzHhR) and check `#vitedge` chan
 ## Requirements
 
 - Vitedge relies on **native ES Modules**. Therefore, during development, it is recommended using Node version `>=14`. However, `12.x` should also work in production.
-- Currently, Vitedge supports **Vue** and **React** out of the box. For other frameworks, please open feature requests.
+- Currently, Vitedge supports **Vue** and **React** out of the box but it also exposes utilities for Vanilla JS or [bring-your-own-framework](./custom-rendering).
 - A Vitedge app can be deployed to **any Node.js environment** (monolith or serverless) or to **Cloudflare Workers**. For the latter, you must open an account at [Cloudflare](https://www.cloudflare.com/).
-
-::: tip Current incompatibilities
-Due to some breaking changes in Vite and Node.js, Vitedge is not yet compatible with `Vite >= 2.7` and `Node >= 16.2`.
-:::
 
 ## Installation
 
