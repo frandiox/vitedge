@@ -42,6 +42,10 @@ export default (options = {}) => {
             __DEV__: isDev,
             __HOT__: isDev && (server || {}).hmr !== false,
           },
+          ssr: {
+            // This is required for Vite >= 2.7
+            noExternal: [/vitedge/],
+          },
         }
       },
       configResolved: (config) => {

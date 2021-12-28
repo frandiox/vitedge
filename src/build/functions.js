@@ -87,7 +87,8 @@ export default function buildFunctions({
         {
           name: virtualEntryName,
           resolveId: (id) =>
-            id === virtualEntryName ? virtualEntryName : undefined,
+            // Vite 2.7 is prefixing the virtual entry name with the project path
+            id.includes(virtualEntryName) ? virtualEntryName : undefined,
           load: (id) =>
             id === virtualEntryName ? generateVirtualEntryCode() : undefined,
           async config() {
