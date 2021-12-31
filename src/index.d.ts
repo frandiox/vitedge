@@ -9,6 +9,13 @@ declare module 'vitedge' {
       pageProps?: { passToPage: boolean }
       debug?: { mount?: boolean }
       styleCollector?: any
+      routerOptions?: {
+        scrollBehavior?: any
+        linkActiveClass?: string
+        linkExactActiveClass?: string
+        parseQuery?: any
+        stringifyQuery?: any
+      }
     },
     hook: (params: {
       app: any
