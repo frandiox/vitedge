@@ -12,7 +12,7 @@ Pass any [Vite config options](https://vitejs.dev/config/) to the plugin in `opt
 
 ## Backend functions build
 
-The backend functions are built using Vite but only a subset of the options applies. From the  [Vite config options](https://vitejs.dev/config/), any of the following are available in the `options.functions` property: `build.rollupOptions`, `build.commonjsOptions`, `build.minify`, `build.target`, `build.terserOptions`, `esbuild`, `define`, `json`, `plugins`, `resolve`.
+The backend functions are built using Vite but only a subset of the options applies. From the [Vite config options](https://vitejs.dev/config/), any of the following are available in the `options.functions` property: `build.rollupOptions`, `build.commonjsOptions`, `build.minify`, `build.target`, `build.terserOptions`, `esbuild`, `define`, `json`, `plugins`, `resolve`.
 
 ## Worker script build
 
@@ -25,3 +25,7 @@ Most of the [ESBuild options](https://esbuild.github.io/api/#simple-options) are
 `options.excludeSsrComponents: Regex[]`: any component file that matches this option will be excluded from the SSR build. This can be useful for leaving out non-isomorphic components that crash during SSR, or to simply make the bundle smaller for CFW constraints.
 
 **Note**: this works by mocking the default export of each component. Named exports won't be mocked and might break your app if you use them.
+
+## Container ID
+
+By default, `<div id="app"></div>` must be included in `index.html` and is where the rendered HTML will be injected. Specify `options.containerId: string` to change the ID of the container element. Note that the element should still be a `div`.

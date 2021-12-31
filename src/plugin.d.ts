@@ -36,6 +36,7 @@ interface VitedgeOptions {
     >
   }
   excludeSsrComponents?: ViteSsrPluginOptions['excludeSsrComponents']
+  containerId?: ViteSsrPluginOptions['containerId']
 }
 
 declare module 'vitedge/plugin' {
