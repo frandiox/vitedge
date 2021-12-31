@@ -1,4 +1,5 @@
 import viteSSR from 'vite-ssr/plugin.js'
+import { getEntryPoint } from 'vite-ssr/config.js'
 import { configureServer, getRenderContext } from './dev/middleware.js'
 
 const pluginName = 'vitedge'
@@ -7,6 +8,8 @@ const entryClient = '/entry-client'
 
 export default (options = {}) => {
   let lib
+  let entryPoint
+  let resolvedConfig
 
   return [
     viteSSR({
@@ -48,7 +51,8 @@ export default (options = {}) => {
           },
         }
       },
-      configResolved: (config) => {
+      configResolved: async (config) => {
+        resolvedConfig = config
         const libPath = `/${lib}`
 
         // config.alias is pre-beta.69
@@ -67,6 +71,25 @@ export default (options = {}) => {
           pluginName + libPath + entryClient,
           pluginName + libPath + entryServer
         )
+
+        entryPoint = await getEntryPoint(config)
+      },
+
+      // Fix import.meta.hot in Vite >= 2.6
+      // https://github.com/vitejs/vite/issues/5270
+      transform(code, id, options) {
+        if (
+          resolvedConfig.command === 'serve' &&
+          !(options || {}).ssr &&
+          entryPoint &&
+          id.startsWith(entryPoint)
+        ) {
+          // Copy import.meta.hot globally so it can be used
+          // by Vitedge in src/dev/hmr.js in development
+          return code + '\nglobalThis.__hot=import.meta.hot;'
+        }
+
+        return null
       },
     },
   ]
