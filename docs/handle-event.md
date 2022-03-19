@@ -58,6 +58,18 @@ handleEvent(event, {
 })
 ```
 
+## Global Cache Option
+
+If you have same caching policy for different pages it is possible to define default cache configuration globally as follows.
+
+```js
+handleEvent(event, {
+  cache: { html:<number>, api: <number> }
+})
+```
+
+Refer to [caching](./cache.md) section for moore details.
+
 ## HTTP2 Server Push
 
 Thanks to [HTTP/2 Server Push](https://developers.google.com/web/fundamentals/performance/http2#server_push) it is possible to push certain assets to the browser in parallel to the current request to avoid waterfall requests. The `http2ServerPush: Array<'script' | 'style'>` option allows selecting which assets are pushed.
