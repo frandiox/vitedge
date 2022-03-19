@@ -15,6 +15,7 @@ export async function handleEvent(
   {
     // Options
     skipSSR,
+    cache,
     http2ServerPush,
     // Hooks
     willRequestAsset,
@@ -50,7 +51,7 @@ export async function handleEvent(
     const { url, query } = parseQuerystring(event)
 
     willRequestProps && (await willRequestProps({ event, url, query }))
-    const response = await handlePropsRequest(event)
+    const response = await handlePropsRequest(event, { cache })
 
     return (
       (didRequestProps &&
@@ -77,6 +78,7 @@ export async function handleEvent(
   willRequestRender && (await willRequestRender({ event }))
   const response = await handleViewRendering(event, {
     skipSSR,
+    cache,
     http2ServerPush,
   })
 
