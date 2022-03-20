@@ -16,6 +16,10 @@ declare module 'vitedge/worker' {
     options?: {
       // Options
       skipSSR?: boolean
+      cache?: {
+        api?: number | boolean
+        html?: number | boolean
+      }
       http2ServerPush?: {
         destinations: ('script' | 'style')[]
       }

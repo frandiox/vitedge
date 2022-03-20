@@ -52,7 +52,7 @@ function getCacheKey(event) {
   return url.toString()
 }
 
-export async function getPageProps(event) {
+export async function getPageProps(event, { cache } = {}) {
   const {
     handler,
     options: staticOptions,
@@ -66,8 +66,8 @@ export async function getPageProps(event) {
     }
   }
 
-  const cacheOption =
-    staticOptions && staticOptions.cache && staticOptions.cache.api
+  const cacheOption = ((staticOptions && staticOptions.cache) || cache || {})
+    .api
   const cacheKey = cacheOption && getCacheKey(event)
 
   if (cacheOption) {
@@ -97,8 +97,10 @@ export async function getPageProps(event) {
   return { options, response }
 }
 
-export async function handlePropsRequest(event) {
-  const { response = createNotFoundResponse() } = await getPageProps(event)
+export async function handlePropsRequest(event, { cache } = {}) {
+  const { response = createNotFoundResponse() } = await getPageProps(event, {
+    cache,
+  })
 
   if (response.status >= 300 && response.status < 400) {
     // Mock redirect status on props request to bypass Fetch opaque responses
