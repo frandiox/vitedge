@@ -52,7 +52,7 @@ function getCacheKey(event) {
   return url.toString()
 }
 
-export async function getPageProps(event, { cache }) {
+export async function getPageProps(event, { cache } = {}) {
   const {
     handler,
     options: staticOptions,
@@ -66,9 +66,8 @@ export async function getPageProps(event, { cache }) {
     }
   }
 
-  const cacheOption =
-    (staticOptions && staticOptions.cache && staticOptions.cache.api) ||
-    cache.api
+  const cacheOption = ((staticOptions && staticOptions.cache) || cache || {})
+    .api
   const cacheKey = cacheOption && getCacheKey(event)
 
   if (cacheOption) {
@@ -98,7 +97,7 @@ export async function getPageProps(event, { cache }) {
   return { options, response }
 }
 
-export async function handlePropsRequest(event, { cache }) {
+export async function handlePropsRequest(event, { cache } = {}) {
   const { response = createNotFoundResponse() } = await getPageProps(event, {
     cache,
   })
