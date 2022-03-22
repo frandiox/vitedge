@@ -1,6 +1,6 @@
 import './App.css'
 import React, { useState } from 'react'
-import { Link, Route, Switch } from 'react-router-dom'
+import { Link, Route, Routes } from 'react-router-dom'
 import logo from './logo.svg'
 
 export default function App({ router }) {
@@ -35,15 +35,15 @@ export default function App({ router }) {
         </nav>
       </header>
 
-      <Switch>
-        {router.routes.map((route) => {
-          return (
-            <Route exact={route.exact} key={route.path} path={route.path}>
-              <route.component />
-            </Route>
-          )
-        })}
-      </Switch>
+      <Routes>
+        {router.routes.map((route) => (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={<route.component />}
+          />
+        ))}
+      </Routes>
     </div>
   )
 }
