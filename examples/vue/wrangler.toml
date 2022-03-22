@@ -4,6 +4,7 @@ account_id = "<YOUR ID>"
 workers_dev = true
 route = ""
 zone_id = ""
+compatibility_date = "2022-03-22"
 
 kv_namespaces = [
   { binding = "TEST_NAMESPACE1", id = "<ignored>", preview_id = "<ignored>" },
