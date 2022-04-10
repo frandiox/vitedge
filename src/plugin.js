@@ -1,13 +1,10 @@
 import viteSSR from 'vite-ssr/plugin.js'
-import { getEntryPoint } from 'vite-ssr/config.js'
 import { configureServer, getRenderContext } from './dev/middleware.js'
 
 const pluginName = 'vitedge'
 
 export default (options = {}) => {
   let lib
-  let entryPoint
-  let resolvedConfig
 
   return [
     viteSSR({
@@ -26,7 +23,7 @@ export default (options = {}) => {
       },
       getFramework: () => lib,
       configureServer, // Provide API/Props during development
-      config: ({ plugins, server }, env) => {
+      config: ({ plugins }) => {
         const isVue = hasPlugin(plugins, 'vite:vue')
         const isReact =
           hasPlugin(plugins, 'vite:react') ||
@@ -34,41 +31,18 @@ export default (options = {}) => {
 
         lib = isVue ? 'vue' : isReact ? 'react' : 'core'
 
-        const isDev = env.mode !== 'production'
-
         return {
-          define: {
-            // Vite 2.6.0 bug: use this
-            // instead of import.meta
-            __DEV__: isDev,
-            __HOT__: isDev && (server || {}).hmr !== false,
+          optimizeDeps: {
+            esbuildOptions: {
+              // This is needed since Vite >= 2.6 to populate import.meta correctly
+              target: 'es2020',
+            },
           },
           ssr: {
             // This is required for Vite >= 2.7
             noExternal: [/vitedge/],
           },
         }
-      },
-      configResolved: async (config) => {
-        resolvedConfig = config
-        entryPoint = await getEntryPoint(config)
-      },
-
-      // Fix import.meta.hot in Vite >= 2.6
-      // https://github.com/vitejs/vite/issues/5270
-      transform(code, id, options) {
-        if (
-          resolvedConfig.command === 'serve' &&
-          !(options || {}).ssr &&
-          entryPoint &&
-          id.startsWith(entryPoint)
-        ) {
-          // Copy import.meta.hot globally so it can be used
-          // by Vitedge in src/dev/hmr.js in development
-          return code + '\nglobalThis.__hot=import.meta.hot;'
-        }
-
-        return null
       },
     },
   ]

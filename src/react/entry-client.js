@@ -8,8 +8,7 @@ export { ClientOnly, useContext } from 'vite-ssr/react/entry-client'
 
 export default function (App, { routes, ...options }, hook) {
   return viteSSR(App, { routes, PropsProvider, ...options }, async (ctx) => {
-    // @ts-ignore
-    if (__HOT__) {
+    if (import.meta.hot) {
       onFunctionReload(ctx.router.getCurrentRoute, fetchPagePropsAsync)
       await setupPropsEndpointsWatcher()
     }
@@ -59,8 +58,7 @@ function PropsProvider({
     return null
   }
 
-  // @ts-ignore
-  if (__DEV__) {
+  if (import.meta.env.DEV) {
     // For props HMR
     to.meta.setState = setState
   }

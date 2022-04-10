@@ -41,8 +41,7 @@ export function buildPropsRoute(route) {
   const url = createUrl(route.href || route.fullPath)
   url.pathname = PROPS_PREFIX + url.pathname
 
-  // @ts-ignore
-  if (__DEV__) {
+  if (import.meta.env.DEV) {
     url.searchParams.set('propsGetter', propsGetter)
     url.searchParams.set('data', encodeURIComponent(JSON.stringify(data)))
   }

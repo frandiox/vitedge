@@ -9,8 +9,7 @@ import { IS_SSR_PAGE } from '../utils/dom'
 export { ClientOnly, useContext } from 'vite-ssr/vue/entry-client'
 
 export default function (App, { routes, ...options }, hook) {
-  // @ts-ignore
-  if (__DEV__) {
+  if (import.meta.env.DEV) {
     // Will be used in HMR later
     routes.forEach((route) => {
       route.meta = route.meta || {}
@@ -27,8 +26,7 @@ export default function (App, { routes, ...options }, hook) {
 
       app.component(ClientOnly.name, ClientOnly)
 
-      // @ts-ignore
-      if (__HOT__) {
+      if (import.meta.hot) {
         onFunctionReload(
           () => router.currentRoute.value,
           async (route) => {
@@ -103,8 +101,7 @@ export function usePageProps() {
   const { meta = {} } = useRoute() || {}
 
   // Props reactivity in dev
-  // @ts-ignore
-  if (__DEV__) {
+  if (import.meta.env.DEV) {
     const pageProps = shallowReactive(meta.state || {})
 
     watch(meta.hmr, () => {

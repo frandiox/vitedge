@@ -9,7 +9,7 @@
     "dev:spa": "vitedge --force",
     "preview": "vitedge preview",
     "build": "rm -rf dist && vitedge build",
-    "refresh": "rm -rf node_modules/vitedge && cp -r ../../src node_modules/vitedge && cp ../../src/bin/cli.js node_modules/.bin/vitedge",
+    "refresh": "rm -rf node_modules/vitedge && cp -r ../../src node_modules/vitedge && rm -rf node_modules/vitedge/node_modules/vite-ssr && cp ../../src/bin/cli.js node_modules/.bin/vitedge",
     "serve:worker": "wrangler dev",
     "serve:node": "cd ../node-server && yarn serve react"
   },

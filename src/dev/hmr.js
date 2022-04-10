@@ -2,9 +2,8 @@ import { IS_SSR_PAGE } from '../utils/dom'
 import { findRoutePropsGetter } from '../utils/props'
 
 export function onFunctionReload(getCurrentRoute, updateState) {
-  const hot = import.meta.hot || globalThis.__hot
-  if (hot) {
-    hot.on('function-reload', async (data) => {
+  if (import.meta.hot) {
+    import.meta.hot.on('function-reload', async (data) => {
       const currentRoute = getCurrentRoute()
       const propsGetter = findRoutePropsGetter(currentRoute)
       if (propsGetter === data.path) {
@@ -16,11 +15,10 @@ export function onFunctionReload(getCurrentRoute, updateState) {
 }
 
 export function setupPropsEndpointsWatcher() {
-  const hot = import.meta.hot || globalThis.__hot
-  if (hot) {
+  if (import.meta.hot) {
     return new Promise((resolve) => {
       // Listen for new props handlers in backend
-      hot.on('props-endpoints-change', async (data) => {
+      import.meta.hot.on('props-endpoints-change', async (data) => {
         // Save it globally during development. This will be used
         // to know if a page can make a "get page props" request or not.
         window.__AVAILABLE_PROPS_ENDPOINTS__ = data.names
