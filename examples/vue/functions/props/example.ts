@@ -2,7 +2,7 @@ import { defineEdgeProps } from 'vitedge/define'
 
 export default defineEdgeProps({
   handler({ params = {}, query = {} }) {
-    console.log('KV instance:', globalThis.TEST_NAMESPACE1)
+    console.log('KV instance:', globalThis.TEST_NAMESPACE)
 
     return {
       data: {

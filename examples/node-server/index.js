@@ -10,13 +10,15 @@ if (!example) {
 
 const { default: functions } = await import(`../${example}/dist/functions.js`)
 const { default: packageJson } = await import(
-  `../${example}/dist/ssr/package.json`
+  `../${example}/dist/ssr/package.json`,
+  { assert: { type: 'json' } }
 )
 const { default: router } = await import(
   `../${example}/dist/ssr/${packageJson.main}`
 )
 const { default: manifest } = await import(
-  `../${example}/dist/client/ssr-manifest.json`
+  `../${example}/dist/client/ssr-manifest.json`,
+  { assert: { type: 'json' } }
 )
 
 // This could be Polka, Fastify or any other server

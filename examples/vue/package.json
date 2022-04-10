@@ -9,14 +9,14 @@
     "dev:spa": "vitedge --force",
     "preview": "vitedge preview",
     "build": "rm -rf dist && vitedge build",
-    "refresh": "rm -rf node_modules/vitedge && cp -r ../../src node_modules/vitedge && cp ../../src/bin/cli.js node_modules/.bin/vitedge",
+    "refresh": "rm -rf node_modules/vitedge && cp -r ../../src node_modules/vitedge && rm -rf node_modules/vitedge/node_modules/vite-ssr && cp ../../src/bin/cli.js node_modules/.bin/vitedge",
     "serve:worker": "wrangler dev",
     "serve:node": "cd ../node-server && yarn serve vue",
     "deploy": "export EXAMPLE_NAME=vue && cd ../worker-site && yarn deploy --env vue"
   },
   "dependencies": {
     "@vueuse/head": "^0.6.0",
-    "vite": "2.7.x",
+    "vite": "2.9.x",
     "vitedge": "file:../../src",
     "vue": "^3.2.26",
     "vue-router": "^4.0.0"

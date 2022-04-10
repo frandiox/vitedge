@@ -95,7 +95,7 @@ export async function handleApiRequest(event) {
   return createNotFoundResponse()
 }
 
-const originalFetch = globalThis.fetch
+const originalFetch = globalThis.fetch.bind(globalThis)
 
 export function createLocalFetch(instanceRequest, waitUntil) {
   return function localFetch(resource, options = {}) {
