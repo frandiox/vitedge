@@ -116,7 +116,9 @@ export default async function ({
     const serverBundle = await fs.readFile(serverBundlePath, 'utf-8')
     await fs.writeFile(
       serverBundlePath,
-      serverBundle.replace('"react/jsx-runtime"', '"react/jsx-runtime.js"'),
+      serverBundle
+        .replace('"react/jsx-runtime"', '"react/jsx-runtime.js"')
+        .replace('"react-router-dom/server"', '"react-router-dom/server.js"'),
       'utf-8'
     )
   }

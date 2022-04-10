@@ -21,7 +21,7 @@
     "vitedge": "file:../../src"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^1.1.3",
+    "@vitejs/plugin-react": "^1.3.0",
     "miniflare": "^1.3.3",
     "ts-node": "^10.4.0",
     "typescript": "^4.2.3",
