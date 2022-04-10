@@ -3,8 +3,6 @@ import { getEntryPoint } from 'vite-ssr/config.js'
 import { configureServer, getRenderContext } from './dev/middleware.js'
 
 const pluginName = 'vitedge'
-const entryServer = '/entry-server'
-const entryClient = '/entry-client'
 
 export default (options = {}) => {
   let lib
@@ -53,25 +51,6 @@ export default (options = {}) => {
       },
       configResolved: async (config) => {
         resolvedConfig = config
-        const libPath = `/${lib}`
-
-        // config.alias is pre-beta.69
-        ;(config.resolve.alias || config.alias).push({
-          find: /^vitedge(\/vue|\/react)?$/,
-          replacement:
-            pluginName +
-            libPath +
-            (config.build.ssr ? entryServer : entryClient),
-          _viteSSR: true,
-        })
-
-        config.optimizeDeps = config.optimizeDeps || {}
-        config.optimizeDeps.include = config.optimizeDeps.include || []
-        config.optimizeDeps.include.push(
-          pluginName + libPath + entryClient,
-          pluginName + libPath + entryServer
-        )
-
         entryPoint = await getEntryPoint(config)
       },
 
