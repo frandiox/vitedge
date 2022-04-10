@@ -4,11 +4,10 @@ account_id = "<YOUR ID>"
 workers_dev = true
 route = ""
 zone_id = ""
+compatibility_date = "2022-04-10"
 
-kv_namespaces = [
-  { binding = "TEST_NAMESPACE1", id = "<ignored>", preview_id = "<ignored>" },
-  { binding = "TEST_NAMESPACE2", id = "<ignored>", preview_id = "<ignored>" }
-]
+#$ wrangler kv:namespace create "TEST_NAMESPACE" --preview
+kv_namespaces = [{ binding = "TEST_NAMESPACE", preview_id = "<preview_id>" }]
 
 [site]
 bucket = "dist/client"
