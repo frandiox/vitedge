@@ -65,7 +65,7 @@ yarn add vitedge
 Apart from that, install your framework dependencies if the starting template didn't add them:
 
 - **Vue**: `vue@3` `@vue/server-renderer@3` `vue-router@4` `@vueuse/head`
-- **React**: `react@17` `react-dom@17` `react-router-dom@5` `react-router-config@5` `react-helmet-async@1`
+- **React**: `react@17` `react-dom@17` `react-router-dom@6` `react-helmet-async@1`
 
 ### 3. Import Vitedge plugin
 
