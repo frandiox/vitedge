@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Redirect } from 'react-router-dom'
 import viteSSR, { useContext } from 'vite-ssr/react/entry-client'
 import { buildPropsRoute, fetchPageProps } from '../utils/props'
 import { onFunctionReload, setupPropsEndpointsWatcher } from '../dev/hmr'
@@ -54,7 +53,10 @@ function PropsProvider({
 
   if (state && state.__redirect) {
     to.meta.state = null
-    return React.createElement(Redirect, { to: state.__redirect })
+    // TODO Fix SPA redirect in RRv6
+    // return React.createElement(Navigate, { to: state.__redirect })
+    window.location.href = state.__redirect
+    return null
   }
 
   // @ts-ignore
