@@ -1,9 +1,9 @@
-import type { SharedContext } from 'vite-ssr/utils/types'
+import type { SharedContext, SharedOptions } from 'vite-ssr/utils/types'
 
 declare module 'vitedge' {
   const handler: (
     App: any,
-    options: {
+    options: Pick<SharedOptions, 'transformState'> & {
       routes: Array<Record<string, any>>
       base?: (params: { url: URL }) => string
       pageProps?: { passToPage: boolean }
