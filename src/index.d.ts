@@ -29,7 +29,7 @@ declare module 'vitedge' {
   export default handler
 
   export const ClientOnly: any
-  export const useContext: Omit<SharedContext, 'request' | 'response'>
+  export const useContext: () => Omit<SharedContext, 'request' | 'response'>
   export const usePageProps: () => Record<string, any>
 }
 
