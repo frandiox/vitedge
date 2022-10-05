@@ -80,9 +80,11 @@ export default async function preview({
 
         if (vitePkg.version.startsWith('3')) {
           // Vite 3.x does not expose utilities
-          console.log(chalk.bold(chalk.white('➜  Local: ')), chalk.cyan(`${protocol}://localhost:${port}/`));
-        }
-        else if (printHttpServerUrls) {
+          console.log(
+            chalk.bold(chalk.white('➜  Local: ')),
+            chalk.cyan(`${protocol}://localhost:${port}/`)
+          )
+        } else if (printHttpServerUrls) {
           // Vite 2.6.x exposes this function
           printHttpServerUrls(
             {
@@ -108,8 +110,8 @@ export default async function preview({
 
         mf.log.log(
           '\n -- Preview mode' +
-          (buildWatch ? '. Waiting for updates' : '') +
-          '\n'
+            (buildWatch ? '. Waiting for updates' : '') +
+            '\n'
         )
       })
     })
