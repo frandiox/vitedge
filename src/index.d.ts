@@ -17,13 +17,14 @@ declare module 'vitedge' {
         stringifyQuery?: any
       }
     },
-    hook: (params: {
-      app: any
-      router: any
-      isClient: boolean
-      initialState: unknown
-      initialRoute: any
-    }) => void | Promise<void>
+    hook: (
+      params: Omit<SharedContext, 'request' | 'response'> & {
+        app: any
+        router: any
+        initialRoute: any
+        request: Request
+      }
+    ) => void | Promise<void>
   ) => void
 
   export default handler
