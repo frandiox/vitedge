@@ -12,20 +12,16 @@ export default function (App, { routes, base, ...options }, hook) {
     render: viteSSR(
       App,
       { routes, base, ...options },
-      async ({ app, router, isClient, initialState, initialRoute }) => {
+      async (context) => {
+        const { app } = context
+
         const head = createHead()
         app.use(head)
 
         app.component(ClientOnly.name, ClientOnly)
 
         if (hook) {
-          await hook({
-            app,
-            router,
-            isClient,
-            initialState,
-            initialRoute,
-          })
+          await hook(context)
         }
 
         return { head }
