@@ -32,10 +32,10 @@ Since Vitedge is just a [Vite app](https://vitejs.dev/guide/#scaffolding-your-fi
 
 ```bash
 # Using NPM
-npm init @vitejs/app my-vue-app --template [vue|vue-ts|react|react-ts]
+npm init vite my-vue-app --template [vue|vue-ts|react|react-ts]
 
 # Using Yarn
-yarn create @vitejs/app my-vue-app --template [vue|vue-ts|react|react-ts]
+yarn create vite my-vue-app --template [vue|vue-ts|react|react-ts]
 ```
 
 ### 2. Install Vitedge and framework dependencies
