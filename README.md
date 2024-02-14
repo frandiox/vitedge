@@ -24,7 +24,7 @@ See [live demo](https://vitessedge.zable.workers.dev/), and [Vue](https://github
 
 See [docs](https://vitedge.js.org).
 
-To talk about Vitedge, join [ViteLand Discord](https://discord.gg/taRZdpzHhR) and check `#vitedge` channel or use [GitHub's Discussions](https://github.com/frandiox/vitedge/discussions).
+To talk about Vitedge, you can use [GitHub's Discussions](https://github.com/frandiox/vitedge/discussions).
 
 ## Starters
 
